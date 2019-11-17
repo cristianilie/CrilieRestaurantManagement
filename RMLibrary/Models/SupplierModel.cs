@@ -1,10 +1,12 @@
 ﻿namespace RMLibrary.Models
 {
-    public class CustomerAdress
+    public class SupplierModel
     {
         public int Id { get; set; }
 
-        public Customer CustomerId { get; set; }
+        public string Name { get; set; }
+
+        public string SupplierData { get; set; }
 
         public string Adress { get; set; }
     }
