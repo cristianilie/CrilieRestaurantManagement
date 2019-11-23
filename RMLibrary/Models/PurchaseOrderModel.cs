@@ -1,10 +1,10 @@
 ﻿namespace RMLibrary.Models
 {
+    /// <summary>
+    /// Represents a Purchase Order - buying merchandise from our suppliers
+    /// </summary>
     public class PurchaseOrderModel : OrderModel
     {
-
-        public SupplierModel SuplierId { get; set; }
-
-        public TaxModel TaxId { get; set; }
+        public CompanyModel SuplierId { get; set; }
     }
 }

@@ -1,5 +1,10 @@
 ﻿namespace RMLibrary.Models
 {
+    /// <summary>
+    /// Represents the product prices
+    /// Cost = buying + taxes price
+    /// SalesPrice = cost + taxes + profit margin; Calculated to gain profit from sales.
+    /// </summary>
     public class PriceModel
     {
         public int Id { get; set; }

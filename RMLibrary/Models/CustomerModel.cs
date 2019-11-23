@@ -1,6 +1,9 @@
 ﻿namespace RMLibrary.Models
 {
-    public class Customer
+    /// <summary>
+    /// Represents a customer ordering food online
+    /// </summary>
+    public class CustomerModel
     {
         public int Id { get; set; }
 
