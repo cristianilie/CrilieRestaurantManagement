@@ -141,13 +141,75 @@ namespace RMLibrary.DataAcces
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
             {
                 var parameters = new DynamicParameters();
-                parameters.Add("@ProductId", model.ProductId);
-                parameters.Add("@ProductQuantity", model.ProductQuantity);
+                parameters.Add("@Name", model.Name);
                 parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                 connection.Execute("dbo.spRecipe_Insert", parameters, commandType: CommandType.StoredProcedure);
 
                 model.Id = parameters.Get<int>("@Id");
+
+                return model;
+            }
+        }
+
+        /// <summary>
+        /// Deletes a Product Recipe entity from the database
+        /// </summary>
+        /// <param name="model">The Product Recipe about to be deleted</param>
+        /// <returns></returns>
+        public RecipeModel DeleteRecipe(RecipeModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Id", model.Id);
+                connection.Execute("dbo.spRecipe_Delete", parameters, commandType: CommandType.StoredProcedure);
+
+                return model;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new Recipe Content entry in the database
+        /// Recipe Content represents the ingredients of the recipe associated by RecipeId, and ProductId + ProductQuantity
+        /// </summary>
+        /// <param name="model">The Recipe - Recipe Content association</param>
+        /// <returns></returns>
+        public RecipeContentModel CreateRecipeContent(RecipeContentModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@RecipeId", model.RecipeId);
+                parameters.Add("@ProductId", model.ProductId);
+                parameters.Add("@ProductQuantity", model.ProductQuantity);
+                parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                connection.Execute("dbo.spRecipeContent_Insert", parameters, commandType: CommandType.StoredProcedure);
+
+                model.Id = parameters.Get<int>("@Id");
+
+                return model;
+            }
+        }
+
+
+        /// <summary>
+        /// Deletes a  Recipe Content entry in the database by RecipeId, and ProductId
+        /// Recipe Content represents the ingredients of the recipe associated by RecipeId, and ProductId + ProductQuantity
+        /// </summary>
+        /// <param name="model">The Recipe - Recipe Content association</param>
+        /// <returns></returns>
+        public RecipeContentModel RemoveRecipeContent(RecipeContentModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@RecipeId", model.RecipeId);
+                parameters.Add("@ProductId", model.ProductId);
+
+                connection.Execute("dbo.spRecipeContent_RemoveItem", parameters, commandType: CommandType.StoredProcedure);
+
 
                 return model;
             }
@@ -220,6 +282,38 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
+        /// Retrieves a list of Product Category items that match the id of the product model we filter by
+        /// </summary>
+        /// <param name="model">The Product  model we filter by </param>
+        /// <returns></returns>
+        public List<ProductCategoryModel> GetRecord_ProductCategory(ProductModel model)
+        {
+            List<ProductCategoryModel> output;
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", model.Id);
+
+                output = connection.Query<ProductCategoryModel>("dbo.spProductCategory_GetRecords", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Retrieves a list of all Product Category items 
+        /// </summary>
+        /// <returns></returns>
+        public List<ProductCategoryModel> GetProductCategories_All()
+        {
+            List<ProductCategoryModel> output;
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<ProductCategoryModel>("dbo.spProductCategory_GetAll", commandType: CommandType.StoredProcedure).ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Creates a new Product Stock association in the database
         /// Reflects the "quantity in stock" of a product
         /// </summary>
@@ -272,9 +366,7 @@ namespace RMLibrary.DataAcces
                 return model;
             }
         }
-
-
-
+               
         /// <summary>
         /// Creates a new Purchase Order in the database
         /// </summary>
@@ -305,6 +397,87 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
+        /// Returns a list with all the products in the Product table, ordered by name
+        /// </summary>
+        /// <returns></returns>
+        public List<ProductModel> GetProducts_All()
+        {
+            List<ProductModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<ProductModel>("dbo.spProducts_GetAll").ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Returns a list with all the recipes in the Recipe table, ordered by name
+        /// </summary>
+        /// <returns></returns>
+        public List<RecipeModel> GetRecipes_All()
+        {
+            List<RecipeModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<RecipeModel>("dbo.spRecipes_GetAll").ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Returns a list with all the Products asociated with a recipe
+        /// </summary>
+        /// <returns></returns>
+        public List<RecipeContentModel> GetRecipe_Content(RecipeModel model)
+        {
+            List<RecipeContentModel> output;
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@RecipeId", model.Id);
+
+                output = connection.Query<RecipeContentModel>("dbo.spRecipeContent_GetAll", parameters,commandType: CommandType.StoredProcedure).ToList();
+
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Returns a list with Product/Recipe/RecipeContent atributes joined
+        /// </summary>
+        /// <returns></returns>
+        public List<RecipeAndContentModel> GetRecipeAndContent(RecipeModel model)
+        {
+            List<RecipeAndContentModel> output;
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@RecipeId", model.Id);
+
+                output = connection.Query<RecipeAndContentModel>("dbo.spRecipeContentProduct_GetJoined", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return output;
+        }
+
+
+        /// <summary>
+        /// Returns a list with all the product categories in the Categories table, ordered by name
+        /// </summary>
+        /// <returns></returns>
+        public List<CategoryModel> GetCategories_All()
+        {
+            List<CategoryModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<CategoryModel>("dbo.spCategories_GetAll").ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Creates a new Sales/Purchase Order product association in the database
         /// </summary>      
         /// <param name="connection">The database connection</param>
@@ -320,6 +493,101 @@ namespace RMLibrary.DataAcces
             parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
             connection.Execute(storedProcedureName, parameters, commandType: CommandType.StoredProcedure);
+        }
+
+        /// <summary>
+        /// Updates category details in the database
+        /// </summary>
+        /// <param name="model">the category item we want to update</param>
+        /// <returns></returns>
+        public void UpdateCategoryModel(CategoryModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                //var parameters = new DynamicParameters();
+                //parameters.Add("@Name", model.Name);
+                //parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                //connection.Execute("dbo.spCategory_Update", parameters, commandType: CommandType.StoredProcedure);
+                //TODO - try to update the method to use the update stored procedure
+                var sqlUpdateStatement = $@"UPDATE Category 
+                                            SET  Name = @Name
+                                            WHERE Id = @Id";
+                connection.Execute(sqlUpdateStatement, model);
+            }
+        }
+
+        /// <summary>
+        /// Updates a recipes details in the database
+        /// </summary>
+        /// <param name="model">The recipe item we want to update</param>
+        /// <returns></returns>
+        public void UpdateRecipeModel(RecipeModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Name", model.Name);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spRecipe_Update", parameters, commandType: CommandType.StoredProcedure);
+
+            }
+        }
+
+        /// <summary>
+        /// Updates a products details in the database
+        /// </summary>
+        /// <param name="model">The products  we want to update</param>
+        /// <returns></returns>
+        public void UpdateProductModel(ProductModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Name", model.Name);
+                parameters.Add("@RecipeId", model.RecipeId);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spProduct_Update", parameters, commandType: CommandType.StoredProcedure);
+
+            }
+        }
+
+        /// <summary>
+        /// Updates a products category entry in the database
+        /// </summary>
+        /// <param name="model">The product category we want to update</param>
+        /// <returns></returns>
+        public void UpdateProductCategoryModel(ProductCategoryModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@CategoryId", model.CategoryId);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spProductCategory_Update", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
+        /// Updates a recipes content entry in the database
+        /// </summary>
+        /// <param name="model">the recipe content entry we want to update</param>
+        /// <returns></returns>
+        public void UpdateRecipeContentModel(RecipeContentModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@RecipeId", model.RecipeId);
+                parameters.Add("@ProductId", model.ProductId);
+                parameters.Add("@ProductQuantity", model.ProductQuantity);
+
+                connection.Execute("dbo.spRecipeContent_Update", parameters, commandType: CommandType.StoredProcedure);
+
+            }
         }
     }
 }

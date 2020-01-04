@@ -12,7 +12,7 @@
         /// <summary>
         /// If not null, represents the product components
         /// </summary>
-        public RecipeModel RecipeId { get; set; }
+        public int? RecipeId { get; set; }
 
     }
 }

@@ -34,6 +34,7 @@
             this.CategoryNameLabel = new System.Windows.Forms.Label();
             this.UpdateCategoryButton = new System.Windows.Forms.Button();
             this.ClearCategoryNameTextBoxButton = new System.Windows.Forms.Button();
+            this.ExitFormButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // CreateCategoryButton
@@ -44,15 +45,17 @@
             this.CreateCategoryButton.TabIndex = 0;
             this.CreateCategoryButton.Text = "Create";
             this.CreateCategoryButton.UseVisualStyleBackColor = true;
+            this.CreateCategoryButton.Click += new System.EventHandler(this.CreateCategoryButton_Click);
             // 
             // ProductCategoriesListBox
             // 
             this.ProductCategoriesListBox.FormattingEnabled = true;
             this.ProductCategoriesListBox.ItemHeight = 18;
-            this.ProductCategoriesListBox.Location = new System.Drawing.Point(197, 12);
+            this.ProductCategoriesListBox.Location = new System.Drawing.Point(189, 30);
             this.ProductCategoriesListBox.Name = "ProductCategoriesListBox";
-            this.ProductCategoriesListBox.Size = new System.Drawing.Size(158, 166);
+            this.ProductCategoriesListBox.Size = new System.Drawing.Size(171, 166);
             this.ProductCategoriesListBox.TabIndex = 1;
+            this.ProductCategoriesListBox.SelectedIndexChanged += new System.EventHandler(this.ProductCategoriesListBox_SelectedIndexChanged);
             // 
             // CategoryNameTextBox
             // 
@@ -78,6 +81,7 @@
             this.UpdateCategoryButton.TabIndex = 4;
             this.UpdateCategoryButton.Text = "Update";
             this.UpdateCategoryButton.UseVisualStyleBackColor = true;
+            this.UpdateCategoryButton.Click += new System.EventHandler(this.UpdateCategoryButton_Click);
             // 
             // ClearCategoryNameTextBoxButton
             // 
@@ -87,13 +91,25 @@
             this.ClearCategoryNameTextBoxButton.TabIndex = 5;
             this.ClearCategoryNameTextBoxButton.Text = "Clear";
             this.ClearCategoryNameTextBoxButton.UseVisualStyleBackColor = true;
+            this.ClearCategoryNameTextBoxButton.Click += new System.EventHandler(this.ClearCategoryNameTextBoxButton_Click);
+            // 
+            // ExitFormButton
+            // 
+            this.ExitFormButton.Location = new System.Drawing.Point(358, 1);
+            this.ExitFormButton.Name = "ExitFormButton";
+            this.ExitFormButton.Size = new System.Drawing.Size(26, 26);
+            this.ExitFormButton.TabIndex = 6;
+            this.ExitFormButton.Text = "X";
+            this.ExitFormButton.UseVisualStyleBackColor = true;
+            this.ExitFormButton.Click += new System.EventHandler(this.ExitFormButton_Click);
             // 
             // CategoryManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(383, 198);
+            this.ClientSize = new System.Drawing.Size(386, 208);
+            this.Controls.Add(this.ExitFormButton);
             this.Controls.Add(this.ClearCategoryNameTextBoxButton);
             this.Controls.Add(this.UpdateCategoryButton);
             this.Controls.Add(this.CategoryNameLabel);
@@ -102,6 +118,7 @@
             this.Controls.Add(this.CreateCategoryButton);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.LightSeaGreen;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "CategoryManagementForm";
             this.ShowIcon = false;
@@ -120,5 +137,6 @@
         private System.Windows.Forms.Label CategoryNameLabel;
         private System.Windows.Forms.Button UpdateCategoryButton;
         private System.Windows.Forms.Button ClearCategoryNameTextBoxButton;
+        private System.Windows.Forms.Button ExitFormButton;
     }
 }

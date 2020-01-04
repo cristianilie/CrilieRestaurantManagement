@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.ProductRecipeCheckBox = new System.Windows.Forms.CheckBox();
             this.ClearProductTextBoxesButton = new System.Windows.Forms.Button();
             this.UpdateProductButton = new System.Windows.Forms.Button();
             this.ProductNameLabel = new System.Windows.Forms.Label();
@@ -39,39 +38,32 @@
             this.AssociateRecipeButton = new System.Windows.Forms.Button();
             this.ProductListLabel = new System.Windows.Forms.Label();
             this.RecipeListLabel = new System.Windows.Forms.Label();
-            this.CreateRecipeButton = new System.Windows.Forms.Button();
-            this.EditRecipeButton = new System.Windows.Forms.Button();
             this.ProductCategoryLabel = new System.Windows.Forms.Label();
             this.ProductCategoryComboBox = new System.Windows.Forms.ComboBox();
+            this.CreateNewCategorylinkLabel = new System.Windows.Forms.LinkLabel();
+            this.CreateNewRecipeLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.ProductRecipeCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
-            // 
-            // ProductRecipeCheckBox
-            // 
-            this.ProductRecipeCheckBox.AutoSize = true;
-            this.ProductRecipeCheckBox.Location = new System.Drawing.Point(539, 123);
-            this.ProductRecipeCheckBox.Name = "ProductRecipeCheckBox";
-            this.ProductRecipeCheckBox.Size = new System.Drawing.Size(129, 22);
-            this.ProductRecipeCheckBox.TabIndex = 46;
-            this.ProductRecipeCheckBox.Text = "Product Recipe";
-            this.ProductRecipeCheckBox.UseVisualStyleBackColor = true;
             // 
             // ClearProductTextBoxesButton
             // 
-            this.ClearProductTextBoxesButton.Location = new System.Drawing.Point(16, 251);
+            this.ClearProductTextBoxesButton.Location = new System.Drawing.Point(308, 312);
             this.ClearProductTextBoxesButton.Name = "ClearProductTextBoxesButton";
-            this.ClearProductTextBoxesButton.Size = new System.Drawing.Size(160, 28);
+            this.ClearProductTextBoxesButton.Size = new System.Drawing.Size(70, 28);
             this.ClearProductTextBoxesButton.TabIndex = 45;
             this.ClearProductTextBoxesButton.Text = "Clear";
             this.ClearProductTextBoxesButton.UseVisualStyleBackColor = true;
+            this.ClearProductTextBoxesButton.Click += new System.EventHandler(this.ClearProductTextBoxesButton_Click);
             // 
             // UpdateProductButton
             // 
-            this.UpdateProductButton.Location = new System.Drawing.Point(16, 217);
+            this.UpdateProductButton.Location = new System.Drawing.Point(162, 312);
             this.UpdateProductButton.Name = "UpdateProductButton";
-            this.UpdateProductButton.Size = new System.Drawing.Size(160, 28);
+            this.UpdateProductButton.Size = new System.Drawing.Size(140, 28);
             this.UpdateProductButton.TabIndex = 41;
-            this.UpdateProductButton.Text = "Update";
+            this.UpdateProductButton.Text = "Update Product";
             this.UpdateProductButton.UseVisualStyleBackColor = true;
+            this.UpdateProductButton.Click += new System.EventHandler(this.UpdateProductButton_Click);
             // 
             // ProductNameLabel
             // 
@@ -97,15 +89,17 @@
             this.ProductsListBox.Name = "ProductsListBox";
             this.ProductsListBox.Size = new System.Drawing.Size(164, 238);
             this.ProductsListBox.TabIndex = 38;
+            this.ProductsListBox.SelectedIndexChanged += new System.EventHandler(this.ProductsListBox_SelectedIndexChanged);
             // 
             // CreateProductButton
             // 
-            this.CreateProductButton.Location = new System.Drawing.Point(16, 183);
+            this.CreateProductButton.Location = new System.Drawing.Point(16, 312);
             this.CreateProductButton.Name = "CreateProductButton";
-            this.CreateProductButton.Size = new System.Drawing.Size(160, 28);
+            this.CreateProductButton.Size = new System.Drawing.Size(140, 28);
             this.CreateProductButton.TabIndex = 37;
-            this.CreateProductButton.Text = "Create";
+            this.CreateProductButton.Text = "Create Product";
             this.CreateProductButton.UseVisualStyleBackColor = true;
+            this.CreateProductButton.Click += new System.EventHandler(this.CreateProductButton_Click);
             // 
             // RecipesListBox
             // 
@@ -118,12 +112,13 @@
             // 
             // AssociateRecipeButton
             // 
-            this.AssociateRecipeButton.Location = new System.Drawing.Point(539, 151);
+            this.AssociateRecipeButton.Location = new System.Drawing.Point(16, 242);
             this.AssociateRecipeButton.Name = "AssociateRecipeButton";
-            this.AssociateRecipeButton.Size = new System.Drawing.Size(137, 28);
+            this.AssociateRecipeButton.Size = new System.Drawing.Size(160, 28);
             this.AssociateRecipeButton.TabIndex = 48;
             this.AssociateRecipeButton.Text = "Associate Recipe";
             this.AssociateRecipeButton.UseVisualStyleBackColor = true;
+            this.AssociateRecipeButton.Click += new System.EventHandler(this.AssociateRecipeButton_Click);
             // 
             // ProductListLabel
             // 
@@ -143,28 +138,10 @@
             this.RecipeListLabel.TabIndex = 50;
             this.RecipeListLabel.Text = "Recipe List";
             // 
-            // CreateRecipeButton
-            // 
-            this.CreateRecipeButton.Location = new System.Drawing.Point(539, 43);
-            this.CreateRecipeButton.Name = "CreateRecipeButton";
-            this.CreateRecipeButton.Size = new System.Drawing.Size(137, 28);
-            this.CreateRecipeButton.TabIndex = 51;
-            this.CreateRecipeButton.Text = "Create Recipe";
-            this.CreateRecipeButton.UseVisualStyleBackColor = true;
-            // 
-            // EditRecipeButton
-            // 
-            this.EditRecipeButton.Location = new System.Drawing.Point(539, 77);
-            this.EditRecipeButton.Name = "EditRecipeButton";
-            this.EditRecipeButton.Size = new System.Drawing.Size(137, 28);
-            this.EditRecipeButton.TabIndex = 52;
-            this.EditRecipeButton.Text = "Edit Recipe";
-            this.EditRecipeButton.UseVisualStyleBackColor = true;
-            // 
             // ProductCategoryLabel
             // 
             this.ProductCategoryLabel.AutoSize = true;
-            this.ProductCategoryLabel.Location = new System.Drawing.Point(13, 97);
+            this.ProductCategoryLabel.Location = new System.Drawing.Point(13, 114);
             this.ProductCategoryLabel.Name = "ProductCategoryLabel";
             this.ProductCategoryLabel.Size = new System.Drawing.Size(124, 18);
             this.ProductCategoryLabel.TabIndex = 53;
@@ -173,21 +150,59 @@
             // ProductCategoryComboBox
             // 
             this.ProductCategoryComboBox.FormattingEnabled = true;
-            this.ProductCategoryComboBox.Location = new System.Drawing.Point(16, 123);
+            this.ProductCategoryComboBox.Location = new System.Drawing.Point(16, 140);
             this.ProductCategoryComboBox.Name = "ProductCategoryComboBox";
             this.ProductCategoryComboBox.Size = new System.Drawing.Size(160, 26);
             this.ProductCategoryComboBox.TabIndex = 54;
+            // 
+            // CreateNewCategorylinkLabel
+            // 
+            this.CreateNewCategorylinkLabel.AutoSize = true;
+            this.CreateNewCategorylinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CreateNewCategorylinkLabel.LinkColor = System.Drawing.Color.DodgerBlue;
+            this.CreateNewCategorylinkLabel.Location = new System.Drawing.Point(88, 169);
+            this.CreateNewCategorylinkLabel.Name = "CreateNewCategorylinkLabel";
+            this.CreateNewCategorylinkLabel.Size = new System.Drawing.Size(88, 16);
+            this.CreateNewCategorylinkLabel.TabIndex = 55;
+            this.CreateNewCategorylinkLabel.TabStop = true;
+            this.CreateNewCategorylinkLabel.Text = "Create New";
+            this.CreateNewCategorylinkLabel.VisitedLinkColor = System.Drawing.Color.DarkCyan;
+            this.CreateNewCategorylinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CreateNewCategorylinkLabel_LinkClicked);
+            // 
+            // CreateNewRecipeLinkLabel
+            // 
+            this.CreateNewRecipeLinkLabel.AutoSize = true;
+            this.CreateNewRecipeLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CreateNewRecipeLinkLabel.LinkColor = System.Drawing.Color.DodgerBlue;
+            this.CreateNewRecipeLinkLabel.Location = new System.Drawing.Point(88, 273);
+            this.CreateNewRecipeLinkLabel.Name = "CreateNewRecipeLinkLabel";
+            this.CreateNewRecipeLinkLabel.Size = new System.Drawing.Size(88, 16);
+            this.CreateNewRecipeLinkLabel.TabIndex = 56;
+            this.CreateNewRecipeLinkLabel.TabStop = true;
+            this.CreateNewRecipeLinkLabel.Text = "Create New";
+            this.CreateNewRecipeLinkLabel.VisitedLinkColor = System.Drawing.Color.DarkCyan;
+            this.CreateNewRecipeLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CreateNewRecipeLinkLabel_LinkClicked);
+            // 
+            // ProductRecipeCheckBox
+            // 
+            this.ProductRecipeCheckBox.AutoSize = true;
+            this.ProductRecipeCheckBox.Location = new System.Drawing.Point(16, 214);
+            this.ProductRecipeCheckBox.Name = "ProductRecipeCheckBox";
+            this.ProductRecipeCheckBox.Size = new System.Drawing.Size(129, 22);
+            this.ProductRecipeCheckBox.TabIndex = 46;
+            this.ProductRecipeCheckBox.Text = "Product Recipe";
+            this.ProductRecipeCheckBox.UseVisualStyleBackColor = true;
             // 
             // ProductManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(692, 295);
+            this.ClientSize = new System.Drawing.Size(552, 354);
+            this.Controls.Add(this.CreateNewRecipeLinkLabel);
+            this.Controls.Add(this.CreateNewCategorylinkLabel);
             this.Controls.Add(this.ProductCategoryComboBox);
             this.Controls.Add(this.ProductCategoryLabel);
-            this.Controls.Add(this.EditRecipeButton);
-            this.Controls.Add(this.CreateRecipeButton);
             this.Controls.Add(this.RecipeListLabel);
             this.Controls.Add(this.ProductListLabel);
             this.Controls.Add(this.AssociateRecipeButton);
@@ -204,6 +219,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ProductManagementForm";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Product Management Form";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -211,8 +227,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.CheckBox ProductRecipeCheckBox;
         private System.Windows.Forms.Button ClearProductTextBoxesButton;
         private System.Windows.Forms.Button UpdateProductButton;
         private System.Windows.Forms.Label ProductNameLabel;
@@ -223,9 +237,10 @@
         private System.Windows.Forms.Button AssociateRecipeButton;
         private System.Windows.Forms.Label ProductListLabel;
         private System.Windows.Forms.Label RecipeListLabel;
-        private System.Windows.Forms.Button CreateRecipeButton;
-        private System.Windows.Forms.Button EditRecipeButton;
         private System.Windows.Forms.Label ProductCategoryLabel;
         private System.Windows.Forms.ComboBox ProductCategoryComboBox;
+        private System.Windows.Forms.LinkLabel CreateNewCategorylinkLabel;
+        private System.Windows.Forms.LinkLabel CreateNewRecipeLinkLabel;
+        private System.Windows.Forms.CheckBox ProductRecipeCheckBox;
     }
 }

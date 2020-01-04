@@ -46,11 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAcces\SqlConnection.cs" />
+    <Compile Include="GlobalConfig.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\Helpers\Enums.cs" />
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\PurchaseOrderModel.cs" />
+    <Compile Include="Models\RecipeAndContentModel.cs" />
+    <Compile Include="Models\RecipeContentModel.cs" />
     <Compile Include="Models\SalesOrderModel.cs" />
     <Compile Include="Models\OrderProductModel.cs" />
     <Compile Include="Models\PriceModel.cs" />
@@ -66,6 +69,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
