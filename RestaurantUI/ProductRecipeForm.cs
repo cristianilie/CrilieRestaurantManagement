@@ -215,7 +215,7 @@ namespace RestaurantUI
         }
 
         /// <summary>
-        /// Checks if the new recipe name has at leat 2 characters, and there are at least 2 ingredients or an ingredient with a quantity > 1
+        /// Checks if the new recipe name has at leat 3 characters, and there are at least 2 ingredients or an ingredient with a quantity > 1
         /// </summary>
         /// <returns></returns>
         private bool ValidateForm()

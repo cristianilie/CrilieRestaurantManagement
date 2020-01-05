@@ -34,6 +34,7 @@
             this.TableNameTextBox = new System.Windows.Forms.TextBox();
             this.TablesListBox = new System.Windows.Forms.ListBox();
             this.CreateTableButton = new System.Windows.Forms.Button();
+            this.ExitButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // ClearTableTextBoxButton
@@ -44,6 +45,7 @@
             this.ClearTableTextBoxButton.TabIndex = 35;
             this.ClearTableTextBoxButton.Text = "Clear";
             this.ClearTableTextBoxButton.UseVisualStyleBackColor = true;
+            this.ClearTableTextBoxButton.Click += new System.EventHandler(this.ClearTableTextBoxButton_Click);
             // 
             // UpdateTableButton
             // 
@@ -53,6 +55,7 @@
             this.UpdateTableButton.TabIndex = 29;
             this.UpdateTableButton.Text = "Update";
             this.UpdateTableButton.UseVisualStyleBackColor = true;
+            this.UpdateTableButton.Click += new System.EventHandler(this.UpdateTableButton_Click);
             // 
             // TableNameLabel
             // 
@@ -78,6 +81,7 @@
             this.TablesListBox.Name = "TablesListBox";
             this.TablesListBox.Size = new System.Drawing.Size(181, 130);
             this.TablesListBox.TabIndex = 26;
+            this.TablesListBox.SelectedIndexChanged += new System.EventHandler(this.TablesListBox_SelectedIndexChanged);
             // 
             // CreateTableButton
             // 
@@ -87,6 +91,17 @@
             this.CreateTableButton.TabIndex = 25;
             this.CreateTableButton.Text = "Create";
             this.CreateTableButton.UseVisualStyleBackColor = true;
+            this.CreateTableButton.Click += new System.EventHandler(this.CreateTableButton_Click);
+            // 
+            // ExitButton
+            // 
+            this.ExitButton.Location = new System.Drawing.Point(367, 0);
+            this.ExitButton.Name = "ExitButton";
+            this.ExitButton.Size = new System.Drawing.Size(26, 26);
+            this.ExitButton.TabIndex = 85;
+            this.ExitButton.Text = "X";
+            this.ExitButton.UseVisualStyleBackColor = true;
+            this.ExitButton.Click += new System.EventHandler(this.ExitButton_Click);
             // 
             // TableManagementForm
             // 
@@ -94,6 +109,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ClientSize = new System.Drawing.Size(393, 190);
+            this.Controls.Add(this.ExitButton);
             this.Controls.Add(this.ClearTableTextBoxButton);
             this.Controls.Add(this.UpdateTableButton);
             this.Controls.Add(this.TableNameLabel);
@@ -102,9 +118,11 @@
             this.Controls.Add(this.CreateTableButton);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.Orange;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "TableManagementForm";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Table Management Form";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -119,5 +137,6 @@
         private System.Windows.Forms.TextBox TableNameTextBox;
         private System.Windows.Forms.ListBox TablesListBox;
         private System.Windows.Forms.Button CreateTableButton;
+        private System.Windows.Forms.Button ExitButton;
     }
 }

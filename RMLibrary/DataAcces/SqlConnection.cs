@@ -478,6 +478,21 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
+        /// Returns a list with all the tables(tables to sit @ restaurant in the "Table" table) in database ordered by name
+        /// </summary>
+        /// <returns></returns>
+        public List<TableModel> GetTables_All()
+        {
+            List<TableModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<TableModel>("dbo.spTables_GetAll").ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Creates a new Sales/Purchase Order product association in the database
         /// </summary>      
         /// <param name="connection">The database connection</param>
@@ -517,6 +532,7 @@ namespace RMLibrary.DataAcces
             }
         }
 
+
         /// <summary>
         /// Updates a recipes details in the database
         /// </summary>
@@ -535,6 +551,23 @@ namespace RMLibrary.DataAcces
             }
         }
 
+        /// <summary>
+        /// Updates a table's details in the database
+        /// </summary>
+        /// <param name="model">The table item we want to update</param>
+        /// <returns></returns>
+        public void UpdateTableModel(TableModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Name", model.Name);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spTable_Update", parameters, commandType: CommandType.StoredProcedure);
+
+            }
+        }
         /// <summary>
         /// Updates a products details in the database
         /// </summary>
