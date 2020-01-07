@@ -493,6 +493,37 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
+        /// Returns a list with all the tables(tables to sit @ restaurant in the "Table" table) in database ordered by name
+        /// </summary>
+        /// <returns></returns>
+        public List<CompanyModel> GetCompanies_All()
+        {
+            List<CompanyModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<CompanyModel>("dbo.spCompanies_GetAll").ToList();
+            }
+            return output;
+        }
+
+
+        /// <summary>
+        /// Returns a list with all the entries in the Customer table, ordered by first name
+        /// </summary>
+        /// <returns></returns>
+        public List<CustomerModel> GetCustomers_All()
+        {
+            List<CustomerModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<CustomerModel>("dbo.spCustomers_GetAll").ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Creates a new Sales/Purchase Order product association in the database
         /// </summary>      
         /// <param name="connection">The database connection</param>
@@ -547,7 +578,44 @@ namespace RMLibrary.DataAcces
                 parameters.Add("@Id", model.Id);
 
                 connection.Execute("dbo.spRecipe_Update", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
 
+        /// <summary>
+        /// Updates a company's details in the database
+        /// </summary>
+        /// <param name="model">The company entry we want to update</param>
+        /// <returns></returns>
+        public void UpdateCompanyModel(CompanyModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Name", model.Name);
+                parameters.Add("@Data", model.Data);
+                parameters.Add("@Adress", model.Adress);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spCompany_Update", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
+        /// Updates a customer's details in the database
+        /// </summary>
+        /// <param name="model">The customer entry we want to update</param>
+        /// <returns></returns>
+        public void UpdateCustomerModel(CustomerModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@FirstName", model.FirstName);
+                parameters.Add("@LastName", model.LastName);
+                parameters.Add("@DeliveryAdress", model.DeliveryAdress);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spCustomer_Update", parameters, commandType: CommandType.StoredProcedure);
             }
         }
 

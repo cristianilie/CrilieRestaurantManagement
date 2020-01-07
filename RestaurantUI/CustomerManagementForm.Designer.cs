@@ -81,6 +81,7 @@
             this.UpdateCustomerButton.TabIndex = 18;
             this.UpdateCustomerButton.Text = "Update";
             this.UpdateCustomerButton.UseVisualStyleBackColor = true;
+            this.UpdateCustomerButton.Click += new System.EventHandler(this.UpdateCustomerButton_Click);
             // 
             // FirstNameLabel
             // 
@@ -106,6 +107,7 @@
             this.CustomersListBox.Name = "CustomersListBox";
             this.CustomersListBox.Size = new System.Drawing.Size(181, 238);
             this.CustomersListBox.TabIndex = 15;
+            this.CustomersListBox.SelectedIndexChanged += new System.EventHandler(this.CustomersListBox_SelectedIndexChanged);
             // 
             // CreateCustomerButton
             // 
@@ -115,6 +117,7 @@
             this.CreateCustomerButton.TabIndex = 14;
             this.CreateCustomerButton.Text = "Create";
             this.CreateCustomerButton.UseVisualStyleBackColor = true;
+            this.CreateCustomerButton.Click += new System.EventHandler(this.CreateCustomerButton_Click);
             // 
             // CustomerDetailsLabel
             // 
@@ -133,6 +136,7 @@
             this.ClearCustomerTextBoxesButton.TabIndex = 24;
             this.ClearCustomerTextBoxesButton.Text = "Clear";
             this.ClearCustomerTextBoxesButton.UseVisualStyleBackColor = true;
+            this.ClearCustomerTextBoxesButton.Click += new System.EventHandler(this.ClearCustomerTextBoxesButton_Click);
             // 
             // CustomerManagementForm
             // 
@@ -153,7 +157,7 @@
             this.Controls.Add(this.CreateCustomerButton);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.Firebrick;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "CustomerManagementForm";
             this.ShowIcon = false;
             this.Text = "Customer Management Form";

@@ -13,5 +13,7 @@
 
         public string DeliveryAdress { get; set; }
 
+        public string FullName { get => $"{FirstName} {LastName}"; }
+
     }
 }

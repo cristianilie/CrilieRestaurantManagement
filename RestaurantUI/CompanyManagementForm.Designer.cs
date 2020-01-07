@@ -48,6 +48,7 @@
             this.UpdateCompanyButton.TabIndex = 9;
             this.UpdateCompanyButton.Text = "Update";
             this.UpdateCompanyButton.UseVisualStyleBackColor = true;
+            this.UpdateCompanyButton.Click += new System.EventHandler(this.UpdateCompanyButton_Click);
             // 
             // CompanyNameLabel
             // 
@@ -63,7 +64,7 @@
             this.CompanyNameTextBox.Location = new System.Drawing.Point(15, 40);
             this.CompanyNameTextBox.Name = "CompanyNameTextBox";
             this.CompanyNameTextBox.Size = new System.Drawing.Size(160, 24);
-            this.CompanyNameTextBox.TabIndex = 7;
+            this.CompanyNameTextBox.TabIndex = 0;
             // 
             // CompaniesListBox
             // 
@@ -73,6 +74,7 @@
             this.CompaniesListBox.Name = "CompaniesListBox";
             this.CompaniesListBox.Size = new System.Drawing.Size(181, 220);
             this.CompaniesListBox.TabIndex = 6;
+            this.CompaniesListBox.SelectedIndexChanged += new System.EventHandler(this.CompaniesListBox_SelectedIndexChanged);
             // 
             // CreateCompanyButton
             // 
@@ -82,6 +84,7 @@
             this.CreateCompanyButton.TabIndex = 5;
             this.CreateCompanyButton.Text = "Create";
             this.CreateCompanyButton.UseVisualStyleBackColor = true;
+            this.CreateCompanyButton.Click += new System.EventHandler(this.CreateCompanyButton_Click);
             // 
             // CompanyDataLabel
             // 
@@ -97,7 +100,7 @@
             this.CompanyDataTextBox.Location = new System.Drawing.Point(15, 88);
             this.CompanyDataTextBox.Name = "CompanyDataTextBox";
             this.CompanyDataTextBox.Size = new System.Drawing.Size(160, 24);
-            this.CompanyDataTextBox.TabIndex = 10;
+            this.CompanyDataTextBox.TabIndex = 1;
             // 
             // CompanyAdressLabel
             // 
@@ -113,7 +116,7 @@
             this.CompanyAdressTextBox.Location = new System.Drawing.Point(15, 136);
             this.CompanyAdressTextBox.Name = "CompanyAdressTextBox";
             this.CompanyAdressTextBox.Size = new System.Drawing.Size(160, 24);
-            this.CompanyAdressTextBox.TabIndex = 12;
+            this.CompanyAdressTextBox.TabIndex = 2;
             // 
             // ClearCompanyTextBoxesButton
             // 
@@ -123,6 +126,7 @@
             this.ClearCompanyTextBoxesButton.TabIndex = 14;
             this.ClearCompanyTextBoxesButton.Text = "Clear";
             this.ClearCompanyTextBoxesButton.UseVisualStyleBackColor = true;
+            this.ClearCompanyTextBoxesButton.Click += new System.EventHandler(this.ClearCompanyTextBoxesButton_Click);
             // 
             // CompanyManagementForm
             // 
@@ -142,7 +146,7 @@
             this.Controls.Add(this.CreateCompanyButton);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.Firebrick;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "CompanyManagementForm";
             this.ShowIcon = false;
             this.Text = "Company Management Form";

@@ -14,7 +14,7 @@ namespace RestaurantUI
 {
     public partial class CategoryManagementForm : Form
     {
-        public List<CategoryModel> CategoryList { get; set; } = GlobalConfig.Connection.GetCategories_All();
+        public List<CategoryModel> CategoryList { get; set; }
 
         private ICategoryRequester callingForm;
 
