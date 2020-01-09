@@ -314,6 +314,20 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
+        /// Retrieves a list of all Tax entries 
+        /// </summary>
+        /// <returns></returns>
+        public List<TaxModel> GetTaxes_All()
+        {
+            List<TaxModel> output;
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<TaxModel>("dbo.spTaxes_GetAll", commandType: CommandType.StoredProcedure).ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Creates a new Product Stock association in the database
         /// Reflects the "quantity in stock" of a product
         /// </summary>
@@ -578,6 +592,25 @@ namespace RMLibrary.DataAcces
                 parameters.Add("@Id", model.Id);
 
                 connection.Execute("dbo.spRecipe_Update", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
+        /// Updates a recipes details in the database
+        /// </summary>
+        /// <param name="model">The recipe item we want to update</param>
+        /// <returns></returns>
+        public void UpdateTaxModel(TaxModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Name", model.Name);
+                parameters.Add("@Percent", model.Percent);
+                parameters.Add("@DefaultSelectedTax", model.DefaultSelectedTax);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spTax_Update", parameters, commandType: CommandType.StoredProcedure);
             }
         }
 

@@ -31,13 +31,13 @@
             this.ClearTaxTextBoxesButton = new System.Windows.Forms.Button();
             this.TaxDetailsLabel = new System.Windows.Forms.Label();
             this.TaxPercentLabel = new System.Windows.Forms.Label();
-            this.LastNameTextBox = new System.Windows.Forms.TextBox();
+            this.TaxPercentTextBox = new System.Windows.Forms.TextBox();
             this.UpdateTaxButton = new System.Windows.Forms.Button();
             this.TaxDisplayNameLabel = new System.Windows.Forms.Label();
-            this.FirstNameTextBox = new System.Windows.Forms.TextBox();
+            this.TaxNameTextBox = new System.Windows.Forms.TextBox();
             this.TaxesListBox = new System.Windows.Forms.ListBox();
             this.CreateTaxButton = new System.Windows.Forms.Button();
-            this.TaxIsDefaultTaxCheckBox = new System.Windows.Forms.CheckBox();
+            this.IsDefaultTaxCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // ClearTaxTextBoxesButton
@@ -48,6 +48,7 @@
             this.ClearTaxTextBoxesButton.TabIndex = 35;
             this.ClearTaxTextBoxesButton.Text = "Clear";
             this.ClearTaxTextBoxesButton.UseVisualStyleBackColor = true;
+            this.ClearTaxTextBoxesButton.Click += new System.EventHandler(this.ClearTaxTextBoxesButton_Click);
             // 
             // TaxDetailsLabel
             // 
@@ -67,12 +68,12 @@
             this.TaxPercentLabel.TabIndex = 31;
             this.TaxPercentLabel.Text = "Percent";
             // 
-            // LastNameTextBox
+            // TaxPercentTextBox
             // 
-            this.LastNameTextBox.Location = new System.Drawing.Point(16, 105);
-            this.LastNameTextBox.Name = "LastNameTextBox";
-            this.LastNameTextBox.Size = new System.Drawing.Size(160, 24);
-            this.LastNameTextBox.TabIndex = 30;
+            this.TaxPercentTextBox.Location = new System.Drawing.Point(16, 105);
+            this.TaxPercentTextBox.Name = "TaxPercentTextBox";
+            this.TaxPercentTextBox.Size = new System.Drawing.Size(160, 24);
+            this.TaxPercentTextBox.TabIndex = 30;
             // 
             // UpdateTaxButton
             // 
@@ -82,6 +83,7 @@
             this.UpdateTaxButton.TabIndex = 29;
             this.UpdateTaxButton.Text = "Update";
             this.UpdateTaxButton.UseVisualStyleBackColor = true;
+            this.UpdateTaxButton.Click += new System.EventHandler(this.UpdateTaxButton_Click);
             // 
             // TaxDisplayNameLabel
             // 
@@ -92,12 +94,12 @@
             this.TaxDisplayNameLabel.TabIndex = 28;
             this.TaxDisplayNameLabel.Text = "Display Name";
             // 
-            // FirstNameTextBox
+            // TaxNameTextBox
             // 
-            this.FirstNameTextBox.Location = new System.Drawing.Point(16, 57);
-            this.FirstNameTextBox.Name = "FirstNameTextBox";
-            this.FirstNameTextBox.Size = new System.Drawing.Size(160, 24);
-            this.FirstNameTextBox.TabIndex = 27;
+            this.TaxNameTextBox.Location = new System.Drawing.Point(16, 57);
+            this.TaxNameTextBox.Name = "TaxNameTextBox";
+            this.TaxNameTextBox.Size = new System.Drawing.Size(160, 24);
+            this.TaxNameTextBox.TabIndex = 27;
             // 
             // TaxesListBox
             // 
@@ -107,6 +109,7 @@
             this.TaxesListBox.Name = "TaxesListBox";
             this.TaxesListBox.Size = new System.Drawing.Size(181, 238);
             this.TaxesListBox.TabIndex = 26;
+            this.TaxesListBox.SelectedIndexChanged += new System.EventHandler(this.TaxesListBox_SelectedIndexChanged);
             // 
             // CreateTaxButton
             // 
@@ -116,16 +119,17 @@
             this.CreateTaxButton.TabIndex = 25;
             this.CreateTaxButton.Text = "Create";
             this.CreateTaxButton.UseVisualStyleBackColor = true;
+            this.CreateTaxButton.Click += new System.EventHandler(this.CreateTaxButton_Click);
             // 
-            // TaxIsDefaultTaxCheckBox
+            // IsDefaultTaxCheckBox
             // 
-            this.TaxIsDefaultTaxCheckBox.AutoSize = true;
-            this.TaxIsDefaultTaxCheckBox.Location = new System.Drawing.Point(16, 145);
-            this.TaxIsDefaultTaxCheckBox.Name = "TaxIsDefaultTaxCheckBox";
-            this.TaxIsDefaultTaxCheckBox.Size = new System.Drawing.Size(116, 22);
-            this.TaxIsDefaultTaxCheckBox.TabIndex = 36;
-            this.TaxIsDefaultTaxCheckBox.Text = "Is Default Tax";
-            this.TaxIsDefaultTaxCheckBox.UseVisualStyleBackColor = true;
+            this.IsDefaultTaxCheckBox.AutoSize = true;
+            this.IsDefaultTaxCheckBox.Location = new System.Drawing.Point(16, 145);
+            this.IsDefaultTaxCheckBox.Name = "IsDefaultTaxCheckBox";
+            this.IsDefaultTaxCheckBox.Size = new System.Drawing.Size(116, 22);
+            this.IsDefaultTaxCheckBox.TabIndex = 36;
+            this.IsDefaultTaxCheckBox.Text = "Is Default Tax";
+            this.IsDefaultTaxCheckBox.UseVisualStyleBackColor = true;
             // 
             // TaxManagementForm
             // 
@@ -133,19 +137,19 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(396, 290);
-            this.Controls.Add(this.TaxIsDefaultTaxCheckBox);
+            this.Controls.Add(this.IsDefaultTaxCheckBox);
             this.Controls.Add(this.ClearTaxTextBoxesButton);
             this.Controls.Add(this.TaxDetailsLabel);
             this.Controls.Add(this.TaxPercentLabel);
-            this.Controls.Add(this.LastNameTextBox);
+            this.Controls.Add(this.TaxPercentTextBox);
             this.Controls.Add(this.UpdateTaxButton);
             this.Controls.Add(this.TaxDisplayNameLabel);
-            this.Controls.Add(this.FirstNameTextBox);
+            this.Controls.Add(this.TaxNameTextBox);
             this.Controls.Add(this.TaxesListBox);
             this.Controls.Add(this.CreateTaxButton);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.Tomato;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "TaxManagementForm";
             this.ShowIcon = false;
             this.Text = "Tax Management Form";
@@ -159,12 +163,12 @@
         private System.Windows.Forms.Button ClearTaxTextBoxesButton;
         private System.Windows.Forms.Label TaxDetailsLabel;
         private System.Windows.Forms.Label TaxPercentLabel;
-        private System.Windows.Forms.TextBox LastNameTextBox;
+        private System.Windows.Forms.TextBox TaxPercentTextBox;
         private System.Windows.Forms.Button UpdateTaxButton;
         private System.Windows.Forms.Label TaxDisplayNameLabel;
-        private System.Windows.Forms.TextBox FirstNameTextBox;
+        private System.Windows.Forms.TextBox TaxNameTextBox;
         private System.Windows.Forms.ListBox TaxesListBox;
         private System.Windows.Forms.Button CreateTaxButton;
-        private System.Windows.Forms.CheckBox TaxIsDefaultTaxCheckBox;
+        private System.Windows.Forms.CheckBox IsDefaultTaxCheckBox;
     }
 }
