@@ -99,6 +99,7 @@ namespace RMLibrary.DataAcces
                 parameters.Add("@ProductId", model.ProductId);
                 parameters.Add("@Cost", model.Cost);
                 parameters.Add("@SalesPrice", model.SalesPrice);
+                parameters.Add("@CurrentlyActivePrice", model.CurrentlyActivePrice);
                 parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                 connection.Execute("dbo.spPrice_Insert", parameters, commandType: CommandType.StoredProcedure);
@@ -153,19 +154,32 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
-        /// Deletes a Product Recipe entity from the database
+        /// Deletes a Product Recipe entry from the database
         /// </summary>
         /// <param name="model">The Product Recipe about to be deleted</param>
         /// <returns></returns>
-        public RecipeModel DeleteRecipe(RecipeModel model)
+        public void DeleteRecipe(RecipeModel model)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@Id", model.Id);
                 connection.Execute("dbo.spRecipe_Delete", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
 
-                return model;
+        /// <summary>
+        /// Deletes a Product Price entry from the database
+        /// </summary>
+        /// <param name="model">The Product Price about to be deleted</param>
+        /// <returns></returns>
+        public void DeleteProductPrice(PriceModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Id", model.Id);
+                connection.Execute("dbo.spPrice_Delete", parameters, commandType: CommandType.StoredProcedure);
             }
         }
 
@@ -309,6 +323,20 @@ namespace RMLibrary.DataAcces
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
             {
                 output = connection.Query<ProductCategoryModel>("dbo.spProductCategory_GetAll", commandType: CommandType.StoredProcedure).ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Retrieves a list of all product prices 
+        /// </summary>
+        /// <returns></returns>
+        public List<PriceModel> GetPrices_All()
+        {
+            List<PriceModel> output;
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<PriceModel>("dbo.spPrices_GetAll", commandType: CommandType.StoredProcedure).ToList();
             }
             return output;
         }
@@ -594,6 +622,27 @@ namespace RMLibrary.DataAcces
                 connection.Execute("dbo.spRecipe_Update", parameters, commandType: CommandType.StoredProcedure);
             }
         }
+
+        /// <summary>
+        /// Updates a a product price entry in the database
+        /// </summary>
+        /// <param name="model">The product price we want to update</param>
+        /// <returns></returns>
+        public void UpdatePriceModel(PriceModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", model.ProductId);
+                parameters.Add("@Cost", model.Cost);
+                parameters.Add("@SalesPrice", model.SalesPrice);
+                parameters.Add("@CurrentlyActivePrice", model.CurrentlyActivePrice);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spPrice_Update", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
 
         /// <summary>
         /// Updates a recipes details in the database

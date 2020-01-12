@@ -16,7 +16,7 @@ namespace RestaurantUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new TaxManagementForm());
+            Application.Run(new PricingManagementForm());
             //Application.Run(new RestaurantManagementForm());
 
         }

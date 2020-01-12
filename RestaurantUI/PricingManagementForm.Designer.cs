@@ -32,12 +32,11 @@
             this.ProductsListBox = new System.Windows.Forms.ListBox();
             this.PriceTextBox = new System.Windows.Forms.TextBox();
             this.AssociatePriceButton = new System.Windows.Forms.Button();
-            this.ImportPriceListButton = new System.Windows.Forms.Button();
-            this.PriceListPathLabel = new System.Windows.Forms.Label();
-            this.PriceListFilePathLabel = new System.Windows.Forms.Label();
             this.ClearTextBoxesButton = new System.Windows.Forms.Button();
             this.UpdateProductPriceButton = new System.Windows.Forms.Button();
-            this.FinishPriceImportButton = new System.Windows.Forms.Button();
+            this.SelectedProductPricesListBox = new System.Windows.Forms.ListBox();
+            this.IsCurrentlyActivePriceCheckBox = new System.Windows.Forms.CheckBox();
+            this.DeletePriceButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SelectProductLabel
@@ -55,12 +54,13 @@
             this.ProductsListBox.ItemHeight = 18;
             this.ProductsListBox.Location = new System.Drawing.Point(12, 27);
             this.ProductsListBox.Name = "ProductsListBox";
-            this.ProductsListBox.Size = new System.Drawing.Size(164, 184);
+            this.ProductsListBox.Size = new System.Drawing.Size(143, 238);
             this.ProductsListBox.TabIndex = 59;
+            this.ProductsListBox.SelectedIndexChanged += new System.EventHandler(this.ProductsListBox_SelectedIndexChanged);
             // 
             // PriceTextBox
             // 
-            this.PriceTextBox.Location = new System.Drawing.Point(221, 25);
+            this.PriceTextBox.Location = new System.Drawing.Point(258, 27);
             this.PriceTextBox.Name = "PriceTextBox";
             this.PriceTextBox.Size = new System.Drawing.Size(89, 24);
             this.PriceTextBox.TabIndex = 61;
@@ -68,46 +68,19 @@
             // AssociatePriceButton
             // 
             this.AssociatePriceButton.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.AssociatePriceButton.Location = new System.Drawing.Point(221, 56);
+            this.AssociatePriceButton.Location = new System.Drawing.Point(258, 58);
             this.AssociatePriceButton.Name = "AssociatePriceButton";
-            this.AssociatePriceButton.Size = new System.Drawing.Size(159, 30);
+            this.AssociatePriceButton.Size = new System.Drawing.Size(125, 30);
             this.AssociatePriceButton.TabIndex = 62;
             this.AssociatePriceButton.Text = "Associate Price";
             this.AssociatePriceButton.UseVisualStyleBackColor = false;
-            // 
-            // ImportPriceListButton
-            // 
-            this.ImportPriceListButton.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ImportPriceListButton.Location = new System.Drawing.Point(221, 120);
-            this.ImportPriceListButton.Name = "ImportPriceListButton";
-            this.ImportPriceListButton.Size = new System.Drawing.Size(159, 30);
-            this.ImportPriceListButton.TabIndex = 63;
-            this.ImportPriceListButton.Text = "Import Price List";
-            this.ImportPriceListButton.UseVisualStyleBackColor = false;
-            // 
-            // PriceListPathLabel
-            // 
-            this.PriceListPathLabel.AutoSize = true;
-            this.PriceListPathLabel.Location = new System.Drawing.Point(218, 162);
-            this.PriceListPathLabel.Name = "PriceListPathLabel";
-            this.PriceListPathLabel.Size = new System.Drawing.Size(111, 18);
-            this.PriceListPathLabel.TabIndex = 64;
-            this.PriceListPathLabel.Text = "Price List Path: ";
-            // 
-            // PriceListFilePathLabel
-            // 
-            this.PriceListFilePathLabel.AutoSize = true;
-            this.PriceListFilePathLabel.Location = new System.Drawing.Point(335, 162);
-            this.PriceListFilePathLabel.Name = "PriceListFilePathLabel";
-            this.PriceListFilePathLabel.Size = new System.Drawing.Size(20, 18);
-            this.PriceListFilePathLabel.TabIndex = 65;
-            this.PriceListFilePathLabel.Text = "...";
+            this.AssociatePriceButton.Click += new System.EventHandler(this.AssociatePriceButton_Click);
             // 
             // ClearTextBoxesButton
             // 
-            this.ClearTextBoxesButton.Location = new System.Drawing.Point(148, 227);
+            this.ClearTextBoxesButton.Location = new System.Drawing.Point(114, 272);
             this.ClearTextBoxesButton.Name = "ClearTextBoxesButton";
-            this.ClearTextBoxesButton.Size = new System.Drawing.Size(127, 28);
+            this.ClearTextBoxesButton.Size = new System.Drawing.Size(96, 28);
             this.ClearTextBoxesButton.TabIndex = 68;
             this.ClearTextBoxesButton.Text = "Clear";
             this.ClearTextBoxesButton.UseVisualStyleBackColor = true;
@@ -115,41 +88,62 @@
             // 
             // UpdateProductPriceButton
             // 
-            this.UpdateProductPriceButton.Location = new System.Drawing.Point(15, 227);
+            this.UpdateProductPriceButton.Location = new System.Drawing.Point(12, 272);
             this.UpdateProductPriceButton.Name = "UpdateProductPriceButton";
-            this.UpdateProductPriceButton.Size = new System.Drawing.Size(127, 28);
+            this.UpdateProductPriceButton.Size = new System.Drawing.Size(96, 28);
             this.UpdateProductPriceButton.TabIndex = 67;
             this.UpdateProductPriceButton.Text = "Update";
             this.UpdateProductPriceButton.UseVisualStyleBackColor = true;
+            this.UpdateProductPriceButton.Click += new System.EventHandler(this.UpdateProductPriceButton_Click);
             // 
-            // FinishPriceImportButton
+            // SelectedProductPricesListBox
             // 
-            this.FinishPriceImportButton.Location = new System.Drawing.Point(221, 183);
-            this.FinishPriceImportButton.Name = "FinishPriceImportButton";
-            this.FinishPriceImportButton.Size = new System.Drawing.Size(159, 28);
-            this.FinishPriceImportButton.TabIndex = 66;
-            this.FinishPriceImportButton.Text = "Finish Import";
-            this.FinishPriceImportButton.UseVisualStyleBackColor = true;
+            this.SelectedProductPricesListBox.FormattingEnabled = true;
+            this.SelectedProductPricesListBox.ItemHeight = 18;
+            this.SelectedProductPricesListBox.Location = new System.Drawing.Point(161, 27);
+            this.SelectedProductPricesListBox.Name = "SelectedProductPricesListBox";
+            this.SelectedProductPricesListBox.Size = new System.Drawing.Size(91, 238);
+            this.SelectedProductPricesListBox.TabIndex = 69;
+            this.SelectedProductPricesListBox.SelectedIndexChanged += new System.EventHandler(this.SelectedProductPricesListBox_SelectedIndexChanged);
+            // 
+            // IsCurrentlyActivePriceCheckBox
+            // 
+            this.IsCurrentlyActivePriceCheckBox.AutoSize = true;
+            this.IsCurrentlyActivePriceCheckBox.Location = new System.Drawing.Point(258, 94);
+            this.IsCurrentlyActivePriceCheckBox.Name = "IsCurrentlyActivePriceCheckBox";
+            this.IsCurrentlyActivePriceCheckBox.Size = new System.Drawing.Size(167, 22);
+            this.IsCurrentlyActivePriceCheckBox.TabIndex = 70;
+            this.IsCurrentlyActivePriceCheckBox.Text = "Currently Active Price";
+            this.IsCurrentlyActivePriceCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // DeletePriceButton
+            // 
+            this.DeletePriceButton.Location = new System.Drawing.Point(216, 272);
+            this.DeletePriceButton.Name = "DeletePriceButton";
+            this.DeletePriceButton.Size = new System.Drawing.Size(96, 28);
+            this.DeletePriceButton.TabIndex = 71;
+            this.DeletePriceButton.Text = "Delete Price";
+            this.DeletePriceButton.UseVisualStyleBackColor = true;
+            this.DeletePriceButton.Click += new System.EventHandler(this.DeletePriceButton_Click);
             // 
             // PricingManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(421, 262);
+            this.ClientSize = new System.Drawing.Size(426, 315);
+            this.Controls.Add(this.DeletePriceButton);
+            this.Controls.Add(this.IsCurrentlyActivePriceCheckBox);
+            this.Controls.Add(this.SelectedProductPricesListBox);
             this.Controls.Add(this.ClearTextBoxesButton);
             this.Controls.Add(this.UpdateProductPriceButton);
-            this.Controls.Add(this.FinishPriceImportButton);
-            this.Controls.Add(this.PriceListFilePathLabel);
-            this.Controls.Add(this.PriceListPathLabel);
-            this.Controls.Add(this.ImportPriceListButton);
             this.Controls.Add(this.AssociatePriceButton);
             this.Controls.Add(this.PriceTextBox);
             this.Controls.Add(this.SelectProductLabel);
             this.Controls.Add(this.ProductsListBox);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.SeaGreen;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "PricingManagementForm";
             this.ShowIcon = false;
             this.Text = "Pricing Management Form";
@@ -164,11 +158,10 @@
         private System.Windows.Forms.ListBox ProductsListBox;
         private System.Windows.Forms.TextBox PriceTextBox;
         private System.Windows.Forms.Button AssociatePriceButton;
-        private System.Windows.Forms.Button ImportPriceListButton;
-        private System.Windows.Forms.Label PriceListPathLabel;
-        private System.Windows.Forms.Label PriceListFilePathLabel;
         private System.Windows.Forms.Button ClearTextBoxesButton;
         private System.Windows.Forms.Button UpdateProductPriceButton;
-        private System.Windows.Forms.Button FinishPriceImportButton;
+        private System.Windows.Forms.ListBox SelectedProductPricesListBox;
+        private System.Windows.Forms.CheckBox IsCurrentlyActivePriceCheckBox;
+        private System.Windows.Forms.Button DeletePriceButton;
     }
 }
