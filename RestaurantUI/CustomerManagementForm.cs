@@ -58,7 +58,7 @@ namespace RestaurantUI
             CustomerList = GlobalConfig.Connection.GetCustomers_All();
 
             CustomersListBox.DataSource = null;
-            CustomersListBox.DisplayMember = "FullName";
+            CustomersListBox.DisplayMember = "Name";
             CustomersListBox.DataSource = CustomerList;
 
             ResetForm();

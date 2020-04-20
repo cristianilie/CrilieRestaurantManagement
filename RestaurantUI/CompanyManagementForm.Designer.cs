@@ -38,13 +38,16 @@
             this.CompanyAdressLabel = new System.Windows.Forms.Label();
             this.CompanyAdressTextBox = new System.Windows.Forms.TextBox();
             this.ClearCompanyTextBoxesButton = new System.Windows.Forms.Button();
+            this.DeliveryAdressLabel = new System.Windows.Forms.Label();
+            this.DeliveryAdressTextBox = new System.Windows.Forms.TextBox();
+            this.SelectCompanyButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // UpdateCompanyButton
             // 
-            this.UpdateCompanyButton.Location = new System.Drawing.Point(15, 200);
+            this.UpdateCompanyButton.Location = new System.Drawing.Point(106, 214);
             this.UpdateCompanyButton.Name = "UpdateCompanyButton";
-            this.UpdateCompanyButton.Size = new System.Drawing.Size(160, 28);
+            this.UpdateCompanyButton.Size = new System.Drawing.Size(85, 28);
             this.UpdateCompanyButton.TabIndex = 9;
             this.UpdateCompanyButton.Text = "Update";
             this.UpdateCompanyButton.UseVisualStyleBackColor = true;
@@ -70,17 +73,17 @@
             // 
             this.CompaniesListBox.FormattingEnabled = true;
             this.CompaniesListBox.ItemHeight = 18;
-            this.CompaniesListBox.Location = new System.Drawing.Point(199, 26);
+            this.CompaniesListBox.Location = new System.Drawing.Point(201, 12);
             this.CompaniesListBox.Name = "CompaniesListBox";
-            this.CompaniesListBox.Size = new System.Drawing.Size(181, 220);
+            this.CompaniesListBox.Size = new System.Drawing.Size(172, 184);
             this.CompaniesListBox.TabIndex = 6;
             this.CompaniesListBox.SelectedIndexChanged += new System.EventHandler(this.CompaniesListBox_SelectedIndexChanged);
             // 
             // CreateCompanyButton
             // 
-            this.CreateCompanyButton.Location = new System.Drawing.Point(15, 166);
+            this.CreateCompanyButton.Location = new System.Drawing.Point(15, 214);
             this.CreateCompanyButton.Name = "CreateCompanyButton";
-            this.CreateCompanyButton.Size = new System.Drawing.Size(160, 28);
+            this.CreateCompanyButton.Size = new System.Drawing.Size(85, 28);
             this.CreateCompanyButton.TabIndex = 5;
             this.CreateCompanyButton.Text = "Create";
             this.CreateCompanyButton.UseVisualStyleBackColor = true;
@@ -120,20 +123,49 @@
             // 
             // ClearCompanyTextBoxesButton
             // 
-            this.ClearCompanyTextBoxesButton.Location = new System.Drawing.Point(15, 234);
+            this.ClearCompanyTextBoxesButton.Location = new System.Drawing.Point(288, 214);
             this.ClearCompanyTextBoxesButton.Name = "ClearCompanyTextBoxesButton";
-            this.ClearCompanyTextBoxesButton.Size = new System.Drawing.Size(160, 28);
+            this.ClearCompanyTextBoxesButton.Size = new System.Drawing.Size(85, 28);
             this.ClearCompanyTextBoxesButton.TabIndex = 14;
             this.ClearCompanyTextBoxesButton.Text = "Clear";
             this.ClearCompanyTextBoxesButton.UseVisualStyleBackColor = true;
             this.ClearCompanyTextBoxesButton.Click += new System.EventHandler(this.ClearCompanyTextBoxesButton_Click);
+            // 
+            // DeliveryAdressLabel
+            // 
+            this.DeliveryAdressLabel.AutoSize = true;
+            this.DeliveryAdressLabel.Location = new System.Drawing.Point(12, 163);
+            this.DeliveryAdressLabel.Name = "DeliveryAdressLabel";
+            this.DeliveryAdressLabel.Size = new System.Drawing.Size(110, 18);
+            this.DeliveryAdressLabel.TabIndex = 16;
+            this.DeliveryAdressLabel.Text = "Delivery Adress";
+            // 
+            // DeliveryAdressTextBox
+            // 
+            this.DeliveryAdressTextBox.Location = new System.Drawing.Point(15, 184);
+            this.DeliveryAdressTextBox.Name = "DeliveryAdressTextBox";
+            this.DeliveryAdressTextBox.Size = new System.Drawing.Size(160, 24);
+            this.DeliveryAdressTextBox.TabIndex = 15;
+            // 
+            // SelectCompanyButton
+            // 
+            this.SelectCompanyButton.Location = new System.Drawing.Point(197, 214);
+            this.SelectCompanyButton.Name = "SelectCompanyButton";
+            this.SelectCompanyButton.Size = new System.Drawing.Size(85, 28);
+            this.SelectCompanyButton.TabIndex = 17;
+            this.SelectCompanyButton.Text = "Select";
+            this.SelectCompanyButton.UseVisualStyleBackColor = true;
+            this.SelectCompanyButton.Click += new System.EventHandler(this.SelectCompanyButton_Click);
             // 
             // CompanyManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(394, 267);
+            this.ClientSize = new System.Drawing.Size(387, 251);
+            this.Controls.Add(this.SelectCompanyButton);
+            this.Controls.Add(this.DeliveryAdressLabel);
+            this.Controls.Add(this.DeliveryAdressTextBox);
             this.Controls.Add(this.ClearCompanyTextBoxesButton);
             this.Controls.Add(this.CompanyAdressLabel);
             this.Controls.Add(this.CompanyAdressTextBox);
@@ -167,5 +199,8 @@
         private System.Windows.Forms.Label CompanyAdressLabel;
         private System.Windows.Forms.TextBox CompanyAdressTextBox;
         private System.Windows.Forms.Button ClearCompanyTextBoxesButton;
+        private System.Windows.Forms.Label DeliveryAdressLabel;
+        private System.Windows.Forms.TextBox DeliveryAdressTextBox;
+        private System.Windows.Forms.Button SelectCompanyButton;
     }
 }

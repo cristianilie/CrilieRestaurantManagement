@@ -14,15 +14,23 @@ namespace RestaurantUI
 {
     public partial class CompanyManagementForm : Form
     {
+        private ICompanyRequester callingForm;
         public List<CompanyModel> CompaniesList { get; set; }
 
         /// <summary>
-        /// Default constructor
+        /// Overloaded constructor that recieves data from the calling form or uses the null default parameter if its not called by a form
+        /// that doesnt implements the ICompanyRequester interface
         /// </summary>
-        public CompanyManagementForm()
+        /// <param name="caller"></param>
+        public CompanyManagementForm(ICompanyRequester caller = null)
         {
             InitializeComponent();
             InitializeCompaniesList();
+
+            if (caller != null)
+            {
+                callingForm = caller;
+            }
         }
 
         /// <summary>
@@ -34,7 +42,12 @@ namespace RestaurantUI
         {
             if (ValidateForm())
             {
-                CompanyModel company = new CompanyModel { Name = CompanyNameTextBox.Text, Data = CompanyDataTextBox.Text, Adress = CompanyAdressTextBox.Text };
+                CompanyModel company = new CompanyModel { 
+                    Name = CompanyNameTextBox.Text, 
+                    Data = CompanyDataTextBox.Text, 
+                    Adress = CompanyAdressTextBox.Text, 
+                    DeliveryAdress = DeliveryAdressTextBox.Text 
+                };
                 GlobalConfig.Connection.CreateCompany(company);
                 InitializeCompaniesList();
             }
@@ -90,6 +103,7 @@ namespace RestaurantUI
             CompanyNameTextBox.Text = "";
             CompanyDataTextBox.Text = "";
             CompanyAdressTextBox.Text = "";
+            DeliveryAdressTextBox.Text = "";
         }
 
         /// <summary>
@@ -122,6 +136,8 @@ namespace RestaurantUI
                 selectedCompany.Name = CompanyNameTextBox.Text;
                 selectedCompany.Data = CompanyDataTextBox.Text;
                 selectedCompany.Adress = CompanyAdressTextBox.Text;
+                selectedCompany.DeliveryAdress = DeliveryAdressTextBox.Text;
+
 
                 GlobalConfig.Connection.UpdateCompanyModel(selectedCompany);
             }
@@ -136,6 +152,17 @@ namespace RestaurantUI
         private void ClearCompanyTextBoxesButton_Click(object sender, EventArgs e)
         {
             ResetForm();
+        }
+
+        private void SelectCompanyButton_Click(object sender, EventArgs e)
+        {
+            CompanyModel selectedCompany = (CompanyModel)CompaniesListBox.SelectedItem;
+
+            if (selectedCompany != null)
+            {
+                callingForm.CompanySelected(selectedCompany);
+                this.Close();
+            }
         }
     }
 }

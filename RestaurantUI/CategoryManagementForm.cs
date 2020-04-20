@@ -19,6 +19,11 @@ namespace RestaurantUI
         private ICategoryRequester callingForm;
 
         private CategoryModel lastCategoryCreated = new CategoryModel();
+
+        /// <summary>
+        /// Overloaded constructor that recieves data from the calling form
+        /// </summary>
+        /// <param name="caller"></param>
         public CategoryManagementForm(ICategoryRequester caller)
         {
             InitializeComponent();

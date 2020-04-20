@@ -63,25 +63,56 @@
     <Compile Include="CompanyManagementForm.Designer.cs">
       <DependentUpon>CompanyManagementForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CreateNewSalesOrderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateNewSalesOrderForm.Designer.cs">
+      <DependentUpon>CreateNewSalesOrderForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomerManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CustomerManagementForm.Designer.cs">
       <DependentUpon>CustomerManagementForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FinishSalesOrderPreviewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FinishSalesOrderPreviewForm.Designer.cs">
+      <DependentUpon>FinishSalesOrderPreviewForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ICategoryRequester.cs" />
+    <Compile Include="ICompanyRequester.cs" />
+    <Compile Include="IDeliveryMethodRequester.cs" />
+    <Compile Include="IDocumentRequester.cs" />
+    <Compile Include="IPaymentTermRequester.cs" />
+    <Compile Include="IProductRequester.cs" />
     <Compile Include="IRecipeRequester.cs" />
+    <Compile Include="ISalesOrderPreviewer.cs" />
+    <Compile Include="ISalesPriceUpdater.cs" />
+    <Compile Include="PaymentTermsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PaymentTermsForm.Designer.cs">
+      <DependentUpon>PaymentTermsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProductRecipeForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ProductRecipeForm.Designer.cs">
       <DependentUpon>ProductRecipeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="PricingManagementForm.cs">
+    <Compile Include="PurchasePriceManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PricingManagementForm.Designer.cs">
-      <DependentUpon>PricingManagementForm.cs</DependentUpon>
+    <Compile Include="PurchasePriceManagementForm.Designer.cs">
+      <DependentUpon>PurchasePriceManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SalesPriceManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SalesPriceManagementForm.Designer.cs">
+      <DependentUpon>SalesPriceManagementForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ProductManagementForm.cs">
       <SubType>Form</SubType>
@@ -97,6 +128,18 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchPurchaseDocumentForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchPurchaseDocumentForm.Designer.cs">
+      <DependentUpon>SearchPurchaseDocumentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectProductForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectProductForm.Designer.cs">
+      <DependentUpon>SelectProductForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TableManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,14 +158,26 @@
     <EmbeddedResource Include="CompanyManagementForm.resx">
       <DependentUpon>CompanyManagementForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CreateNewSalesOrderForm.resx">
+      <DependentUpon>CreateNewSalesOrderForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomerManagementForm.resx">
       <DependentUpon>CustomerManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FinishSalesOrderPreviewForm.resx">
+      <DependentUpon>FinishSalesOrderPreviewForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PaymentTermsForm.resx">
+      <DependentUpon>PaymentTermsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProductRecipeForm.resx">
       <DependentUpon>ProductRecipeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PricingManagementForm.resx">
-      <DependentUpon>PricingManagementForm.cs</DependentUpon>
+    <EmbeddedResource Include="PurchasePriceManagementForm.resx">
+      <DependentUpon>PurchasePriceManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SalesPriceManagementForm.resx">
+      <DependentUpon>SalesPriceManagementForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProductManagementForm.resx">
       <DependentUpon>ProductManagementForm.cs</DependentUpon>
@@ -140,6 +195,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SearchPurchaseDocumentForm.resx">
+      <DependentUpon>SearchPurchaseDocumentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectProductForm.resx">
+      <DependentUpon>SelectProductForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TableManagementForm.resx">
       <DependentUpon>TableManagementForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -167,6 +228,9 @@
       <Project>{c7c99b8b-4ba3-46c7-bf47-6f2b08605a15}</Project>
       <Name>RMLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -11,5 +11,7 @@ namespace RMLibrary
     {
         public static SqlConnection Connection { get; private set; } = new SqlConnection();
 
+        public static DataValidation Validation { get; private set; } = new DataValidation();
+
     }
 }

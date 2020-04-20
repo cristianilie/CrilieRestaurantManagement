@@ -31,15 +31,18 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RestaurantManagementForm));
             this.RMSTabControl = new System.Windows.Forms.TabControl();
             this.SalesTabPage = new System.Windows.Forms.TabPage();
+            this.EditSalesPriceLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.noActivePriceLabel = new System.Windows.Forms.Label();
+            this.ClearProductCategFilterButton = new System.Windows.Forms.Button();
             this.DeleteOrderButton = new System.Windows.Forms.Button();
             this.CreateNewOrderButton = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
             this.ProductTaxComboBox = new System.Windows.Forms.ComboBox();
             this.OrderTaxLabel = new System.Windows.Forms.Label();
             this.SelectedOrderTotalGroupBox = new System.Windows.Forms.GroupBox();
-            this.TotalAmountLabel = new System.Windows.Forms.Label();
-            this.TaxTotalAmountLabel = new System.Windows.Forms.Label();
-            this.GrandTotalAmountLabel = new System.Windows.Forms.Label();
+            this.GrandTotalAmountSOTextBox = new System.Windows.Forms.TextBox();
+            this.TaxTotalAmountSOTextBox = new System.Windows.Forms.TextBox();
+            this.TotalAmountSOTextBox = new System.Windows.Forms.TextBox();
             this.GrandTotalLabel = new System.Windows.Forms.Label();
             this.TaxTotalLabel = new System.Windows.Forms.Label();
             this.TotalLabel = new System.Windows.Forms.Label();
@@ -71,10 +74,13 @@
             this.ActiveOrdersListBox = new System.Windows.Forms.ListBox();
             this.ActiveOrdersLabel = new System.Windows.Forms.Label();
             this.PurchasingTabPage = new System.Windows.Forms.TabPage();
+            this.CreateNewPaymentTermLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.PaymentTermLabel = new System.Windows.Forms.Label();
+            this.PaymentTermComboBox = new System.Windows.Forms.ComboBox();
+            this.ClearButton = new System.Windows.Forms.Button();
             this.POrderTaxLabel = new System.Windows.Forms.Label();
             this.POrderTaxFilterComboBox = new System.Windows.Forms.ComboBox();
             this.PurchaseOrderLabel = new System.Windows.Forms.Label();
-            this.PurchasingDisplayOptionsLabel = new System.Windows.Forms.Label();
             this.SearchDocumentButton = new System.Windows.Forms.Button();
             this.PInvoicesCheckBox = new System.Windows.Forms.CheckBox();
             this.POrdersCheckBox = new System.Windows.Forms.CheckBox();
@@ -90,27 +96,24 @@
             this.POrderTotalLabel = new System.Windows.Forms.Label();
             this.POrderContentDataGridView = new System.Windows.Forms.DataGridView();
             this.OrderDetailsGroupBox = new System.Windows.Forms.GroupBox();
+            this.InvoiceDateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.DocumentDueDateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.DocumentPostingDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.OrderNumberTextBox = new System.Windows.Forms.TextBox();
             this.OrderNumberLabel = new System.Windows.Forms.Label();
-            this.InvoiceDateTextBox = new System.Windows.Forms.TextBox();
-            this.DocumentDueDateTextBox = new System.Windows.Forms.TextBox();
             this.DocumentDateLabel = new System.Windows.Forms.Label();
             this.DocumentDueDateLabel = new System.Windows.Forms.Label();
             this.DocumentPostingDateLabel = new System.Windows.Forms.Label();
-            this.DocumentPostingDateTextBox = new System.Windows.Forms.TextBox();
             this.BusinessPartnerInfoGroupBox = new System.Windows.Forms.GroupBox();
-            this.SearchBPButton = new System.Windows.Forms.Button();
             this.CreateNewBPButton = new System.Windows.Forms.Button();
-            this.CustomerRefNoLabel = new System.Windows.Forms.Label();
-            this.CustomerRefNoTextBox = new System.Windows.Forms.TextBox();
             this.BPNumberLabel = new System.Windows.Forms.Label();
             this.BPNameLabel = new System.Windows.Forms.Label();
             this.BPNumberTextBox = new System.Windows.Forms.TextBox();
             this.BPNameTextBox = new System.Windows.Forms.TextBox();
             this.OptionsTabPage = new System.Windows.Forms.TabPage();
-            this.CreateProductButton = new System.Windows.Forms.Button();
-            this.CreateCustomerButton = new System.Windows.Forms.Button();
             this.CreateSupplierButton = new System.Windows.Forms.Button();
+            this.CreateCustomerButton = new System.Windows.Forms.Button();
+            this.CreateProductButton = new System.Windows.Forms.Button();
             this.RMSTabControl.SuspendLayout();
             this.SalesTabPage.SuspendLayout();
             this.SelectedOrderTotalGroupBox.SuspendLayout();
@@ -133,9 +136,13 @@
             this.RMSTabControl.SelectedIndex = 0;
             this.RMSTabControl.Size = new System.Drawing.Size(820, 516);
             this.RMSTabControl.TabIndex = 0;
+            this.RMSTabControl.SelectedIndexChanged += new System.EventHandler(this.RMSTabControl_SelectedIndexChanged);
             // 
             // SalesTabPage
             // 
+            this.SalesTabPage.Controls.Add(this.EditSalesPriceLinkLabel);
+            this.SalesTabPage.Controls.Add(this.noActivePriceLabel);
+            this.SalesTabPage.Controls.Add(this.ClearProductCategFilterButton);
             this.SalesTabPage.Controls.Add(this.DeleteOrderButton);
             this.SalesTabPage.Controls.Add(this.CreateNewOrderButton);
             this.SalesTabPage.Controls.Add(this.label22);
@@ -171,6 +178,42 @@
             this.SalesTabPage.Text = "SALES";
             this.SalesTabPage.UseVisualStyleBackColor = true;
             // 
+            // EditSalesPriceLinkLabel
+            // 
+            this.EditSalesPriceLinkLabel.AutoSize = true;
+            this.EditSalesPriceLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EditSalesPriceLinkLabel.LinkColor = System.Drawing.Color.LightSeaGreen;
+            this.EditSalesPriceLinkLabel.Location = new System.Drawing.Point(725, 170);
+            this.EditSalesPriceLinkLabel.Name = "EditSalesPriceLinkLabel";
+            this.EditSalesPriceLinkLabel.Size = new System.Drawing.Size(75, 16);
+            this.EditSalesPriceLinkLabel.TabIndex = 62;
+            this.EditSalesPriceLinkLabel.TabStop = true;
+            this.EditSalesPriceLinkLabel.Text = "Edit Price";
+            this.EditSalesPriceLinkLabel.VisitedLinkColor = System.Drawing.Color.DarkCyan;
+            this.EditSalesPriceLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.EditSalesPriceLinkLabel_LinkClicked);
+            // 
+            // noActivePriceLabel
+            // 
+            this.noActivePriceLabel.AutoSize = true;
+            this.noActivePriceLabel.ForeColor = System.Drawing.Color.Crimson;
+            this.noActivePriceLabel.Location = new System.Drawing.Point(644, 155);
+            this.noActivePriceLabel.Name = "noActivePriceLabel";
+            this.noActivePriceLabel.Size = new System.Drawing.Size(148, 15);
+            this.noActivePriceLabel.TabIndex = 29;
+            this.noActivePriceLabel.Text = "No active price found!";
+            // 
+            // ClearProductCategFilterButton
+            // 
+            this.ClearProductCategFilterButton.BackgroundImage = global::RestaurantUI.Properties.Resources.cancel;
+            this.ClearProductCategFilterButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ClearProductCategFilterButton.Location = new System.Drawing.Point(606, 342);
+            this.ClearProductCategFilterButton.Margin = new System.Windows.Forms.Padding(0);
+            this.ClearProductCategFilterButton.Name = "ClearProductCategFilterButton";
+            this.ClearProductCategFilterButton.Size = new System.Drawing.Size(23, 24);
+            this.ClearProductCategFilterButton.TabIndex = 28;
+            this.ClearProductCategFilterButton.UseVisualStyleBackColor = true;
+            this.ClearProductCategFilterButton.Click += new System.EventHandler(this.ClearProductCategFilterButton_Click);
+            // 
             // DeleteOrderButton
             // 
             this.DeleteOrderButton.Location = new System.Drawing.Point(9, 402);
@@ -179,6 +222,7 @@
             this.DeleteOrderButton.TabIndex = 27;
             this.DeleteOrderButton.Text = "Delete Order";
             this.DeleteOrderButton.UseVisualStyleBackColor = true;
+            this.DeleteOrderButton.Click += new System.EventHandler(this.DeleteOrderButton_Click);
             // 
             // CreateNewOrderButton
             // 
@@ -188,11 +232,12 @@
             this.CreateNewOrderButton.TabIndex = 26;
             this.CreateNewOrderButton.Text = "Create New Order";
             this.CreateNewOrderButton.UseVisualStyleBackColor = true;
+            this.CreateNewOrderButton.Click += new System.EventHandler(this.CreateNewOrderButton_Click);
             // 
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(748, 159);
+            this.label22.Location = new System.Drawing.Point(748, 213);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(18, 15);
             this.label22.TabIndex = 25;
@@ -201,7 +246,7 @@
             // ProductTaxComboBox
             // 
             this.ProductTaxComboBox.FormattingEnabled = true;
-            this.ProductTaxComboBox.Location = new System.Drawing.Point(683, 156);
+            this.ProductTaxComboBox.Location = new System.Drawing.Point(683, 210);
             this.ProductTaxComboBox.Name = "ProductTaxComboBox";
             this.ProductTaxComboBox.Size = new System.Drawing.Size(59, 23);
             this.ProductTaxComboBox.TabIndex = 24;
@@ -209,7 +254,7 @@
             // OrderTaxLabel
             // 
             this.OrderTaxLabel.AutoSize = true;
-            this.OrderTaxLabel.Location = new System.Drawing.Point(635, 159);
+            this.OrderTaxLabel.Location = new System.Drawing.Point(635, 213);
             this.OrderTaxLabel.Name = "OrderTaxLabel";
             this.OrderTaxLabel.Size = new System.Drawing.Size(30, 15);
             this.OrderTaxLabel.TabIndex = 23;
@@ -217,45 +262,42 @@
             // 
             // SelectedOrderTotalGroupBox
             // 
-            this.SelectedOrderTotalGroupBox.Controls.Add(this.TotalAmountLabel);
-            this.SelectedOrderTotalGroupBox.Controls.Add(this.TaxTotalAmountLabel);
-            this.SelectedOrderTotalGroupBox.Controls.Add(this.GrandTotalAmountLabel);
+            this.SelectedOrderTotalGroupBox.Controls.Add(this.GrandTotalAmountSOTextBox);
+            this.SelectedOrderTotalGroupBox.Controls.Add(this.TaxTotalAmountSOTextBox);
+            this.SelectedOrderTotalGroupBox.Controls.Add(this.TotalAmountSOTextBox);
             this.SelectedOrderTotalGroupBox.Controls.Add(this.GrandTotalLabel);
             this.SelectedOrderTotalGroupBox.Controls.Add(this.TaxTotalLabel);
             this.SelectedOrderTotalGroupBox.Controls.Add(this.TotalLabel);
-            this.SelectedOrderTotalGroupBox.Location = new System.Drawing.Point(236, 361);
+            this.SelectedOrderTotalGroupBox.Location = new System.Drawing.Point(234, 349);
             this.SelectedOrderTotalGroupBox.Name = "SelectedOrderTotalGroupBox";
-            this.SelectedOrderTotalGroupBox.Size = new System.Drawing.Size(162, 102);
+            this.SelectedOrderTotalGroupBox.Size = new System.Drawing.Size(164, 121);
             this.SelectedOrderTotalGroupBox.TabIndex = 21;
             this.SelectedOrderTotalGroupBox.TabStop = false;
             this.SelectedOrderTotalGroupBox.Text = "Selected Order Total";
             // 
-            // TotalAmountLabel
+            // GrandTotalAmountSOTextBox
             // 
-            this.TotalAmountLabel.AutoSize = true;
-            this.TotalAmountLabel.Location = new System.Drawing.Point(59, 19);
-            this.TotalAmountLabel.Name = "TotalAmountLabel";
-            this.TotalAmountLabel.Size = new System.Drawing.Size(15, 15);
-            this.TotalAmountLabel.TabIndex = 13;
-            this.TotalAmountLabel.Text = "0";
+            this.GrandTotalAmountSOTextBox.Location = new System.Drawing.Point(54, 87);
+            this.GrandTotalAmountSOTextBox.Name = "GrandTotalAmountSOTextBox";
+            this.GrandTotalAmountSOTextBox.ReadOnly = true;
+            this.GrandTotalAmountSOTextBox.Size = new System.Drawing.Size(101, 23);
+            this.GrandTotalAmountSOTextBox.TabIndex = 18;
             // 
-            // TaxTotalAmountLabel
+            // TaxTotalAmountSOTextBox
             // 
-            this.TaxTotalAmountLabel.AutoSize = true;
-            this.TaxTotalAmountLabel.Location = new System.Drawing.Point(49, 44);
-            this.TaxTotalAmountLabel.Name = "TaxTotalAmountLabel";
-            this.TaxTotalAmountLabel.Size = new System.Drawing.Size(15, 15);
-            this.TaxTotalAmountLabel.TabIndex = 12;
-            this.TaxTotalAmountLabel.Text = "0";
+            this.TaxTotalAmountSOTextBox.Location = new System.Drawing.Point(54, 41);
+            this.TaxTotalAmountSOTextBox.Name = "TaxTotalAmountSOTextBox";
+            this.TaxTotalAmountSOTextBox.ReadOnly = true;
+            this.TaxTotalAmountSOTextBox.Size = new System.Drawing.Size(101, 23);
+            this.TaxTotalAmountSOTextBox.TabIndex = 17;
             // 
-            // GrandTotalAmountLabel
+            // TotalAmountSOTextBox
             // 
-            this.GrandTotalAmountLabel.AutoSize = true;
-            this.GrandTotalAmountLabel.Location = new System.Drawing.Point(99, 69);
-            this.GrandTotalAmountLabel.Name = "GrandTotalAmountLabel";
-            this.GrandTotalAmountLabel.Size = new System.Drawing.Size(15, 15);
-            this.GrandTotalAmountLabel.TabIndex = 11;
-            this.GrandTotalAmountLabel.Text = "0";
+            this.TotalAmountSOTextBox.Location = new System.Drawing.Point(54, 16);
+            this.TotalAmountSOTextBox.Name = "TotalAmountSOTextBox";
+            this.TotalAmountSOTextBox.ReadOnly = true;
+            this.TotalAmountSOTextBox.Size = new System.Drawing.Size(101, 23);
+            this.TotalAmountSOTextBox.TabIndex = 16;
             // 
             // GrandTotalLabel
             // 
@@ -292,7 +334,7 @@
             this.ProductStockDetailsGroupBox.Controls.Add(this.ProductAvailableStockLabel);
             this.ProductStockDetailsGroupBox.Controls.Add(this.ProductBookedStockLabel);
             this.ProductStockDetailsGroupBox.Controls.Add(this.ProductTotalStockLabel);
-            this.ProductStockDetailsGroupBox.Location = new System.Drawing.Point(638, 196);
+            this.ProductStockDetailsGroupBox.Location = new System.Drawing.Point(638, 250);
             this.ProductStockDetailsGroupBox.Name = "ProductStockDetailsGroupBox";
             this.ProductStockDetailsGroupBox.Size = new System.Drawing.Size(162, 115);
             this.ProductStockDetailsGroupBox.TabIndex = 20;
@@ -384,6 +426,8 @@
             this.ProductQuantityTextBox.Name = "ProductQuantityTextBox";
             this.ProductQuantityTextBox.Size = new System.Drawing.Size(39, 23);
             this.ProductQuantityTextBox.TabIndex = 16;
+            this.ProductQuantityTextBox.Text = "1";
+            this.ProductQuantityTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ProductQuantityTextBox_KeyPress);
             // 
             // RemoveFromOrderButton
             // 
@@ -393,6 +437,7 @@
             this.RemoveFromOrderButton.TabIndex = 15;
             this.RemoveFromOrderButton.Text = "Remove From Order";
             this.RemoveFromOrderButton.UseVisualStyleBackColor = true;
+            this.RemoveFromOrderButton.Click += new System.EventHandler(this.RemoveFromOrderButton_Click);
             // 
             // AddToOrderButton
             // 
@@ -402,21 +447,23 @@
             this.AddToOrderButton.TabIndex = 14;
             this.AddToOrderButton.Text = "Add To Order";
             this.AddToOrderButton.UseVisualStyleBackColor = true;
+            this.AddToOrderButton.Click += new System.EventHandler(this.AddToOrderButton_Click);
             // 
             // SearchProductButton
             // 
             this.SearchProductButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SearchProductButton.BackgroundImage")));
             this.SearchProductButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.SearchProductButton.Location = new System.Drawing.Point(606, 395);
+            this.SearchProductButton.Location = new System.Drawing.Point(606, 420);
             this.SearchProductButton.Margin = new System.Windows.Forms.Padding(0);
             this.SearchProductButton.Name = "SearchProductButton";
             this.SearchProductButton.Size = new System.Drawing.Size(23, 24);
             this.SearchProductButton.TabIndex = 13;
             this.SearchProductButton.UseVisualStyleBackColor = true;
+            this.SearchProductButton.Click += new System.EventHandler(this.SearchProductButton_Click);
             // 
             // SearchProductTextBox
             // 
-            this.SearchProductTextBox.Location = new System.Drawing.Point(465, 396);
+            this.SearchProductTextBox.Location = new System.Drawing.Point(465, 421);
             this.SearchProductTextBox.Name = "SearchProductTextBox";
             this.SearchProductTextBox.Size = new System.Drawing.Size(138, 23);
             this.SearchProductTextBox.TabIndex = 12;
@@ -424,7 +471,7 @@
             // SearchProductLabel
             // 
             this.SearchProductLabel.AutoSize = true;
-            this.SearchProductLabel.Location = new System.Drawing.Point(462, 377);
+            this.SearchProductLabel.Location = new System.Drawing.Point(462, 402);
             this.SearchProductLabel.Name = "SearchProductLabel";
             this.SearchProductLabel.Size = new System.Drawing.Size(109, 15);
             this.SearchProductLabel.TabIndex = 11;
@@ -444,8 +491,9 @@
             this.ProductCategoryFilterComboBox.FormattingEnabled = true;
             this.ProductCategoryFilterComboBox.Location = new System.Drawing.Point(465, 342);
             this.ProductCategoryFilterComboBox.Name = "ProductCategoryFilterComboBox";
-            this.ProductCategoryFilterComboBox.Size = new System.Drawing.Size(147, 23);
+            this.ProductCategoryFilterComboBox.Size = new System.Drawing.Size(138, 23);
             this.ProductCategoryFilterComboBox.TabIndex = 9;
+            this.ProductCategoryFilterComboBox.SelectedIndexChanged += new System.EventHandler(this.ProductCategoryFilterComboBox_SelectedIndexChanged);
             // 
             // ProductListListBox
             // 
@@ -455,6 +503,7 @@
             this.ProductListListBox.Name = "ProductListListBox";
             this.ProductListListBox.Size = new System.Drawing.Size(164, 274);
             this.ProductListListBox.TabIndex = 8;
+            this.ProductListListBox.SelectedIndexChanged += new System.EventHandler(this.ProductListListBox_SelectedIndexChanged);
             // 
             // ProductListLabel
             // 
@@ -473,6 +522,7 @@
             this.FinishOrderButton.TabIndex = 6;
             this.FinishOrderButton.Text = "Finish Order";
             this.FinishOrderButton.UseVisualStyleBackColor = true;
+            this.FinishOrderButton.Click += new System.EventHandler(this.FinishOrderButton_Click);
             // 
             // SelectedOrderItemsListBox
             // 
@@ -482,6 +532,7 @@
             this.SelectedOrderItemsListBox.Name = "SelectedOrderItemsListBox";
             this.SelectedOrderItemsListBox.Size = new System.Drawing.Size(164, 274);
             this.SelectedOrderItemsListBox.TabIndex = 5;
+            this.SelectedOrderItemsListBox.Format += new System.Windows.Forms.ListControlConvertEventHandler(this.SelectedOrderItemsListBox_Format);
             // 
             // SelectedOrderItemsLabel
             // 
@@ -508,6 +559,7 @@
             this.OrderStatusFilterComboBox.Name = "OrderStatusFilterComboBox";
             this.OrderStatusFilterComboBox.Size = new System.Drawing.Size(164, 23);
             this.OrderStatusFilterComboBox.TabIndex = 2;
+            this.OrderStatusFilterComboBox.SelectedIndexChanged += new System.EventHandler(this.OrderStatusFilterComboBox_SelectedIndexChanged);
             // 
             // ActiveOrdersListBox
             // 
@@ -517,6 +569,7 @@
             this.ActiveOrdersListBox.Name = "ActiveOrdersListBox";
             this.ActiveOrdersListBox.Size = new System.Drawing.Size(164, 274);
             this.ActiveOrdersListBox.TabIndex = 1;
+            this.ActiveOrdersListBox.SelectedIndexChanged += new System.EventHandler(this.ActiveOrdersListBox_SelectedIndexChanged);
             // 
             // ActiveOrdersLabel
             // 
@@ -529,10 +582,13 @@
             // 
             // PurchasingTabPage
             // 
+            this.PurchasingTabPage.Controls.Add(this.CreateNewPaymentTermLinkLabel);
+            this.PurchasingTabPage.Controls.Add(this.PaymentTermLabel);
+            this.PurchasingTabPage.Controls.Add(this.PaymentTermComboBox);
+            this.PurchasingTabPage.Controls.Add(this.ClearButton);
             this.PurchasingTabPage.Controls.Add(this.POrderTaxLabel);
             this.PurchasingTabPage.Controls.Add(this.POrderTaxFilterComboBox);
             this.PurchasingTabPage.Controls.Add(this.PurchaseOrderLabel);
-            this.PurchasingTabPage.Controls.Add(this.PurchasingDisplayOptionsLabel);
             this.PurchasingTabPage.Controls.Add(this.SearchDocumentButton);
             this.PurchasingTabPage.Controls.Add(this.PInvoicesCheckBox);
             this.PurchasingTabPage.Controls.Add(this.POrdersCheckBox);
@@ -551,10 +607,51 @@
             this.PurchasingTabPage.Text = "PURCHASING";
             this.PurchasingTabPage.UseVisualStyleBackColor = true;
             // 
+            // CreateNewPaymentTermLinkLabel
+            // 
+            this.CreateNewPaymentTermLinkLabel.AutoSize = true;
+            this.CreateNewPaymentTermLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CreateNewPaymentTermLinkLabel.LinkColor = System.Drawing.Color.LightSeaGreen;
+            this.CreateNewPaymentTermLinkLabel.Location = new System.Drawing.Point(714, 265);
+            this.CreateNewPaymentTermLinkLabel.Name = "CreateNewPaymentTermLinkLabel";
+            this.CreateNewPaymentTermLinkLabel.Size = new System.Drawing.Size(88, 16);
+            this.CreateNewPaymentTermLinkLabel.TabIndex = 61;
+            this.CreateNewPaymentTermLinkLabel.TabStop = true;
+            this.CreateNewPaymentTermLinkLabel.Text = "Create New";
+            this.CreateNewPaymentTermLinkLabel.VisitedLinkColor = System.Drawing.Color.DarkCyan;
+            this.CreateNewPaymentTermLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CreateNewPaymentTermLinkLabel_LinkClicked);
+            // 
+            // PaymentTermLabel
+            // 
+            this.PaymentTermLabel.AutoSize = true;
+            this.PaymentTermLabel.Location = new System.Drawing.Point(681, 217);
+            this.PaymentTermLabel.Name = "PaymentTermLabel";
+            this.PaymentTermLabel.Size = new System.Drawing.Size(101, 15);
+            this.PaymentTermLabel.TabIndex = 43;
+            this.PaymentTermLabel.Text = "Payment Term";
+            // 
+            // PaymentTermComboBox
+            // 
+            this.PaymentTermComboBox.FormattingEnabled = true;
+            this.PaymentTermComboBox.Location = new System.Drawing.Point(684, 239);
+            this.PaymentTermComboBox.Name = "PaymentTermComboBox";
+            this.PaymentTermComboBox.Size = new System.Drawing.Size(52, 23);
+            this.PaymentTermComboBox.TabIndex = 42;
+            // 
+            // ClearButton
+            // 
+            this.ClearButton.Location = new System.Drawing.Point(683, 358);
+            this.ClearButton.Name = "ClearButton";
+            this.ClearButton.Size = new System.Drawing.Size(123, 23);
+            this.ClearButton.TabIndex = 40;
+            this.ClearButton.Text = "Clear";
+            this.ClearButton.UseVisualStyleBackColor = true;
+            this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
+            // 
             // POrderTaxLabel
             // 
             this.POrderTaxLabel.AutoSize = true;
-            this.POrderTaxLabel.Location = new System.Drawing.Point(680, 153);
+            this.POrderTaxLabel.Location = new System.Drawing.Point(681, 153);
             this.POrderTaxLabel.Name = "POrderTaxLabel";
             this.POrderTaxLabel.Size = new System.Drawing.Size(30, 15);
             this.POrderTaxLabel.TabIndex = 37;
@@ -563,7 +660,7 @@
             // POrderTaxFilterComboBox
             // 
             this.POrderTaxFilterComboBox.FormattingEnabled = true;
-            this.POrderTaxFilterComboBox.Location = new System.Drawing.Point(683, 175);
+            this.POrderTaxFilterComboBox.Location = new System.Drawing.Point(684, 175);
             this.POrderTaxFilterComboBox.Name = "POrderTaxFilterComboBox";
             this.POrderTaxFilterComboBox.Size = new System.Drawing.Size(52, 23);
             this.POrderTaxFilterComboBox.TabIndex = 36;
@@ -578,28 +675,20 @@
             this.PurchaseOrderLabel.TabIndex = 35;
             this.PurchaseOrderLabel.Text = "Purchase Order";
             // 
-            // PurchasingDisplayOptionsLabel
-            // 
-            this.PurchasingDisplayOptionsLabel.AutoSize = true;
-            this.PurchasingDisplayOptionsLabel.Location = new System.Drawing.Point(680, 23);
-            this.PurchasingDisplayOptionsLabel.Name = "PurchasingDisplayOptionsLabel";
-            this.PurchasingDisplayOptionsLabel.Size = new System.Drawing.Size(55, 15);
-            this.PurchasingDisplayOptionsLabel.TabIndex = 34;
-            this.PurchasingDisplayOptionsLabel.Text = "Display";
-            // 
             // SearchDocumentButton
             // 
-            this.SearchDocumentButton.Location = new System.Drawing.Point(683, 91);
+            this.SearchDocumentButton.Location = new System.Drawing.Point(683, 60);
             this.SearchDocumentButton.Name = "SearchDocumentButton";
             this.SearchDocumentButton.Size = new System.Drawing.Size(123, 23);
             this.SearchDocumentButton.TabIndex = 33;
             this.SearchDocumentButton.Text = "Search ";
             this.SearchDocumentButton.UseVisualStyleBackColor = true;
+            this.SearchDocumentButton.Click += new System.EventHandler(this.SearchDocumentButton_Click);
             // 
             // PInvoicesCheckBox
             // 
             this.PInvoicesCheckBox.AutoSize = true;
-            this.PInvoicesCheckBox.Location = new System.Drawing.Point(683, 66);
+            this.PInvoicesCheckBox.Location = new System.Drawing.Point(682, 35);
             this.PInvoicesCheckBox.Name = "PInvoicesCheckBox";
             this.PInvoicesCheckBox.Size = new System.Drawing.Size(80, 19);
             this.PInvoicesCheckBox.TabIndex = 32;
@@ -609,7 +698,7 @@
             // POrdersCheckBox
             // 
             this.POrdersCheckBox.AutoSize = true;
-            this.POrdersCheckBox.Location = new System.Drawing.Point(683, 41);
+            this.POrdersCheckBox.Location = new System.Drawing.Point(682, 10);
             this.POrdersCheckBox.Name = "POrdersCheckBox";
             this.POrdersCheckBox.Size = new System.Drawing.Size(71, 19);
             this.POrdersCheckBox.TabIndex = 31;
@@ -624,6 +713,7 @@
             this.RegisterInvoiceButton.TabIndex = 30;
             this.RegisterInvoiceButton.Text = "Register Invoice";
             this.RegisterInvoiceButton.UseVisualStyleBackColor = true;
+            this.RegisterInvoiceButton.Click += new System.EventHandler(this.RegisterInvoiceButton_Click);
             // 
             // CancelAddOrderButton
             // 
@@ -642,6 +732,7 @@
             this.AddOrderButton.TabIndex = 28;
             this.AddOrderButton.Text = "Add Order";
             this.AddOrderButton.UseVisualStyleBackColor = true;
+            this.AddOrderButton.Click += new System.EventHandler(this.AddOrderButton_Click);
             // 
             // OrderTotalGroupBox
             // 
@@ -662,6 +753,7 @@
             // 
             this.POrderGrandTotalTextBox.Location = new System.Drawing.Point(89, 66);
             this.POrderGrandTotalTextBox.Name = "POrderGrandTotalTextBox";
+            this.POrderGrandTotalTextBox.ReadOnly = true;
             this.POrderGrandTotalTextBox.Size = new System.Drawing.Size(125, 23);
             this.POrderGrandTotalTextBox.TabIndex = 15;
             // 
@@ -669,6 +761,7 @@
             // 
             this.POrderTaxTotalTextBox.Location = new System.Drawing.Point(52, 41);
             this.POrderTaxTotalTextBox.Name = "POrderTaxTotalTextBox";
+            this.POrderTaxTotalTextBox.ReadOnly = true;
             this.POrderTaxTotalTextBox.Size = new System.Drawing.Size(162, 23);
             this.POrderTaxTotalTextBox.TabIndex = 14;
             // 
@@ -676,6 +769,7 @@
             // 
             this.POrderTotalTextBox.Location = new System.Drawing.Point(52, 16);
             this.POrderTotalTextBox.Name = "POrderTotalTextBox";
+            this.POrderTotalTextBox.ReadOnly = true;
             this.POrderTotalTextBox.Size = new System.Drawing.Size(162, 23);
             this.POrderTotalTextBox.TabIndex = 13;
             // 
@@ -710,21 +804,25 @@
             // 
             this.POrderContentDataGridView.AllowUserToOrderColumns = true;
             this.POrderContentDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.POrderContentDataGridView.GridColor = System.Drawing.SystemColors.ControlDarkDark;
             this.POrderContentDataGridView.Location = new System.Drawing.Point(7, 153);
             this.POrderContentDataGridView.Name = "POrderContentDataGridView";
+            this.POrderContentDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.POrderContentDataGridView.Size = new System.Drawing.Size(667, 225);
             this.POrderContentDataGridView.TabIndex = 4;
+            this.POrderContentDataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.POrderContentDataGridView_CellValueChanged);
+            this.POrderContentDataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.POrderContentDataGridView_DataError);
             // 
             // OrderDetailsGroupBox
             // 
+            this.OrderDetailsGroupBox.Controls.Add(this.InvoiceDateTimePicker);
+            this.OrderDetailsGroupBox.Controls.Add(this.DocumentDueDateTimePicker);
+            this.OrderDetailsGroupBox.Controls.Add(this.DocumentPostingDateTimePicker);
             this.OrderDetailsGroupBox.Controls.Add(this.OrderNumberTextBox);
             this.OrderDetailsGroupBox.Controls.Add(this.OrderNumberLabel);
-            this.OrderDetailsGroupBox.Controls.Add(this.InvoiceDateTextBox);
-            this.OrderDetailsGroupBox.Controls.Add(this.DocumentDueDateTextBox);
             this.OrderDetailsGroupBox.Controls.Add(this.DocumentDateLabel);
             this.OrderDetailsGroupBox.Controls.Add(this.DocumentDueDateLabel);
             this.OrderDetailsGroupBox.Controls.Add(this.DocumentPostingDateLabel);
-            this.OrderDetailsGroupBox.Controls.Add(this.DocumentPostingDateTextBox);
             this.OrderDetailsGroupBox.Location = new System.Drawing.Point(427, 6);
             this.OrderDetailsGroupBox.Name = "OrderDetailsGroupBox";
             this.OrderDetailsGroupBox.Size = new System.Drawing.Size(246, 139);
@@ -732,11 +830,37 @@
             this.OrderDetailsGroupBox.TabStop = false;
             this.OrderDetailsGroupBox.Text = "Order Details";
             // 
+            // InvoiceDateTimePicker
+            // 
+            this.InvoiceDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.InvoiceDateTimePicker.Location = new System.Drawing.Point(92, 110);
+            this.InvoiceDateTimePicker.Name = "InvoiceDateTimePicker";
+            this.InvoiceDateTimePicker.Size = new System.Drawing.Size(136, 23);
+            this.InvoiceDateTimePicker.TabIndex = 44;
+            this.InvoiceDateTimePicker.ValueChanged += new System.EventHandler(this.InvoiceDateTimePicker_ValueChanged);
+            // 
+            // DocumentDueDateTimePicker
+            // 
+            this.DocumentDueDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.DocumentDueDateTimePicker.Location = new System.Drawing.Point(92, 82);
+            this.DocumentDueDateTimePicker.Name = "DocumentDueDateTimePicker";
+            this.DocumentDueDateTimePicker.Size = new System.Drawing.Size(136, 23);
+            this.DocumentDueDateTimePicker.TabIndex = 43;
+            // 
+            // DocumentPostingDateTimePicker
+            // 
+            this.DocumentPostingDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.DocumentPostingDateTimePicker.Location = new System.Drawing.Point(92, 52);
+            this.DocumentPostingDateTimePicker.Name = "DocumentPostingDateTimePicker";
+            this.DocumentPostingDateTimePicker.Size = new System.Drawing.Size(136, 23);
+            this.DocumentPostingDateTimePicker.TabIndex = 42;
+            // 
             // OrderNumberTextBox
             // 
-            this.OrderNumberTextBox.Location = new System.Drawing.Point(100, 21);
+            this.OrderNumberTextBox.Enabled = false;
+            this.OrderNumberTextBox.Location = new System.Drawing.Point(92, 21);
             this.OrderNumberTextBox.Name = "OrderNumberTextBox";
-            this.OrderNumberTextBox.Size = new System.Drawing.Size(128, 23);
+            this.OrderNumberTextBox.Size = new System.Drawing.Size(136, 23);
             this.OrderNumberTextBox.TabIndex = 12;
             // 
             // OrderNumberLabel
@@ -744,23 +868,9 @@
             this.OrderNumberLabel.AutoSize = true;
             this.OrderNumberLabel.Location = new System.Drawing.Point(6, 24);
             this.OrderNumberLabel.Name = "OrderNumberLabel";
-            this.OrderNumberLabel.Size = new System.Drawing.Size(70, 15);
+            this.OrderNumberLabel.Size = new System.Drawing.Size(60, 15);
             this.OrderNumberLabel.TabIndex = 11;
-            this.OrderNumberLabel.Text = "Order No.";
-            // 
-            // InvoiceDateTextBox
-            // 
-            this.InvoiceDateTextBox.Location = new System.Drawing.Point(100, 108);
-            this.InvoiceDateTextBox.Name = "InvoiceDateTextBox";
-            this.InvoiceDateTextBox.Size = new System.Drawing.Size(128, 23);
-            this.InvoiceDateTextBox.TabIndex = 10;
-            // 
-            // DocumentDueDateTextBox
-            // 
-            this.DocumentDueDateTextBox.Location = new System.Drawing.Point(100, 79);
-            this.DocumentDueDateTextBox.Name = "DocumentDueDateTextBox";
-            this.DocumentDueDateTextBox.Size = new System.Drawing.Size(128, 23);
-            this.DocumentDueDateTextBox.TabIndex = 9;
+            this.OrderNumberLabel.Text = "Order Id";
             // 
             // DocumentDateLabel
             // 
@@ -789,72 +899,38 @@
             this.DocumentPostingDateLabel.TabIndex = 6;
             this.DocumentPostingDateLabel.Text = "Posting Date";
             // 
-            // DocumentPostingDateTextBox
-            // 
-            this.DocumentPostingDateTextBox.Location = new System.Drawing.Point(100, 50);
-            this.DocumentPostingDateTextBox.Name = "DocumentPostingDateTextBox";
-            this.DocumentPostingDateTextBox.Size = new System.Drawing.Size(128, 23);
-            this.DocumentPostingDateTextBox.TabIndex = 5;
-            // 
             // BusinessPartnerInfoGroupBox
             // 
-            this.BusinessPartnerInfoGroupBox.Controls.Add(this.SearchBPButton);
             this.BusinessPartnerInfoGroupBox.Controls.Add(this.CreateNewBPButton);
-            this.BusinessPartnerInfoGroupBox.Controls.Add(this.CustomerRefNoLabel);
-            this.BusinessPartnerInfoGroupBox.Controls.Add(this.CustomerRefNoTextBox);
             this.BusinessPartnerInfoGroupBox.Controls.Add(this.BPNumberLabel);
             this.BusinessPartnerInfoGroupBox.Controls.Add(this.BPNameLabel);
             this.BusinessPartnerInfoGroupBox.Controls.Add(this.BPNumberTextBox);
             this.BusinessPartnerInfoGroupBox.Controls.Add(this.BPNameTextBox);
             this.BusinessPartnerInfoGroupBox.Location = new System.Drawing.Point(7, 7);
             this.BusinessPartnerInfoGroupBox.Name = "BusinessPartnerInfoGroupBox";
-            this.BusinessPartnerInfoGroupBox.Size = new System.Drawing.Size(264, 139);
+            this.BusinessPartnerInfoGroupBox.Size = new System.Drawing.Size(264, 114);
             this.BusinessPartnerInfoGroupBox.TabIndex = 1;
             this.BusinessPartnerInfoGroupBox.TabStop = false;
             this.BusinessPartnerInfoGroupBox.Text = "Business Partner";
             // 
-            // SearchBPButton
-            // 
-            this.SearchBPButton.Location = new System.Drawing.Point(143, 110);
-            this.SearchBPButton.Name = "SearchBPButton";
-            this.SearchBPButton.Size = new System.Drawing.Size(112, 23);
-            this.SearchBPButton.TabIndex = 28;
-            this.SearchBPButton.Text = "Search";
-            this.SearchBPButton.UseVisualStyleBackColor = true;
-            // 
             // CreateNewBPButton
             // 
-            this.CreateNewBPButton.Location = new System.Drawing.Point(9, 110);
+            this.CreateNewBPButton.Location = new System.Drawing.Point(85, 84);
             this.CreateNewBPButton.Name = "CreateNewBPButton";
-            this.CreateNewBPButton.Size = new System.Drawing.Size(112, 23);
+            this.CreateNewBPButton.Size = new System.Drawing.Size(173, 23);
             this.CreateNewBPButton.TabIndex = 27;
-            this.CreateNewBPButton.Text = "Create New";
+            this.CreateNewBPButton.Text = "Create New / Select";
             this.CreateNewBPButton.UseVisualStyleBackColor = true;
-            // 
-            // CustomerRefNoLabel
-            // 
-            this.CustomerRefNoLabel.AutoSize = true;
-            this.CustomerRefNoLabel.Location = new System.Drawing.Point(6, 81);
-            this.CustomerRefNoLabel.Name = "CustomerRefNoLabel";
-            this.CustomerRefNoLabel.Size = new System.Drawing.Size(131, 15);
-            this.CustomerRefNoLabel.TabIndex = 7;
-            this.CustomerRefNoLabel.Text = "Customer Ref. No. :";
-            // 
-            // CustomerRefNoTextBox
-            // 
-            this.CustomerRefNoTextBox.Location = new System.Drawing.Point(143, 77);
-            this.CustomerRefNoTextBox.Name = "CustomerRefNoTextBox";
-            this.CustomerRefNoTextBox.Size = new System.Drawing.Size(115, 23);
-            this.CustomerRefNoTextBox.TabIndex = 6;
+            this.CreateNewBPButton.Click += new System.EventHandler(this.CreateNewBPButton_Click);
             // 
             // BPNumberLabel
             // 
             this.BPNumberLabel.AutoSize = true;
             this.BPNumberLabel.Location = new System.Drawing.Point(6, 51);
             this.BPNumberLabel.Name = "BPNumberLabel";
-            this.BPNumberLabel.Size = new System.Drawing.Size(57, 15);
+            this.BPNumberLabel.Size = new System.Drawing.Size(59, 15);
             this.BPNumberLabel.TabIndex = 5;
-            this.BPNumberLabel.Text = "BP No. :";
+            this.BPNumberLabel.Text = "BP Info :";
             // 
             // BPNameLabel
             // 
@@ -892,14 +968,14 @@
             this.OptionsTabPage.Text = "OPTIONS";
             this.OptionsTabPage.UseVisualStyleBackColor = true;
             // 
-            // CreateProductButton
+            // CreateSupplierButton
             // 
-            this.CreateProductButton.Location = new System.Drawing.Point(6, 6);
-            this.CreateProductButton.Name = "CreateProductButton";
-            this.CreateProductButton.Size = new System.Drawing.Size(144, 23);
-            this.CreateProductButton.TabIndex = 0;
-            this.CreateProductButton.Text = "Create Product";
-            this.CreateProductButton.UseVisualStyleBackColor = true;
+            this.CreateSupplierButton.Location = new System.Drawing.Point(6, 64);
+            this.CreateSupplierButton.Name = "CreateSupplierButton";
+            this.CreateSupplierButton.Size = new System.Drawing.Size(144, 23);
+            this.CreateSupplierButton.TabIndex = 2;
+            this.CreateSupplierButton.Text = "Create Supplier";
+            this.CreateSupplierButton.UseVisualStyleBackColor = true;
             // 
             // CreateCustomerButton
             // 
@@ -910,14 +986,14 @@
             this.CreateCustomerButton.Text = "Create Customer";
             this.CreateCustomerButton.UseVisualStyleBackColor = true;
             // 
-            // CreateSupplierButton
+            // CreateProductButton
             // 
-            this.CreateSupplierButton.Location = new System.Drawing.Point(6, 64);
-            this.CreateSupplierButton.Name = "CreateSupplierButton";
-            this.CreateSupplierButton.Size = new System.Drawing.Size(144, 23);
-            this.CreateSupplierButton.TabIndex = 2;
-            this.CreateSupplierButton.Text = "Create Supplier";
-            this.CreateSupplierButton.UseVisualStyleBackColor = true;
+            this.CreateProductButton.Location = new System.Drawing.Point(6, 6);
+            this.CreateProductButton.Name = "CreateProductButton";
+            this.CreateProductButton.Size = new System.Drawing.Size(144, 23);
+            this.CreateProductButton.TabIndex = 0;
+            this.CreateProductButton.Text = "Create Product";
+            this.CreateProductButton.UseVisualStyleBackColor = true;
             // 
             // RestaurantManagementForm
             // 
@@ -980,9 +1056,6 @@
         private System.Windows.Forms.ComboBox ProductTaxComboBox;
         private System.Windows.Forms.Label OrderTaxLabel;
         private System.Windows.Forms.GroupBox SelectedOrderTotalGroupBox;
-        private System.Windows.Forms.Label TotalAmountLabel;
-        private System.Windows.Forms.Label TaxTotalAmountLabel;
-        private System.Windows.Forms.Label GrandTotalAmountLabel;
         private System.Windows.Forms.Label GrandTotalLabel;
         private System.Windows.Forms.Label TaxTotalLabel;
         private System.Windows.Forms.Label TotalLabel;
@@ -1000,7 +1073,6 @@
         private System.Windows.Forms.Label POrderTaxLabel;
         private System.Windows.Forms.ComboBox POrderTaxFilterComboBox;
         private System.Windows.Forms.Label PurchaseOrderLabel;
-        private System.Windows.Forms.Label PurchasingDisplayOptionsLabel;
         private System.Windows.Forms.Button SearchDocumentButton;
         private System.Windows.Forms.CheckBox PInvoicesCheckBox;
         private System.Windows.Forms.CheckBox POrdersCheckBox;
@@ -1018,17 +1090,11 @@
         private System.Windows.Forms.GroupBox OrderDetailsGroupBox;
         private System.Windows.Forms.TextBox OrderNumberTextBox;
         private System.Windows.Forms.Label OrderNumberLabel;
-        private System.Windows.Forms.TextBox InvoiceDateTextBox;
-        private System.Windows.Forms.TextBox DocumentDueDateTextBox;
         private System.Windows.Forms.Label DocumentDateLabel;
         private System.Windows.Forms.Label DocumentDueDateLabel;
         private System.Windows.Forms.Label DocumentPostingDateLabel;
-        private System.Windows.Forms.TextBox DocumentPostingDateTextBox;
         private System.Windows.Forms.GroupBox BusinessPartnerInfoGroupBox;
-        private System.Windows.Forms.Button SearchBPButton;
         private System.Windows.Forms.Button CreateNewBPButton;
-        private System.Windows.Forms.Label CustomerRefNoLabel;
-        private System.Windows.Forms.TextBox CustomerRefNoTextBox;
         private System.Windows.Forms.Label BPNumberLabel;
         private System.Windows.Forms.Label BPNameLabel;
         private System.Windows.Forms.TextBox BPNumberTextBox;
@@ -1036,6 +1102,19 @@
         private System.Windows.Forms.Button CreateSupplierButton;
         private System.Windows.Forms.Button CreateCustomerButton;
         private System.Windows.Forms.Button CreateProductButton;
+        private System.Windows.Forms.Button ClearButton;
+        private System.Windows.Forms.Label PaymentTermLabel;
+        private System.Windows.Forms.ComboBox PaymentTermComboBox;
+        private System.Windows.Forms.DateTimePicker InvoiceDateTimePicker;
+        private System.Windows.Forms.DateTimePicker DocumentDueDateTimePicker;
+        private System.Windows.Forms.DateTimePicker DocumentPostingDateTimePicker;
+        private System.Windows.Forms.LinkLabel CreateNewPaymentTermLinkLabel;
+        private System.Windows.Forms.Button ClearProductCategFilterButton;
+        private System.Windows.Forms.Label noActivePriceLabel;
+        private System.Windows.Forms.LinkLabel EditSalesPriceLinkLabel;
+        private System.Windows.Forms.TextBox GrandTotalAmountSOTextBox;
+        private System.Windows.Forms.TextBox TaxTotalAmountSOTextBox;
+        private System.Windows.Forms.TextBox TotalAmountSOTextBox;
     }
 }
 

@@ -19,7 +19,7 @@ namespace RestaurantUI
         private RecipeModel lastRecipeCreated = new RecipeModel();
 
         /// <summary>
-        /// Constructor(overloaded)
+        /// Overloaded constructor that recieves data from the calling form
         /// </summary>
         /// <param name="caller"></param>
         public ProductRecipeForm(IRecipeRequester caller)

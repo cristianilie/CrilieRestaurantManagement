@@ -7,9 +7,12 @@ namespace RMLibrary.Models
     /// </summary>
     public class SalesOrderModel : OrderModel
     {
-        public TableModel TableId { get; set; }
+        public int TableId { get; set; }
 
-        public CustomerModel CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
+        public int CompanyId { get; set; }
+
+        public string Name { get; set; }
     }
 }

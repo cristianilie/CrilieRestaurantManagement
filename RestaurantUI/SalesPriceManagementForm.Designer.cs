@@ -1,6 +1,6 @@
 ﻿namespace RestaurantUI
 {
-    partial class PricingManagementForm
+    partial class SalesPriceManagementForm
     {
         /// <summary>
         /// Required designer variable.
@@ -37,6 +37,7 @@
             this.SelectedProductPricesListBox = new System.Windows.Forms.ListBox();
             this.IsCurrentlyActivePriceCheckBox = new System.Windows.Forms.CheckBox();
             this.DeletePriceButton = new System.Windows.Forms.Button();
+            this.CloseButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SelectProductLabel
@@ -64,6 +65,7 @@
             this.PriceTextBox.Name = "PriceTextBox";
             this.PriceTextBox.Size = new System.Drawing.Size(89, 24);
             this.PriceTextBox.TabIndex = 61;
+            this.PriceTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PriceTextBox_KeyPress);
             // 
             // AssociatePriceButton
             // 
@@ -126,12 +128,23 @@
             this.DeletePriceButton.UseVisualStyleBackColor = true;
             this.DeletePriceButton.Click += new System.EventHandler(this.DeletePriceButton_Click);
             // 
-            // PricingManagementForm
+            // CloseButton
+            // 
+            this.CloseButton.Location = new System.Drawing.Point(318, 272);
+            this.CloseButton.Name = "CloseButton";
+            this.CloseButton.Size = new System.Drawing.Size(96, 28);
+            this.CloseButton.TabIndex = 72;
+            this.CloseButton.Text = "Close";
+            this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
+            // 
+            // SalesPriceManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.ClientSize = new System.Drawing.Size(426, 315);
+            this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.DeletePriceButton);
             this.Controls.Add(this.IsCurrentlyActivePriceCheckBox);
             this.Controls.Add(this.SelectedProductPricesListBox);
@@ -143,10 +156,11 @@
             this.Controls.Add(this.ProductsListBox);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.SeaGreen;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "PricingManagementForm";
+            this.Name = "SalesPriceManagementForm";
             this.ShowIcon = false;
-            this.Text = "Pricing Management Form";
+            this.Text = "Sales Price Management Form";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -163,5 +177,6 @@
         private System.Windows.Forms.ListBox SelectedProductPricesListBox;
         private System.Windows.Forms.CheckBox IsCurrentlyActivePriceCheckBox;
         private System.Windows.Forms.Button DeletePriceButton;
+        private System.Windows.Forms.Button CloseButton;
     }
 }

@@ -53,6 +53,7 @@ namespace RMLibrary.DataAcces
                 parameters.Add("@Name", model.Name);
                 parameters.Add("@Data", model.Data);
                 parameters.Add("@Adress", model.Adress);
+                parameters.Add("@DeliveryAdress", model.DeliveryAdress);
                 parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                 connection.Execute("dbo.spCompany_Insert", parameters, commandType: CommandType.StoredProcedure);
@@ -87,28 +88,52 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
-        /// Creates a new Price entity in the database
+        /// Creates a new Sales Price entity in the database
         /// </summary>
-        /// <param name="model">The new Price model</param>
+        /// <param name="model">The new Sales Price model</param>
         /// <returns></returns>
-        public PriceModel CreatePrice(PriceModel model)
+        public SalesPriceModel CreateSalesPrice(SalesPriceModel model)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@ProductId", model.ProductId);
-                parameters.Add("@Cost", model.Cost);
                 parameters.Add("@SalesPrice", model.SalesPrice);
                 parameters.Add("@CurrentlyActivePrice", model.CurrentlyActivePrice);
                 parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                connection.Execute("dbo.spPrice_Insert", parameters, commandType: CommandType.StoredProcedure);
+                connection.Execute("dbo.spSalesPrice_Insert", parameters, commandType: CommandType.StoredProcedure);
 
                 model.Id = parameters.Get<int>("@Id");
 
                 return model;
             }
         }
+
+        /// <summary>
+        /// Creates a new Purchase Price entity in the database
+        /// </summary>
+        /// <param name="model">The new Purchase Price model</param>
+        /// <returns></returns>
+        public PurchasePriceModel CreatePurchasePrice(PurchasePriceModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", model.ProductId);
+                parameters.Add("@PurchasePrice", model.PurchasePrice);
+                parameters.Add("@PurchaseDate", model.PurchaseDate);
+                parameters.Add("@PurchaseOrderId", model.PurchaseOrderId);
+                parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                connection.Execute("dbo.spPurchasePrice_Insert", parameters, commandType: CommandType.StoredProcedure);
+
+                model.Id = parameters.Get<int>("@Id");
+
+                return model;
+            }
+        }
+
 
         /// <summary>
         /// Creates a new Product entity in the database
@@ -169,18 +194,116 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
-        /// Deletes a Product Price entry from the database
+        /// Deletes a "Sales Order Product" entry from the database
         /// </summary>
-        /// <param name="model">The Product Price about to be deleted</param>
+        /// <param name="model">The "Sales Order Product" about to be deleted</param>
         /// <returns></returns>
-        public void DeleteProductPrice(PriceModel model)
+        public void Delete_SO_Product(OrderProductModel model)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@Id", model.Id);
-                connection.Execute("dbo.spPrice_Delete", parameters, commandType: CommandType.StoredProcedure);
+                connection.Execute("dbo.spSalesOrderProduct_Delete", parameters, commandType: CommandType.StoredProcedure);
             }
+        }
+
+        /// <summary>
+        /// Deletes a "Sales Order" entry from the database
+        /// </summary>
+        /// <param name="model">The "Sales Order" about to be deleted</param>
+        /// <returns></returns>
+        public void Delete_SalesOrder(SalesOrderModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Id", model.Id);
+                connection.Execute("dbo.spSalesOrder_Delete", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+
+        /// <summary>
+        /// Deletes a Sales Price entry from the database
+        /// </summary>
+        /// <param name="model">The Sales Price about to be deleted</param>
+        /// <returns></returns>
+        public void DeleteSalesPrice(SalesPriceModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Id", model.Id);
+                connection.Execute("dbo.spSalesPrice_Delete", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
+        /// Deletes a Purchase Price entry from the database
+        /// </summary>
+        /// <param name="model">The Purchase Price about to be deleted</param>
+        /// <returns></returns>
+        public void DeletePurchasePrice(PurchasePriceModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Id", model.Id);
+                connection.Execute("dbo.spPurchasePrice_Delete", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
+        /// Gets a Purchase Price entry from the database by the PO Id & product Id 
+        /// </summary>
+        /// <param name="model">Purchase Order Id, Product Id</param>
+        /// <returns></returns>
+        public PurchasePriceModel GetPurchasePrice_By_Id(int poId, int productId)
+        {
+            PurchasePriceModel price = new PurchasePriceModel();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@PurchaseOrderId", poId);
+                parameters.Add("@ProductId", productId);
+                price = connection.Query<PurchasePriceModel>("dbo.spGetPurchasePrice_ById", parameters, commandType: CommandType.StoredProcedure).Single();
+            }
+            return price;
+        }
+
+        /// <summary>
+        /// Gets a Product Model entry from the database by product Id 
+        /// </summary>
+        /// <param name="model">Purchase Order Id, Product Id</param>
+        /// <returns></returns>
+        public ProductModel GetProductModel_By_Id(int productId)
+        {
+            ProductModel product = new ProductModel();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", productId);
+                product = connection.Query<ProductModel>("dbo.spGetProductModel_ById", parameters, commandType: CommandType.StoredProcedure).Single();
+            }
+            return product;
+        }
+
+        /// <summary>
+        /// Gets a Purchase Order Product List from the database by the PO Id 
+        /// </summary>
+        /// <param name="model">Purchase Order Id</param>
+        /// <returns></returns>
+        public List<OrderProductModel> GetPurchaseOrderProductList_ByPO_Id(int poId)
+        {
+            List<OrderProductModel> output = new List<OrderProductModel>();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@OrderId", poId);
+                output = connection.Query<OrderProductModel>("dbo.spGetPurchaseOrderProduct_ByPOId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return output;
         }
 
         /// <summary>
@@ -328,18 +451,33 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
-        /// Retrieves a list of all product prices 
+        /// Retrieves a list of all sales prices 
         /// </summary>
         /// <returns></returns>
-        public List<PriceModel> GetPrices_All()
+        public List<SalesPriceModel> GetSalesPrices_All()
         {
-            List<PriceModel> output;
+            List<SalesPriceModel> output;
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
             {
-                output = connection.Query<PriceModel>("dbo.spPrices_GetAll", commandType: CommandType.StoredProcedure).ToList();
+                output = connection.Query<SalesPriceModel>("dbo.spSalesPrices_GetAll", commandType: CommandType.StoredProcedure).ToList();
             }
             return output;
         }
+
+        /// <summary>
+        /// Retrieves a list of all purchase prices ordered by newest entry
+        /// </summary>
+        /// <returns></returns>
+        public List<PurchasePriceModel> GetPurchasePrices_All()
+        {
+            List<PurchasePriceModel> output;
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<PurchasePriceModel>("dbo.spPurchasePrices_GetAll", commandType: CommandType.StoredProcedure).ToList();
+            }
+            return output;
+        }
+
 
         /// <summary>
         /// Retrieves a list of all Tax entries 
@@ -356,6 +494,83 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
+        /// Retrieves a list of all Sales Order Product entries/associations 
+        /// </summary>
+        /// <returns></returns>
+        public List<OrderProductModel> Get_SO_Products_BySO_Id(int salesOrderId)
+        {
+            List<OrderProductModel> output;
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@OrderId", salesOrderId);
+
+                output = connection.Query<OrderProductModel>("dbo.spSalesOrderProduct_GetBySO_Id", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Retrieves a list of all Purchase Orders entries/associations 
+        /// </summary>
+        /// <returns></returns>
+        public List<PurchaseOrderModel> GetPurchaseOrders_All()
+        {
+            List<PurchaseOrderModel> output;
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<PurchaseOrderModel>("dbo.spPurchaseOrders_GetAll", commandType: CommandType.StoredProcedure).ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Retrieves a list of all Purchase Invoice entries 
+        /// </summary>
+        /// <returns></returns>
+        public List<PurchaseInvoiceModel> GetPurchaseInvoices_All()
+        {
+            List<PurchaseInvoiceModel> output;
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<PurchaseInvoiceModel>("dbo.spPurchaseInvoices_GetAll", commandType: CommandType.StoredProcedure).ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Retrieves a a single ProductStock entry
+        /// </summary>
+        /// <returns></returns>
+        public ProductStockModel GetProductStock_Single(int productId)
+        {
+            ProductStockModel product;
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", productId);
+                product =  connection.Query<ProductStockModel>("dbo.spProductStock_GetSingle", parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
+            }
+            return product;
+        }
+
+        /// <summary>
+        /// Retrieves a a single Product Sales Price entry
+        /// </summary>
+        /// <returns></returns>
+        public List<SalesPriceModel> GetProduct_SalesPrice_ByProductId(int productId)
+        {
+            List<SalesPriceModel> productPrices = new List<SalesPriceModel>();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", productId);
+                productPrices = connection.Query<SalesPriceModel>("dbo.spSalesPrice_GetByProductId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return productPrices;
+        }
+
+        /// <summary>
         /// Creates a new Product Stock association in the database
         /// Reflects the "quantity in stock" of a product
         /// </summary>
@@ -367,7 +582,8 @@ namespace RMLibrary.DataAcces
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@ProductId", model.ProductId);
-                parameters.Add("@CategoryId", model.Quantity);
+                parameters.Add("@Quantity", model.Quantity);
+                parameters.Add("@AvailableQuantity", model.AvailableQuantity);
                 parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                 connection.Execute("dbo.spProductStock_Insert", parameters, commandType: CommandType.StoredProcedure);
@@ -385,20 +601,14 @@ namespace RMLibrary.DataAcces
         /// <returns></returns>
         public SalesOrderModel CreateSalesOrder(SalesOrderModel model)
         {
-            string storeProcedureName = "dbo.spSalesOrderProduct_Insert";
-
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@Status", model.Status);
                 parameters.Add("@TableId", model.TableId);
                 parameters.Add("@CustomerId", model.CustomerId);
-
-                foreach (OrderProductModel orderProduct in model.OrderProductsList)
-                {
-                    Create_Order_ProductList(storeProcedureName, connection, orderProduct);
-                }
-
+                parameters.Add("@CompanyId", model.CompanyId);
+                parameters.Add("@Name", model.Name);
                 parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                 connection.Execute("dbo.spSalesOrder_Insert", parameters, commandType: CommandType.StoredProcedure);
@@ -408,7 +618,9 @@ namespace RMLibrary.DataAcces
                 return model;
             }
         }
-               
+
+
+
         /// <summary>
         /// Creates a new Purchase Order in the database
         /// </summary>
@@ -416,21 +628,67 @@ namespace RMLibrary.DataAcces
         /// <returns></returns>
         public PurchaseOrderModel CreatePurchaseOrder(PurchaseOrderModel model)
         {
-            string storeProcedureName = "dbo.spPurchaseOrderProduct_Insert";
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@Status", model.Status);
-                parameters.Add("@TableId", model.SuplierId);
-
-                foreach (OrderProductModel orderProduct in model.OrderProductsList)
-                {
-                    Create_Order_ProductList(storeProcedureName, connection, orderProduct);
-                }
-
+                parameters.Add("@SupplierId", model.SupplierId);
+                parameters.Add("@SupplierName", model.SupplierName);
+                parameters.Add("@PostingDate", model.PostingDate);
+                parameters.Add("@DueDate", model.DueDate);
+                parameters.Add("@DocumentDate", model.DocumentDate);
                 parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                connection.Execute("dbo.spSalesOrder_Insert", parameters, commandType: CommandType.StoredProcedure);
+                connection.Execute("dbo.spPurchaseOrder_Insert", parameters, commandType: CommandType.StoredProcedure);
+
+                model.Id = parameters.Get<int>("@Id");
+
+                return model;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new Purchase Invoice in the database
+        /// </summary>
+        /// <param name="model">The new Purchase Invoice model</param>
+        /// <returns></returns>
+        public PurchaseInvoiceModel CreatePurchaseInvoice(PurchaseInvoiceModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@RelatedPurchaseOrderId", model.RelatedPurchaseOrderId);
+                parameters.Add("@Status", model.Status);
+                parameters.Add("@SupplierId", model.SupplierId);
+                parameters.Add("@SupplierName", model.SupplierName);
+                parameters.Add("@PostingDate", model.PostingDate);
+                parameters.Add("@DueDate", model.DueDate);
+                parameters.Add("@DocumentDate", model.DocumentDate);
+                parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                connection.Execute("dbo.spPurchaseInvoice_Insert", parameters, commandType: CommandType.StoredProcedure);
+
+                model.Id = parameters.Get<int>("@Id");
+
+                return model;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new Payment Term association in the database
+        /// </summary>
+        /// <param name="model">The new Payment Term model</param>
+        /// <returns></returns>
+        public PaymentTermsModel CreatePaymentTerm(PaymentTermsModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@PaymentTerm_Days", model.PaymentTerm_Days);
+                parameters.Add("@IsDefaultPaymentTerm", model.IsDefaultPaymentTerm);
+                parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                connection.Execute("dbo.spPaymentTerm_Days_Insert", parameters, commandType: CommandType.StoredProcedure);
 
                 model.Id = parameters.Get<int>("@Id");
 
@@ -452,6 +710,23 @@ namespace RMLibrary.DataAcces
             }
             return output;
         }
+
+        /// <summary>
+        /// Returns a list with all the Payment Term days in the  PaymentTerms table
+        /// </summary>
+        /// <returns></returns>
+        public List<PaymentTermsModel> GetPaymentTerms_All()
+        {
+            List<PaymentTermsModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<PaymentTermsModel>("dbo.spPaymentTerms_GetAll").ToList();
+            }
+            return output;
+        }
+
+
 
         /// <summary>
         /// Returns a list with all the recipes in the Recipe table, ordered by name
@@ -520,6 +795,21 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
+        /// Returns a list with all the Sales Orders in the SalesOrder table, ordered by name
+        /// </summary>
+        /// <returns></returns>
+        public List<SalesOrderModel> GetSalesOrders_All()
+        {
+            List<SalesOrderModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                output = connection.Query<SalesOrderModel>("dbo.spSalesOrder_GetAll").ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Returns a list with all the tables(tables to sit @ restaurant in the "Table" table) in database ordered by name
         /// </summary>
         /// <returns></returns>
@@ -549,6 +839,23 @@ namespace RMLibrary.DataAcces
             return output;
         }
 
+        /// <summary>
+        /// Returns a a single Company entry, matchind the id passed as a parameter
+        /// </summary>
+        /// <returns></returns>
+        public CompanyModel GetCompany_Single(int companyId)
+        {
+            CompanyModel output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Id", companyId);
+                output = connection.Query<CompanyModel>("dbo.spCompany_GetSingle", parameters, commandType: CommandType.StoredProcedure).Single();
+            }
+            return output;
+        }
+
 
         /// <summary>
         /// Returns a list with all the entries in the Customer table, ordered by first name
@@ -566,22 +873,47 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
-        /// Creates a new Sales/Purchase Order product association in the database
+        /// Creates a new Sales Order product association in the database
         /// </summary>      
-        /// <param name="connection">The database connection</param>
         /// <param name="opModel">The Order Product that is about to get inserted to the database and associated with the Sales/Purchase Order</param>
-        private void Create_Order_ProductList(string storedProcedureName, IDbConnection connection, OrderProductModel opModel)
+        public void Create_SO_Product(OrderProductModel opModel)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@ProductId", opModel.ProductId);
-            parameters.Add("@OrderId", opModel.OrderId);
-            parameters.Add("@OrderedQuantity", opModel.OrderedQuantity);
-            parameters.Add("@TaxId", opModel.TaxId);
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", opModel.ProductId);
+                parameters.Add("@ProductName", opModel.ProductName);
+                parameters.Add("@OrderId", opModel.OrderId);
+                parameters.Add("@OrderedQuantity", opModel.OrderedQuantity);
+                parameters.Add("@TaxId", opModel.TaxId);
+                parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-            parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
-
-            connection.Execute(storedProcedureName, parameters, commandType: CommandType.StoredProcedure);
+                connection.Execute("dbo.spSalesOrderProduct_Insert", parameters, commandType: CommandType.StoredProcedure);
+            }
         }
+
+        /// <summary>
+        /// Creates a new Purchase Order product association in the database
+        /// </summary>      
+        /// <param name="">The database connection</param>
+        /// <param name="opModel">The Order Product that is about to get inserted to the database and associated with the Sales/Purchase Order</param>
+        public void Create_PO_Product(OrderProductModel opModel)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", opModel.ProductId);
+                parameters.Add("@ProductName", opModel.ProductName);
+                parameters.Add("@OrderId", opModel.OrderId);
+                parameters.Add("@OrderedQuantity", opModel.OrderedQuantity);
+                parameters.Add("@TaxId", opModel.TaxId);
+                parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                connection.Execute("dbo.spPurchaseOrderProduct_Insert", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+
 
         /// <summary>
         /// Updates category details in the database
@@ -592,16 +924,11 @@ namespace RMLibrary.DataAcces
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
             {
-                //var parameters = new DynamicParameters();
-                //parameters.Add("@Name", model.Name);
-                //parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+                var parameters = new DynamicParameters();
+                parameters.Add("@Name", model.Name);
+                parameters.Add("@Id", model.Id);
 
-                //connection.Execute("dbo.spCategory_Update", parameters, commandType: CommandType.StoredProcedure);
-                //TODO - try to update the method to use the update stored procedure
-                var sqlUpdateStatement = $@"UPDATE Category 
-                                            SET  Name = @Name
-                                            WHERE Id = @Id";
-                connection.Execute(sqlUpdateStatement, model);
+                connection.Execute("dbo.spCategory_Update", parameters, commandType: CommandType.StoredProcedure);
             }
         }
 
@@ -624,22 +951,170 @@ namespace RMLibrary.DataAcces
         }
 
         /// <summary>
-        /// Updates a a product price entry in the database
+        /// Updates a Purchase Order entry details in the database
         /// </summary>
-        /// <param name="model">The product price we want to update</param>
+        /// <param name="model">The Purchase Order we want to update</param>
         /// <returns></returns>
-        public void UpdatePriceModel(PriceModel model)
+        public void UpdatePurchaseOrderModel(PurchaseOrderModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Status", model.Status);
+                parameters.Add("@SupplierId", model.SupplierId);
+                parameters.Add("@SupplierName", model.SupplierName);
+                parameters.Add("@PostingDate", model.PostingDate);
+                parameters.Add("@DueDate", model.DueDate);
+                parameters.Add("@DocumentDate", model.DocumentDate);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spPurchaseOrder_Update", parameters, commandType: CommandType.StoredProcedure);
+
+            }
+        }
+
+        /// <summary>
+        /// Updates a Purchase Invoice details in the database
+        /// </summary>
+        /// <param name="model">The Purchase Invoice we want to update</param>
+        /// <returns></returns>
+        public void UpdatePurchaseInvoiceModel(PurchaseInvoiceModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@RelatedPurchaseOrderId", model.RelatedPurchaseOrderId);
+                parameters.Add("@Status", model.Status);
+                parameters.Add("@SupplierId", model.SupplierId);
+                parameters.Add("@SupplierName", model.SupplierName);
+                parameters.Add("@PostingDate", model.PostingDate);
+                parameters.Add("@DueDate", model.DueDate);
+                parameters.Add("@DocumentDate", model.DocumentDate);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spRecipe_Update", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
+        /// Updates a Sales Order's details in the database
+        /// </summary>
+        /// <param name="model">The Sales Order entry we want to update</param>
+        /// <returns></returns>
+        public void UpdateSalesOrderModel(SalesOrderModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Status", model.Status);
+                parameters.Add("@TableId", model.TableId);
+                parameters.Add("@CustomerId", model.CustomerId);
+                parameters.Add("@CompanyId", model.CompanyId);
+                parameters.Add("@Name", model.Name);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spSalesORder_Update", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+
+        /// <summary>
+        /// Updates a ProductStock details in the database
+        /// </summary>
+        /// <param name="model">The ProductStock entry we want to update</param>
+        /// <returns></returns>
+        public void UpdateProductStockModel(ProductStockModel model)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@ProductId", model.ProductId);
-                parameters.Add("@Cost", model.Cost);
+                parameters.Add("@Quantity", model.Quantity);
+                parameters.Add("@BookedQuantity", model.BookedQuantity);
+                parameters.Add("@AvailableQuantity", model.AvailableQuantity);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spProductStock_Update", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
+        /// Updates a Payment Term in the database
+        /// </summary>
+        /// <param name="model">The Payment Term we want to update</param>
+        /// <returns></returns>
+        public void UpdatePaymentTermModel(PaymentTermsModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@PaymentTerm_Days", model.PaymentTerm_Days);
+                parameters.Add("@IsDefaultPaymentTerm", model.IsDefaultPaymentTerm);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spPaymentTerm_Update", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+
+
+        /// <summary>
+        /// Updates a "Sales Order Product" entry in the database
+        /// </summary>
+        /// <param name="model">The "Sales Order Product" we want to update</param>
+        /// <returns></returns>
+        public void Update_SO_Product(OrderProductModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", model.ProductId);
+                parameters.Add("@ProductName", model.ProductName);
+                parameters.Add("@OrderId", model.OrderId);
+                parameters.Add("@OrderedQuantity", model.OrderedQuantity);
+                parameters.Add("@TaxId", model.TaxId);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spSalesOrderProduct_Update", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+
+        /// <summary>
+        /// Updates a a product Sales Price entry in the database
+        /// </summary>
+        /// <param name="model">The product Sales Price we want to update</param>
+        /// <returns></returns>
+        public void UpdateSalesPriceModel(SalesPriceModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", model.ProductId);
                 parameters.Add("@SalesPrice", model.SalesPrice);
                 parameters.Add("@CurrentlyActivePrice", model.CurrentlyActivePrice);
                 parameters.Add("@Id", model.Id);
 
-                connection.Execute("dbo.spPrice_Update", parameters, commandType: CommandType.StoredProcedure);
+                connection.Execute("dbo.spSalesPrice_Update", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
+        /// Updates a a product Purchase Price entry in the database
+        /// </summary>
+        /// <param name="model">The product Purchase Price we want to update</param>
+        /// <returns></returns>
+        public void UpdatePurchasePriceModel(PurchasePriceModel model)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", model.ProductId);
+                parameters.Add("@PurchasePrice", model.PurchasePrice);
+                parameters.Add("@PurchaseOrderId", model.PurchaseOrderId);
+                parameters.Add("@Id", model.Id);
+
+                connection.Execute("dbo.spPurchasePrice_Update", parameters, commandType: CommandType.StoredProcedure);
             }
         }
 
@@ -676,6 +1151,7 @@ namespace RMLibrary.DataAcces
                 parameters.Add("@Name", model.Name);
                 parameters.Add("@Data", model.Data);
                 parameters.Add("@Adress", model.Adress);
+                parameters.Add("@DeliveryAdress", model.DeliveryAdress);
                 parameters.Add("@Id", model.Id);
 
                 connection.Execute("dbo.spCompany_Update", parameters, commandType: CommandType.StoredProcedure);

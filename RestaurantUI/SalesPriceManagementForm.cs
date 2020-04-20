@@ -8,23 +8,41 @@ using System.Windows.Forms;
 
 namespace RestaurantUI
 {
-    public partial class PricingManagementForm : Form
+    public partial class SalesPriceManagementForm : Form
     {
         public List<ProductModel> ProductList { get; set; }
-        public List<PriceModel> SelectedProductPriceList { get; set; }
-        public List<PriceModel> PriceList_All { get; set; }
+        public List<SalesPriceModel> SelectedProductPriceList { get; set; }
+        public List<SalesPriceModel> PriceList_All { get; set; }
 
-        PriceModel selectedActivePrice;
+        private ISalesPriceUpdater callingForm;
+
+        private ProductModel lastSelectedProduct;
+
+        private SalesPriceModel selectedActivePrice;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public PricingManagementForm()
+        public SalesPriceManagementForm()
         {
             InitializeComponent();
             InitializeProductList();
             InitializePriceList();
 
+        }
+
+        /// <summary>
+        /// Overloaded constructor that recieves data from the calling form
+        /// </summary>
+        /// <param name="caller"></param>
+        /// <param name="productModel"></param>
+        public SalesPriceManagementForm(ISalesPriceUpdater caller, ProductModel productModel)
+        {
+            callingForm = caller;
+            lastSelectedProduct = productModel;
+            InitializeComponent();
+            InitializeProductList();
+            InitializePriceList();
         }
 
         /// <summary>
@@ -48,7 +66,7 @@ namespace RestaurantUI
             if (ValidateForm())
             {
                 ProductModel selectedProduct = (ProductModel)ProductsListBox.SelectedItem;
-                PriceModel newPrice = new PriceModel();
+                SalesPriceModel newPrice = new SalesPriceModel();
                 newPrice.ProductId = selectedProduct.Id;
                 newPrice.SalesPrice = decimal.Parse(PriceTextBox.Text);
                 newPrice.CurrentlyActivePrice = IsCurrentlyActivePriceCheckBox.Checked;
@@ -56,7 +74,7 @@ namespace RestaurantUI
                 if (IsCurrentlyActivePriceCheckBox.Checked)
                     UncheckPreviousActivePrice();
 
-                GlobalConfig.Connection.CreatePrice(newPrice);
+                GlobalConfig.Connection.CreateSalesPrice(newPrice);
             }
             ResetForm();
             InitializePriceList();
@@ -98,7 +116,7 @@ namespace RestaurantUI
         /// </summary>
         private void InitializePriceList()
         {
-            PriceList_All = GlobalConfig.Connection.GetPrices_All();
+            PriceList_All = GlobalConfig.Connection.GetSalesPrices_All();
         }
 
         /// <summary>
@@ -139,9 +157,9 @@ namespace RestaurantUI
         private void ProductsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             InitializeSelectedProductPriceList();
-            PriceModel selectedPrice = SelectedProductPriceList.Where(p => p.CurrentlyActivePrice == true).FirstOrDefault();
+            SalesPriceModel selectedPrice = SelectedProductPriceList.Where(p => p.CurrentlyActivePrice == true).FirstOrDefault();
             PriceTextBox.Text = selectedPrice == null ? "" : selectedPrice.SalesPrice.ToString();
-
+            lastSelectedProduct = (ProductModel)ProductsListBox.SelectedItem;
             IsCurrentlyActivePriceCheckBox.Checked = selectedPrice == null ? false : selectedPrice.CurrentlyActivePrice;
         }
 
@@ -149,10 +167,10 @@ namespace RestaurantUI
         /// Returns a list of prices associated with the selected product
         /// </summary>
         /// <returns></returns>
-        private List<PriceModel> GetSelectedProductPrices()
+        private List<SalesPriceModel> GetSelectedProductPrices()
         {
             ProductModel selectedProduct = (ProductModel)ProductsListBox.SelectedItem;
-            List<PriceModel> output = new List<PriceModel>();
+            List<SalesPriceModel> output = new List<SalesPriceModel>();
 
             if (selectedProduct != null && PriceList_All != null)
             {
@@ -173,7 +191,7 @@ namespace RestaurantUI
         {
             if (ValidateForm())
             {
-                PriceModel newPrice = (PriceModel)SelectedProductPricesListBox.SelectedItem;
+                SalesPriceModel newPrice = (SalesPriceModel)SelectedProductPricesListBox.SelectedItem;
 
                 newPrice.SalesPrice = decimal.Parse(PriceTextBox.Text);
                 newPrice.CurrentlyActivePrice = IsCurrentlyActivePriceCheckBox.Checked;
@@ -181,7 +199,7 @@ namespace RestaurantUI
                 if (IsCurrentlyActivePriceCheckBox.Checked)
                     UncheckPreviousActivePrice();
 
-                GlobalConfig.Connection.UpdatePriceModel(newPrice);
+                GlobalConfig.Connection.UpdateSalesPriceModel(newPrice);
 
                 ResetForm();
                 InitializePriceList();
@@ -197,7 +215,7 @@ namespace RestaurantUI
             if (selectedActivePrice != null)
             {
                 selectedActivePrice.CurrentlyActivePrice = false;
-                GlobalConfig.Connection.UpdatePriceModel(selectedActivePrice);
+                GlobalConfig.Connection.UpdateSalesPriceModel(selectedActivePrice);
             }
         }
 
@@ -208,7 +226,7 @@ namespace RestaurantUI
         /// <param name="e"></param>
         private void SelectedProductPricesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PriceModel selectedPrice = (PriceModel)SelectedProductPricesListBox.SelectedItem;
+            SalesPriceModel selectedPrice = (SalesPriceModel)SelectedProductPricesListBox.SelectedItem;
 
             PriceTextBox.Text = selectedPrice == null ? "" : selectedPrice.SalesPrice.ToString();
             IsCurrentlyActivePriceCheckBox.Checked =  selectedPrice == null ? false : selectedPrice.CurrentlyActivePrice; ;
@@ -222,15 +240,47 @@ namespace RestaurantUI
         /// <param name="e"></param>
         private void DeletePriceButton_Click(object sender, EventArgs e)
         {
-            PriceModel selectedPrice = (PriceModel)SelectedProductPricesListBox.SelectedItem;
+            SalesPriceModel selectedPrice = (SalesPriceModel)SelectedProductPricesListBox.SelectedItem;
             if (selectedPrice != null)
             {
-                GlobalConfig.Connection.DeleteProductPrice(selectedPrice);
+                GlobalConfig.Connection.DeleteSalesPrice(selectedPrice);
 
                 ResetForm();
                 InitializePriceList();
             }
         }
 
+        /// <summary>
+        /// Validates characters entered to the price textbox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PriceTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!GlobalConfig.Validation.ValidatePrice(PriceTextBox.Text, e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// If the for wa opened from another form implementing the  interface, it calls the  SalesPriceUpdateComplete to
+        /// finish the sales price update process
+        /// Closes the current window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CloseButton_Click(object sender, EventArgs e)
+        {
+            if (callingForm == null)
+            {
+                this.Close();
+            }
+            else
+            {
+                callingForm.SalesPriceUpdateComplete(lastSelectedProduct);
+                this.Close();
+            }
+        }
     }
 }

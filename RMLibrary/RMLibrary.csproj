@@ -47,17 +47,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAcces\SqlConnection.cs" />
+    <Compile Include="DataValidation\DataValidation.cs" />
     <Compile Include="GlobalConfig.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\Helpers\Enums.cs" />
+    <Compile Include="Models\Helpers\IDeliveryMethod.cs" />
     <Compile Include="Models\OrderModel.cs" />
+    <Compile Include="Models\PaymentTermsModel.cs" />
+    <Compile Include="Models\PO_ProductList_Join.cs" />
+    <Compile Include="Models\PurchaseInvoiceModel.cs" />
     <Compile Include="Models\PurchaseOrderModel.cs" />
+    <Compile Include="Models\PurchasePriceModel.cs" />
     <Compile Include="Models\RecipeAndContentModel.cs" />
     <Compile Include="Models\RecipeContentModel.cs" />
     <Compile Include="Models\SalesOrderModel.cs" />
     <Compile Include="Models\OrderProductModel.cs" />
-    <Compile Include="Models\PriceModel.cs" />
+    <Compile Include="Models\SalesPriceModel.cs" />
     <Compile Include="Models\ProductCategoryModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductStockModel.cs" />
@@ -70,5 +76,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
