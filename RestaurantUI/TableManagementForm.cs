@@ -2,12 +2,8 @@
 using RMLibrary.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RestaurantUI
@@ -28,29 +24,30 @@ namespace RestaurantUI
         /// <summary>
         /// Creates a new table(table to sit at restaurant)
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CreateTableButton_Click(object sender, EventArgs e)
         {
             if (ValidateForm())
             {
                 TableModel selectedTable = (TableModel)TablesListBox.SelectedItem;
-                if (TablesList.Where(c => c.Name == TableNameTextBox.Text).Count() > 0)
-                {
+                if (CheckIfTableNameExists())
                     MessageBox.Show("Table name already exists! Please pick another table name");
-                }
                 else
-                {
                     GlobalConfig.Connection.CreateTable(new TableModel { Name = TableNameTextBox.Text });
-                }
             }
             InitializeTablesList();
         }
 
         /// <summary>
+        /// Checks if the name of the table we are trying to create already exists
+        /// </summary>
+        private bool CheckIfTableNameExists()
+        {
+            return TablesList.Where(c => c.Name == TableNameTextBox.Text).Count() > 0;
+        }
+
+        /// <summary>
         /// Checks if the new table name has at leat 3 characters
         /// </summary>
-        /// <returns></returns>
         private bool ValidateForm()
         {
             if (TableNameLabel.Text.Count() > 2 )
@@ -86,8 +83,6 @@ namespace RestaurantUI
         /// <summary>
         /// Exist the form
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ExitButton_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -96,8 +91,6 @@ namespace RestaurantUI
         /// <summary>
         /// Clears the selected elements and the table name textbox content
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ClearTableTextBoxButton_Click(object sender, EventArgs e)
         {
             ResetForm();
@@ -106,13 +99,11 @@ namespace RestaurantUI
         /// <summary>
         /// Updates the selected table item, and refreshes the form elements/listbox
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void UpdateTableButton_Click(object sender, EventArgs e)
         {
             if (ValidateForm())
             {
-                if (TablesList.Where(c => c.Name == TableNameTextBox.Text).Count() > 0)
+                if (CheckIfTableNameExists())
                 {
                     MessageBox.Show("Table name already exists! Please pick another table name");
                 }
@@ -131,8 +122,6 @@ namespace RestaurantUI
         /// <summary>
         /// When the selected table changes, it displays the table name in the TableNameTextBox
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void TablesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (TablesListBox.SelectedItem != null)

@@ -21,7 +21,7 @@ namespace RestaurantUI
         /// <summary>
         /// Overloaded constructor that recieves data from the calling form
         /// </summary>
-        /// <param name="caller"></param>
+        /// <param name="caller">Parameter used to call this form and request data by forms that implement IRecipeRequester interface</param>
         public ProductRecipeForm(IRecipeRequester caller)
         {
             callingForm = caller;
@@ -41,7 +41,6 @@ namespace RestaurantUI
             RecipesListBox.ClearSelected();
             RecipeNameTextBox.Text = "";
             SelectedRecipeContent.Clear();
-
             ClearRecipeContentList();
         }
 
@@ -76,6 +75,7 @@ namespace RestaurantUI
         /// <summary>
         /// Initializes the list of ingredients belonging to the selected recipe and connects it with the SelectedRecipeContentListbox
         /// </summary>
+        /// <parameter see cref="refresh">default parameter, used to refresh the recipe content listbox, when RecipesListBox.SelectedItem/Index are null/-1 </parameter>
         private void InitializeRecipeContentList(bool refresh = false)
         {
             if (RecipesListBox.SelectedItem != null || RecipesListBox.SelectedIndex != -1)
@@ -105,10 +105,8 @@ namespace RestaurantUI
         }
 
         /// <summary>
-        /// Exits the form
+        /// Exits the form and sends back to the calling form, the last recipe created
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ExitButton_Click(object sender, EventArgs e)
         {
             callingForm.RecipeComplete(lastRecipeCreated);
@@ -118,8 +116,6 @@ namespace RestaurantUI
         /// <summary>
         /// When the "selected recipe" changes, the "recipe content listbox" gets initialized with the current "selected recipe"
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void RecipesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if ((RecipeModel)RecipesListBox.SelectedItem != null)
@@ -133,8 +129,6 @@ namespace RestaurantUI
         /// <summary>
         /// Displays the ingredient quantity in "()", left of the ingredient name, in the selected recipe content listbox
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void SelectedRecipeContentListbox_Format(object sender, ListControlConvertEventArgs e)
         {
             RecipeAndContentModel ingredient = ((RecipeAndContentModel)e.ListItem);
@@ -145,8 +139,6 @@ namespace RestaurantUI
         /// <summary>
         /// Adds an ingredient to a recipe(new or existing one)
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void AddRecipeItemButton_Click(object sender, EventArgs e)
         {
             ProductModel p = (ProductModel)ProductsListBox.SelectedItem;
@@ -165,28 +157,21 @@ namespace RestaurantUI
         /// <summary>
         /// Removes an ingredient from a recipe(new or existing one)
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void RemoveRecipeItemButton_Click(object sender, EventArgs e)
         {
             RecipeAndContentModel ingredient = (RecipeAndContentModel)SelectedRecipeContentListbox.SelectedItem;
 
             if (ingredient.ProductQuantity > 1)
-            {
                 SelectedRecipeContent[SelectedRecipeContent.IndexOf(ingredient)].ProductQuantity--;
-            }
             else
-            {
                 SelectedRecipeContent.Remove(ingredient);
-            }
+
             InitializeRecipeContentList();
         }
 
         /// <summary>
-        /// Creates a new recipe
+        /// Creates a new recipe model
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CreateRecipeButton_Click(object sender, EventArgs e)
         {
             if (ValidateForm())
@@ -217,7 +202,6 @@ namespace RestaurantUI
         /// <summary>
         /// Checks if the new recipe name has at leat 3 characters, and there are at least 2 ingredients or an ingredient with a quantity > 1
         /// </summary>
-        /// <returns></returns>
         private bool ValidateForm()
         {
             if (RecipeNameTextBox.Text.Count() > 2 && (SelectedRecipeContent.Count > 1 || SelectedRecipeContent[0].ProductQuantity > 1))
@@ -229,8 +213,6 @@ namespace RestaurantUI
         /// <summary>
         /// Deletes a recipe from the database(first its contents, then the recipe itself)
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void DeleteRecipeButton_Click(object sender, EventArgs e)
         {
             RecipeModel recipe = (RecipeModel)RecipesListBox.SelectedItem;
@@ -251,13 +233,10 @@ namespace RestaurantUI
         /// <summary>
         /// Updates the selected recipe
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void UpdateRecipeButton_Click(object sender, EventArgs e)
         {
             if (RecipesListBox.SelectedItem != null && RecipeNameTextBox.Text.Count() > 2)
             {
-                //Update recipe name
                 RecipeModel newRecipeModel = new RecipeModel
                 {
                     Id = ((RecipeModel)RecipesListBox.SelectedItem).Id,
@@ -265,16 +244,10 @@ namespace RestaurantUI
                 };
                 GlobalConfig.Connection.UpdateRecipeModel(newRecipeModel);
 
-                //Update the recipeContent
                 List<RecipeAndContentModel> ExistingRecipeContent = GlobalConfig.Connection.GetRecipeAndContent((RecipeModel)RecipesListBox.SelectedItem);
 
-                //Check and add new entries
                 AddNewIngredientsToRecipe(IngredientsToAdd(ExistingRecipeContent));
-
-                //Check and remove old entries
                 RemoveOldIngredientsToRecipe(IngredientsToRemove(ExistingRecipeContent));
-
-                //Check and update ingredient quantities
                 UpdateIngredientsQuantitiesToRecipe(GetIngredientsWithDifferentQty(ExistingRecipeContent));
 
                 InitializeRecipeList();
@@ -286,7 +259,6 @@ namespace RestaurantUI
         /// <summary>
         /// Updates(in the database) the ingredients with modified quantities
         /// </summary>
-        /// <param name="ingredientsToUpdate"></param>
         private void UpdateIngredientsQuantitiesToRecipe(List<RecipeContentModel> ingredientsToUpdate)
         {
             foreach (RecipeContentModel ingredient in ingredientsToUpdate)
@@ -298,7 +270,6 @@ namespace RestaurantUI
         /// <summary>
         /// Removes ingredients from the existing(saved in the database) recipe
         /// </summary>
-        /// <param name="ingredientsToRemove"></param>
         private void RemoveOldIngredientsToRecipe(List<RecipeContentModel> ingredientsToRemove)
         {
             foreach (RecipeContentModel ingredient in ingredientsToRemove)
@@ -310,7 +281,6 @@ namespace RestaurantUI
         /// <summary>
         /// Adds new ingredients to the selected recipe
         /// </summary>
-        /// <param name="ingredientsToAdd"></param>
         private void AddNewIngredientsToRecipe(List<RecipeContentModel> ingredientsToAdd)
         {
             foreach (RecipeContentModel ingredient in ingredientsToAdd)
@@ -322,7 +292,6 @@ namespace RestaurantUI
         /// <summary>
         /// Checks for new ingredients to add in the selected recipe
         /// </summary>
-        /// <param name="savedRecipe"></param>
         /// <returns>List with new ingredients to add</returns>
         List<RecipeContentModel> IngredientsToAdd(List<RecipeAndContentModel> savedRecipe)
         {
@@ -346,8 +315,6 @@ namespace RestaurantUI
         /// <summary>
         /// Checks for ingredients to remove from the selected recipe
         /// </summary>
-        /// <param name="savedRecipe"></param>
-        /// <returns>List with ingredients to remove</returns>
         List<RecipeContentModel> IngredientsToRemove(List<RecipeAndContentModel> savedRecipe)
         {
             List<RecipeAndContentModel> Differences = new List<RecipeAndContentModel>();
@@ -370,7 +337,6 @@ namespace RestaurantUI
         /// <summary>
         /// Checks for items with a modified quantity to update in the selected recipe
         /// </summary>
-        /// <param name="savedRecipe"></param>
         /// <returns>List of ingredients to update quantity for</returns>
         private List<RecipeContentModel> GetIngredientsWithDifferentQty(List<RecipeAndContentModel> savedRecipe)
         {
@@ -384,6 +350,7 @@ namespace RestaurantUI
                 if (selectedIngredient != null && selectedIngredient.ProductQuantity != savedIngredient.ProductQuantity)
                     CommonIngredients.Add(selectedIngredient);
             }
+
             List<RecipeContentModel> Output = new List<RecipeContentModel>();
             foreach (var item in CommonIngredients)
             {
@@ -396,8 +363,6 @@ namespace RestaurantUI
         /// <summary>
         /// Clears the form elements and deselects listboxes
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ClearButton_Click(object sender, EventArgs e)
         {
             ClearRecipeContentList();

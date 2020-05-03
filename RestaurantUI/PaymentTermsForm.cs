@@ -2,12 +2,8 @@
 using RMLibrary.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RestaurantUI
@@ -21,25 +17,22 @@ namespace RestaurantUI
         /// Overloaded constructor that recieves data from the calling form or uses a default value of null
         /// when the form is not linked with Sales/Purchasing modules
         /// </summary>
-        /// <param name="caller"></param>
         public PaymentTermsForm(IPaymentTermRequester caller = null)
         {
             InitializeComponent();
             InitializePaymentTermList();
 
             if (caller != null)
-            {
                 callingForm = caller;
-            }
         }
 
-
-
+        /// <summary>
+        /// Validates that the user has inserted a valid payment term number of days(integer)
+        /// </summary>
         private bool ValidateForm()
         {
             string termTxt = PaymentTermTextBox.Text.Replace(" ", "");
             bool isParsable = false;
-            int num = 0;
 
             if (termTxt.Count() > 0)
             {
@@ -48,13 +41,23 @@ namespace RestaurantUI
                     if (!char.IsDigit(c))
                         return false;
                 }
-                isParsable = int.TryParse(termTxt, out num);
+
+                isParsable = int.TryParse(termTxt, out int num);
             }
             else
             {
                 MessageBox.Show("Please insert a valid Payment Term(number of days)");
             }
+
             return isParsable;
+        }
+
+        /// <summary>
+        /// Check if a payment term(as number of days) already exists
+        /// </summary>
+        private bool CheckIfPaymentTermExists(int paymentTermDays)
+        {
+            return PaymentTermsList.Where(t => t.PaymentTerm_Days == paymentTermDays).Count() > 0;
         }
 
         /// <summary>
@@ -85,8 +88,6 @@ namespace RestaurantUI
         /// <summary>
         /// Creates a new PaymentTermsModel
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CreateButton_Click(object sender, EventArgs e)
         {
             if (ValidateForm())
@@ -98,12 +99,18 @@ namespace RestaurantUI
                 };
 
                 if (paymentTerm.IsDefaultPaymentTerm)
-                {
                     UncheckPreviousDefaultPaymentTerm();
+
+                if (!CheckIfPaymentTermExists(paymentTerm.PaymentTerm_Days))
+                {
+                    GlobalConfig.Connection.CreatePaymentTerm(paymentTerm);
+                    InitializePaymentTermList();
+                }
+                else
+                {
+                    MessageBox.Show("Payment Term already exists!");
                 }
 
-                GlobalConfig.Connection.CreatePaymentTerm(paymentTerm);
-                InitializePaymentTermList();
             }
         }
 
@@ -123,8 +130,6 @@ namespace RestaurantUI
         /// <summary>
         /// Clears fields/resets selected items
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ClearButton_Click(object sender, EventArgs e)
         {
             ResetForm();
@@ -133,8 +138,6 @@ namespace RestaurantUI
         /// <summary>
         /// Updates a PaymentTermsModel's details 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void UpdateButton_Click(object sender, EventArgs e)
         {
             PaymentTermsModel selectedPaymentTerm = (PaymentTermsModel)PaymentTermsListBox.SelectedItem;
@@ -143,12 +146,17 @@ namespace RestaurantUI
                 if (IsDefaultPaymentTermCheckBox.Checked)
                     UncheckPreviousDefaultPaymentTerm();
 
-                if (ValidateForm())
+                if (ValidateForm() && !CheckIfPaymentTermExists(selectedPaymentTerm.PaymentTerm_Days) )
                 {
                     selectedPaymentTerm.PaymentTerm_Days = int.Parse(PaymentTermTextBox.Text);
                     selectedPaymentTerm.IsDefaultPaymentTerm = IsDefaultPaymentTermCheckBox.Checked;
 
                     GlobalConfig.Connection.UpdatePaymentTermModel(selectedPaymentTerm);
+                }
+                else
+                {
+                    if(CheckIfPaymentTermExists(selectedPaymentTerm.PaymentTerm_Days))
+                        MessageBox.Show("Payment Term already exists!");
                 }
 
                 InitializePaymentTermList();
@@ -158,8 +166,6 @@ namespace RestaurantUI
         /// <summary>
         /// Displays the selected PaymentTermsModel information in the associated textbox/checkbox
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void PaymentTermsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             PaymentTermsModel selectedPaymentTerm = (PaymentTermsModel)PaymentTermsListBox.SelectedItem;
@@ -170,19 +176,17 @@ namespace RestaurantUI
                 IsDefaultPaymentTermCheckBox.Checked = selectedPaymentTerm.IsDefaultPaymentTerm;
             }
         }
+
         /// <summary>
         ///If the form  was openened by being called from another form that implements the IPaymentTermRequester interface
         ///sends back/updates information in the calling form
         ///Closes the current form
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ExitButton_Click(object sender, EventArgs e)
         {
             if (callingForm != null)
-            {
                 callingForm.PaymentTermComplete();
-            }
+
             this.Close();
         }
     }

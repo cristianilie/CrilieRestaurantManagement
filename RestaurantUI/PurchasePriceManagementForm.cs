@@ -2,12 +2,8 @@
 using RMLibrary.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RestaurantUI
@@ -19,7 +15,6 @@ namespace RestaurantUI
 
         public List<PurchasePriceModel> SelectedProduct_PurchasePriceList { get; set; }
 
-
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -29,18 +24,17 @@ namespace RestaurantUI
             InitializeProductList();
             ProductPurchasePriceList = GlobalConfig.Connection.GetPurchasePrices_All();
         }
+
         /// <summary>
         /// Clears textboxes/selected elements
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ClearTextBoxesButton_Click(object sender, EventArgs e)
         {
             ClearSelected();
         }
 
         /// <summary>
-        /// Initializes the product list
+        /// Initializes the product list and links it with the ProductsListBox
         /// </summary>
         private void InitializeProductList()
         {
@@ -56,7 +50,6 @@ namespace RestaurantUI
         /// <summary>
         /// Initialize the list of prices associated with the selected product
         /// </summary>
-        /// <param name="selectedProduct"></param>
         private void InitializeSelectedProductPriceList(ProductModel selectedProduct)
         {
             SelectedProduct_PurchasePriceList = GlobalConfig.Connection.GetPurchasePrices_All().Where(p => p.ProductId == selectedProduct.Id).OrderByDescending(c => c.PurchaseDate).ToList();
@@ -79,14 +72,11 @@ namespace RestaurantUI
             SelectedProductPricesListBox.DataSource = null;
             SelectedProductPricesListBox.ClearSelected();
             SelectedProductPricesListBox.SelectedItem = null;
-
         }
 
         /// <summary>
         /// When the selected product changes the price listbox gets updated with the prices associated with the selected product
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ProductsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateSelectedProduct_PriceListBox();
@@ -100,16 +90,12 @@ namespace RestaurantUI
             ProductModel selectedProduct = (ProductModel)ProductsListBox.SelectedItem;
 
             if (selectedProduct != null)
-            {
                 InitializeSelectedProductPriceList(selectedProduct);
-            }
         }
 
         /// <summary>
         /// When a price is selected, it displays information in the associated textbox/checkbox
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void SelectedProductPricesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateSelectedPriceFields();
@@ -136,8 +122,6 @@ namespace RestaurantUI
         /// <summary>
         /// Updates the selected price(in the UI/database)
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void UpdateProductPriceButton_Click(object sender, EventArgs e)
         {
             PurchasePriceModel purchasePrice = (PurchasePriceModel)SelectedProductPricesListBox.SelectedItem;
@@ -154,14 +138,10 @@ namespace RestaurantUI
         /// <summary>
         /// Validates the the characters inserted into the price textbox, so that the price can be only decimal
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void PriceTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!GlobalConfig.Validation.ValidatePrice(PriceTextBox.Text, e.KeyChar))
-            {
                 e.Handled = true;
-            }
         }
     }
 }

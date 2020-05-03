@@ -2,12 +2,8 @@
 using RMLibrary.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RestaurantUI
@@ -16,9 +12,7 @@ namespace RestaurantUI
     {
         public List<PurchaseOrderModel> PurchaseOrderList { get; set; }
         public List<PurchaseInvoiceModel> PurchaseInvoiceList { get; set; }
-
         public List<CompanyModel> CompanyList { get; set; } = GlobalConfig.Connection.GetCompanies_All();
-
         public RequestedPurchasingDocument RequestedDocument { get; set; }
 
         private IDocumentRequester callingForm;
@@ -26,8 +20,8 @@ namespace RestaurantUI
         /// <summary>
         /// Overloaded constructor that recieves data from the calling form
         /// </summary>
-        /// <param name="caller"></param>
-        /// <param name="_documentType"></param>
+        /// <param name="caller">Parameter used to call this form and request data by forms that implement IDocumentRequester interface</param>
+        /// <param name="_documentType">The requested purchase document type(purchase order/invoice)</param>
         public SearchPurchaseDocumentForm(IDocumentRequester caller, RequestedPurchasingDocument _documentType)
         {
             InitializeComponent();
@@ -41,49 +35,53 @@ namespace RestaurantUI
         /// <summary>
         /// Changes the DocumentLabel text by the purchase document type we are searching for(Order/Invoice)
         /// </summary>
-        /// <param name="docType"></param>
-        private void ChangeUIByDocType(RequestedPurchasingDocument docType)
+        private void ChangeUIByDocType(RequestedPurchasingDocument documentType)
         {
             if (RequestedDocument == RequestedPurchasingDocument.PurchaseOrder)
-            {
                 DocumentLabel.Text = "Order";
-            }
             else
-            {
                 DocumentLabel.Text = "Invoice";
-            }
         }
 
         /// <summary>
         /// Finishes the document selection process and sents the data back to the calling form to display it
         /// And closes the current window
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void SelectDocumentButton_Click(object sender, EventArgs e)
         {
+            if (RequestedDocument == RequestedPurchasingDocument.PurchaseOrder)
+                SelectPurchaseOrder();
 
-                if (RequestedDocument == RequestedPurchasingDocument.PurchaseOrder)
-                {
-                    PurchaseOrderModel selectedDocument = (PurchaseOrderModel)(POrderContentDataGridView.Rows[POrderContentDataGridView.CurrentCell.RowIndex].DataBoundItem);
-                   
-                    if (selectedDocument!= null)
-                    {
-                        callingForm.DocumentSelected(RequestedDocument, selectedDocument);
-                        this.Close();
-                    }
-                }
+            if (RequestedDocument == RequestedPurchasingDocument.PurchaseInvoice)
+                SelectPurchaseInvoice();
+        }
 
-                if (RequestedDocument == RequestedPurchasingDocument.PurchaseInvoice)
-                {
-                    PurchaseInvoiceModel selectedDocument = (PurchaseInvoiceModel)(POrderContentDataGridView.Rows[POrderContentDataGridView.CurrentCell.RowIndex].DataBoundItem);
+        /// <summary>
+        /// Selects the desired purchase invoice, sends it to the requesting form and closes the current form
+        /// </summary>
+        private void SelectPurchaseInvoice()
+        {
+            PurchaseInvoiceModel selectedDocument = (PurchaseInvoiceModel)(POrderContentDataGridView.Rows[POrderContentDataGridView.CurrentCell.RowIndex].DataBoundItem);
 
-                    if (selectedDocument != null)
-                    {
-                        callingForm.DocumentSelected(RequestedDocument, null,selectedDocument);
-                        this.Close();
-                    }
-                }
+            if (selectedDocument != null)
+            {
+                callingForm.DocumentSelected(RequestedDocument, null, selectedDocument);
+                this.Close();
+            }
+        }
+
+        /// <summary>
+        /// Selects the desired purchase order, sends it to the requesting form and closes the current form
+        /// </summary>
+        private void SelectPurchaseOrder()
+        {
+            PurchaseOrderModel selectedDocument = (PurchaseOrderModel)(POrderContentDataGridView.Rows[POrderContentDataGridView.CurrentCell.RowIndex].DataBoundItem);
+
+            if (selectedDocument != null)
+            {
+                callingForm.DocumentSelected(RequestedDocument, selectedDocument);
+                this.Close();
+            }
         }
 
         /// <summary>
@@ -121,8 +119,6 @@ namespace RestaurantUI
         /// <summary>
         /// Filters the Purchase Order list by the specified parameters/default parameter values
         /// </summary>
-        /// <param name="vendorName"></param>
-        /// <param name="documentDate"></param>
         private void FilterPurchaseOrder_ListBy(string vendorName = "", DateTime documentDate = default(DateTime))
         {
             if (PurchaseOrderList == null)
@@ -148,8 +144,6 @@ namespace RestaurantUI
         /// <summary>
         /// Filters the Purchase Invoice list by the specified parameters/default parameter values
         /// </summary>
-        /// <param name="vendorName"></param>
-        /// <param name="documentDate"></param>
         private void FilterPurchaseInvoiceListBy(string vendorName = "", DateTime documentDate = default(DateTime))
         {
             if (PurchaseInvoiceList == null)
@@ -175,8 +169,6 @@ namespace RestaurantUI
         /// <summary>
         /// Filter Purchase Order by supplier name
         /// </summary>
-        /// <param name="vendorName"></param>
-        /// <returns></returns>
         private List<PurchaseOrderModel> FilterPurchaseOrderByCompanyName(string vendorName)
         {
             List<CompanyModel> company = CompanyList.Where(q => q.Name.ToLower().Contains(vendorName.ToLower())).Distinct().ToList();
@@ -192,8 +184,7 @@ namespace RestaurantUI
         /// <summary>
         /// Filter Purchase Invoice by supplier name
         /// </summary>
-        /// <param name="vendorName"></param>
-        /// <returns></returns>
+        /// <returns>A list of purchase invoices, filtered by supplier/company name</returns>
         private List<PurchaseInvoiceModel> FilterPurchaseInvoiceByCompanyName(string vendorName)
         {
             List<CompanyModel> company = CompanyList.Where(q => q.Name.ToLower().Contains(vendorName.ToLower())).Distinct().ToList();
@@ -203,19 +194,19 @@ namespace RestaurantUI
             {
                 invoicesByCompanyName.AddRange(PurchaseInvoiceList.Where(c => c.SupplierId == comp.Id).ToList());
             }
+
             return invoicesByCompanyName;
         }
 
         /// <summary>
         /// Filter Purchase Order by document date
         /// </summary>
-        /// <param name="documentDate"></param>
-        /// <returns></returns>
+        /// <returns>A list of purchase orders, filtered by documentDate</returns>
         private List<PurchaseOrderModel> FilterPurchaseOrderByDocumentDate(DateTime documentDate)
         {
             List<PurchaseOrderModel> poByDocumentDate = new List<PurchaseOrderModel>();
 
-            poByDocumentDate.AddRange(PurchaseOrderList.Where(c =>c.PostingDate.Date >= documentDate.Date).ToList());
+            poByDocumentDate.AddRange(PurchaseOrderList.Where(c => c.PostingDate.Date >= documentDate.Date).ToList());
 
             return poByDocumentDate;
         }
@@ -223,8 +214,7 @@ namespace RestaurantUI
         /// <summary>
         /// Filter Purchase invoice by document date
         /// </summary>
-        /// <param name="documentDate"></param>
-        /// <returns></returns>
+        /// <returns>A list of purchase invoices, filtered by documentDate</returns>
         private List<PurchaseInvoiceModel> FilterPurchaseInvoiceByDocumentDate(DateTime documentDate)
         {
             List<PurchaseInvoiceModel> invoicesByDocumentDate = new List<PurchaseInvoiceModel>();
@@ -264,8 +254,6 @@ namespace RestaurantUI
         /// <summary>
         /// Searches a document by vendor name and other active date filters
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void SearchByVendorNameButton_Click(object sender, EventArgs e)
         {
             InitializeDocumentList();
@@ -274,8 +262,6 @@ namespace RestaurantUI
         /// <summary>
         /// Calcens the document selection process and closes the current window
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CancelSelectButton_Click(object sender, EventArgs e)
         {
             this.Close();

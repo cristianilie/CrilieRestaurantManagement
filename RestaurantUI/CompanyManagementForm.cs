@@ -2,12 +2,7 @@
 using RMLibrary.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RestaurantUI
@@ -21,23 +16,18 @@ namespace RestaurantUI
         /// Overloaded constructor that recieves data from the calling form or uses the null default parameter if its not called by a form
         /// that doesnt implements the ICompanyRequester interface
         /// </summary>
-        /// <param name="caller"></param>
         public CompanyManagementForm(ICompanyRequester caller = null)
         {
             InitializeComponent();
             InitializeCompaniesList();
 
             if (caller != null)
-            {
                 callingForm = caller;
-            }
         }
 
         /// <summary>
         /// Creates a new Company entry in the database
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CreateCompanyButton_Click(object sender, EventArgs e)
         {
             if (ValidateForm())
@@ -57,7 +47,8 @@ namespace RestaurantUI
         /// Validates if the form textboxes contain at least 5 characters long, and the Company Name and Data
         /// doesnt already exists
         /// </summary>
-        /// <returns></returns>
+        /// <returns>true - if company details are valid and company name doesnt already exists in the database
+        /// false - otherwise</returns>
         private bool ValidateForm()
         {
             if (CompanyNameTextBox.Text.Count() > 4 && CompanyDataTextBox.Text.Count() > 4 && CompanyAdressTextBox.Text.Count() > 4)
@@ -108,10 +99,7 @@ namespace RestaurantUI
 
         /// <summary>
         /// When the CompaniesListBox, selected item changes, it initializes the company related textboxes, with the selected item(company)'s properties
-        /// ..so we can edit them
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CompaniesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             CompanyModel selectedCompany = (CompanyModel)CompaniesListBox.SelectedItem;
@@ -126,8 +114,6 @@ namespace RestaurantUI
         /// <summary>
         /// Updates the selected company entry in the Company database table
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void UpdateCompanyButton_Click(object sender, EventArgs e)
         {
             CompanyModel selectedCompany = (CompanyModel)CompaniesListBox.SelectedItem;
@@ -138,7 +124,6 @@ namespace RestaurantUI
                 selectedCompany.Adress = CompanyAdressTextBox.Text;
                 selectedCompany.DeliveryAdress = DeliveryAdressTextBox.Text;
 
-
                 GlobalConfig.Connection.UpdateCompanyModel(selectedCompany);
             }
             InitializeCompaniesList();
@@ -147,13 +132,14 @@ namespace RestaurantUI
         /// <summary>
         /// Clears the form's textboxes and other selected elements
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ClearCompanyTextBoxesButton_Click(object sender, EventArgs e)
         {
             ResetForm();
         }
 
+        /// <summary>
+        /// Select a company model and send the model back to the calling form
+        /// </summary>
         private void SelectCompanyButton_Click(object sender, EventArgs e)
         {
             CompanyModel selectedCompany = (CompanyModel)CompaniesListBox.SelectedItem;

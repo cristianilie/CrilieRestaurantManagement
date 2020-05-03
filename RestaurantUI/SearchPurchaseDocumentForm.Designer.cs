@@ -139,7 +139,6 @@
             this.SearchByVendorNameButton.Size = new System.Drawing.Size(23, 24);
             this.SearchByVendorNameButton.TabIndex = 16;
             this.SearchByVendorNameButton.UseVisualStyleBackColor = true;
-            this.SearchByVendorNameButton.Click += new System.EventHandler(this.SearchProductButton_Click);
             // 
             // SearchProductTextBox
             // 

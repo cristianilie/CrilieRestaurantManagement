@@ -28,37 +28,49 @@ namespace RestaurantUI
         /// <summary>
         /// Creates a new product and associates to it a recipe and a category if selected
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CreateProductButton_Click(object sender, EventArgs e)
         {
-            if (ValidateFormInput())
+            ProductModel product = new ProductModel();
+            product.Name = ProductNameTextBox.Text;
+
+            if (ValidateFormInput() && ProductValidation(product))
             {
-                ProductModel product = new ProductModel();
-                product.Name = ProductNameTextBox.Text;
-
-                if (ProductRecipeCheckBox.Checked == true && RecipesListBox.SelectedItem != null)
-                    product.RecipeId = ((RecipeModel)RecipesListBox.SelectedItem).Id = ((RecipeModel)RecipesListBox.SelectedItem).Id;
-                else
-                    product.RecipeId = null;
-
+                AssociateProductRecipe(product);
                 ProductModel createdproduct = GlobalConfig.Connection.CreateProduct(product);
-
-                if (ProductCategoryComboBox.SelectedItem != null)
-                {
-                    ProductCategoryModel prodCategory = new ProductCategoryModel
-                    {
-                        CategoryId = ((CategoryModel)ProductCategoryComboBox.SelectedItem).Id,
-                        ProductId = createdproduct.Id
-                    };
-                    GlobalConfig.Connection.CreateProductCategory(prodCategory);
-                }
+                AssociateProductCategory(createdproduct);
             }
             else
             {
-                MessageBox.Show("You need to fill in at least a valid Product Name");
+                MessageBox.Show("The product name must be at least 3 characters, and it shouldnt already exist in the database!");
             }
             InitializeLists();
+        }
+
+        /// <summary>
+        /// Associate a product category(if one is selected) to the new created product
+        /// </summary>
+        private void AssociateProductCategory(ProductModel createdproduct)
+        {
+            if (ProductCategoryComboBox.SelectedItem != null)
+            {
+                ProductCategoryModel prodCategory = new ProductCategoryModel
+                {
+                    CategoryId = ((CategoryModel)ProductCategoryComboBox.SelectedItem).Id,
+                    ProductId = createdproduct.Id
+                };
+                GlobalConfig.Connection.CreateProductCategory(prodCategory);
+            }
+        }
+
+        /// <summary>
+        /// Associate a product recipe to the selected product
+        /// </summary>
+        private void AssociateProductRecipe(ProductModel product)
+        {
+            if (ProductRecipeCheckBox.Checked == true && RecipesListBox.SelectedItem != null)
+                product.RecipeId = ((RecipeModel)RecipesListBox.SelectedItem).Id;
+            else
+                product.RecipeId = null;
         }
 
         /// <summary>
@@ -98,8 +110,6 @@ namespace RestaurantUI
         /// <summary>
         /// Opens a window to CategoryManagementForm, that allows us to create/update a new category
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CreateNewCategorylinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             CategoryManagementForm categoryFrm = new CategoryManagementForm(this);
@@ -109,7 +119,6 @@ namespace RestaurantUI
         /// <summary>
         /// Gets called after we created/updated a category in the CategoryManagementForm and refreshes the lists and listBoxes/comboBoxes
         /// </summary>
-        /// <param name="model"></param>
         public void CategoryComplete(CategoryModel model)
         {
             CategoryList = GlobalConfig.Connection.GetCategories_All();
@@ -119,8 +128,6 @@ namespace RestaurantUI
         /// <summary>
         /// Opens a window to ProductRecipeForm, that allows us to create/update a  recipe
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CreateNewRecipeLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ProductRecipeForm recipeFrm = new ProductRecipeForm(this);
@@ -130,7 +137,6 @@ namespace RestaurantUI
         /// <summary>
         /// Gets called after we created/updated a recipe in the ProductRecipeForm and refreshes the lists and listBoxes/comboBoxes
         /// </summary>
-        /// <param name="model"></param>
         public void RecipeComplete(RecipeModel model)
         {
             RecipeList = GlobalConfig.Connection.GetRecipes_All();
@@ -139,46 +145,50 @@ namespace RestaurantUI
 
         /// <summary>
         /// When the selected product(from ProductsListBox) changes, it initializes the related elements
-        /// (recipe in the RecipesListbox, and category in the ProductCategoryComboBox
+        /// recipe in the RecipesListbox, and category in the ProductCategoryComboBox
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ProductsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             ProductModel selectedProduct = (ProductModel)ProductsListBox.SelectedItem;
+
             if (selectedProduct != null)
             {
                 ProductNameTextBox.Text = selectedProduct.Name;
 
-                //if selectedProduct has a category - display it in the combobox
-                if (SelectedProductCategoryList.Where(c => c.ProductId == selectedProduct.Id).Count() > 0)
-                {
-                    var selectedProdCateg = SelectedProductCategoryList.Where(c => c.ProductId == selectedProduct.Id).First();
-                    ProductCategoryComboBox.SelectedItem = CategoryList.Where(c => c.Id == selectedProdCateg.CategoryId).First();
-                }
-                else
-                {
-                    ProductCategoryComboBox.SelectedItem = null;
-                }
-
-                //if selectedProduct has a recipe - display it in the listbox
-                if (selectedProduct.RecipeId != null)
-                {
-                    RecipesListBox.SelectedItem = RecipeList.Where(r => r.Id == selectedProduct.RecipeId).First();
-                }
-                else
-                {
-                    RecipesListBox.ClearSelected();
-                }
+                DisplayProductCategoryIfExists(selectedProduct);
+                DisplayRecipeIfExists(selectedProduct);
             }
 
         }
 
         /// <summary>
+        /// if selectedProduct has a category - display it in the combobox
+        /// </summary>
+        private void DisplayProductCategoryIfExists(ProductModel selectedProduct)
+        {
+            if (SelectedProductCategoryList.Where(c => c.ProductId == selectedProduct.Id).Count() > 0)
+            {
+                var selectedProdCateg = SelectedProductCategoryList.Where(c => c.ProductId == selectedProduct.Id).First();
+                ProductCategoryComboBox.SelectedItem = CategoryList.Where(c => c.Id == selectedProdCateg.CategoryId).First();
+            }
+            else
+            {
+                ProductCategoryComboBox.SelectedItem = null;
+            }
+        }
+
+        //if selectedProduct has a recipe - display it in the recipe listbox
+        private void DisplayRecipeIfExists(ProductModel selectedProduct)
+        {
+            if (selectedProduct.RecipeId != null)
+                RecipesListBox.SelectedItem = RecipeList.Where(r => r.Id == selectedProduct.RecipeId).First();
+            else
+                RecipesListBox.ClearSelected();
+        }
+
+        /// <summary>
         /// Clears the selected elements in list/comboBoxes, and the product name textBox, on button click
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ClearProductTextBoxesButton_Click(object sender, EventArgs e)
         {
             ClearSelected();
@@ -200,57 +210,114 @@ namespace RestaurantUI
         /// <summary>
         /// Associates the selected recipe, to the selected product
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void AssociateRecipeButton_Click(object sender, EventArgs e)
         {
             ProductModel selectedProduct = (ProductModel)ProductsListBox.SelectedItem;
             RecipeModel selectedRecipe = (RecipeModel)RecipesListBox.SelectedItem;
-
             selectedProduct.RecipeId = selectedRecipe.Id;
+
             GlobalConfig.Connection.UpdateProductModel(selectedProduct);
         }
 
         /// <summary>
         /// Updates a product and its related elements(name/recipe/category)
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void UpdateProductButton_Click(object sender, EventArgs e)
         {
             ProductModel selectedProduct = (ProductModel)ProductsListBox.SelectedItem;
             RecipeModel selectedRecipe = (RecipeModel)RecipesListBox.SelectedItem;
 
-            if (selectedProduct != null)
+            if (ProductValidation(selectedProduct))
             {
-                if (ProductNameTextBox.Text.Count() > 2)
-                    selectedProduct.Name = ProductNameTextBox.Text;
-                else
-                    MessageBox.Show("Please enter a product Name with at least 3 characters!");
+                UpdateProductModel(selectedProduct, selectedRecipe);
+                ProductCategoryModel existingProductCategory = GetExistingProductCategory(selectedProduct);
+                CategoryModel selectedCategory = (CategoryModel)ProductCategoryComboBox.SelectedItem;
 
-                if (selectedRecipe != null)
-                    selectedProduct.RecipeId = selectedRecipe.Id;
-
-                GlobalConfig.Connection.UpdateProductModel(selectedProduct);
-
-                ProductCategoryModel existingProductCategory = SelectedProductCategoryList.Where(c => c.ProductId == selectedProduct.Id).FirstOrDefault();
-                CategoryModel selectedCategory = ProductCategoryComboBox.SelectedItem == null ? null : (CategoryModel)ProductCategoryComboBox.SelectedItem;
-
-                if (existingProductCategory != null && selectedCategory != null)
-                {
-                    if (existingProductCategory.CategoryId != selectedCategory.Id)
-                    {
-                        existingProductCategory.CategoryId = selectedCategory.Id;
-                        GlobalConfig.Connection.UpdateProductCategoryModel(existingProductCategory);
-                    }
-                }
-                else
-                {
-                    if (selectedCategory != null)
-                        GlobalConfig.Connection.CreateProductCategory(new ProductCategoryModel { ProductId = selectedProduct.Id, CategoryId = selectedCategory.Id });
-                }
+                UpdateProductCategoryModel(selectedProduct, existingProductCategory, selectedCategory);
             }
             InitializeLists();
+        }
+
+        /// <summary>
+        /// Validates that the selected product is not null, it doesnt exist already, and its name has at least 3 characters
+        /// </summary>
+        private bool ProductValidation(ProductModel selectedProduct)
+        {
+            return selectedProduct != null && !CheckProductNameLength(ProductNameTextBox.Text) && !CheckIfProductNameExists(ProductNameTextBox.Text);
+        }
+
+        /// <summary>
+        /// Updates the selected product category model or creates a new product-category associacion if oe does not already exists
+        /// </summary>
+        private static void UpdateProductCategoryModel(ProductModel selectedProduct, ProductCategoryModel existingProductCategory, CategoryModel selectedCategory)
+        {
+            if (ProductCategoryValidation(existingProductCategory, selectedCategory))
+            {
+                existingProductCategory.CategoryId = selectedCategory.Id;
+                GlobalConfig.Connection.UpdateProductCategoryModel(existingProductCategory);
+            }
+            else
+            {
+                if (selectedCategory != null)
+                    GlobalConfig.Connection.CreateProductCategory(new ProductCategoryModel { ProductId = selectedProduct.Id, CategoryId = selectedCategory.Id });
+            }
+        }
+
+        /// <summary>
+        /// Validates that the existing product category, the selected category are not null, and the existing category is not the 
+        /// same with the one selected from the category list
+        /// </summary>
+        private static bool ProductCategoryValidation(ProductCategoryModel existingProductCategory, CategoryModel selectedCategory)
+        {
+            return existingProductCategory != null && 
+                   selectedCategory != null &&
+                   (existingProductCategory.CategoryId != selectedCategory.Id);
+        }
+
+        /// <summary>
+        /// Retrieves the selected product's category, or "null" if the product isn't associated with a category
+        /// </summary>
+        private ProductCategoryModel GetExistingProductCategory(ProductModel selectedProduct)
+        {
+            return SelectedProductCategoryList.Where(c => c.ProductId == selectedProduct.Id)
+                                              .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Updates the product model
+        /// </summary>
+        private void UpdateProductModel(ProductModel selectedProduct, RecipeModel selectedRecipe)
+        {
+            selectedProduct.Name = ProductNameTextBox.Text;
+
+            if (selectedRecipe != null)
+                selectedProduct.RecipeId = selectedRecipe.Id;
+
+            GlobalConfig.Connection.UpdateProductModel(selectedProduct);
+        }
+
+        /// <summary>
+        /// Checks if the product name already exists
+        /// </summary>
+        private bool CheckIfProductNameExists(string productName)
+        {
+            return ProductList.Where(p => p.Name.ToLower() == productName.ToLower()).Count() > 0;
+        }
+
+        /// <summary>
+        /// Checks if the product name is at least 3 characters long
+        /// </summary>
+        private bool CheckProductNameLength(string productName)
+        {
+            if (productName.Length > 2)
+            {
+                return true;
+            }
+            else
+            {
+                MessageBox.Show("Please enter a product Name with at least 3 characters!");
+                return false;
+            }
         }
     }
 }

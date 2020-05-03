@@ -2,12 +2,8 @@
 using RMLibrary.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RestaurantUI
@@ -15,18 +11,15 @@ namespace RestaurantUI
     public partial class FinishSalesOrderPreviewForm : Form
     {
         private ISalesOrderPreviewer callingForm;
-        SalesOrderModel salesOrder;
-        List<OrderProductModel> SalesOrderContentList;
-        List<SalesPriceModel> SalesPricesList;
-        TaxModel taxToUse;
+        private SalesOrderModel salesOrder;
+        private List<OrderProductModel> SalesOrderContentList;
+        private List<SalesPriceModel> SalesPricesList;
+        private TaxModel taxToUse;
 
         /// <summary>
-        /// Overloaded constructor that recieves data from the calling form
+        /// Overloaded constructor that recieves data from the calling form that will be used to preview the "bill"
+        /// and finish the sale process for the current order
         /// </summary>
-        /// <param name="caller"></param>
-        /// <param name="_salesOrder"></param>
-        /// <param name="salesOrderContent"></param>
-        /// <param name="_taxToUse"></param>
         public FinishSalesOrderPreviewForm(ISalesOrderPreviewer caller, SalesOrderModel _salesOrder, List<OrderProductModel> salesOrderContent, TaxModel _taxToUse)
         {
             InitializeComponent();
@@ -35,7 +28,6 @@ namespace RestaurantUI
             salesOrder = _salesOrder;
             taxToUse = _taxToUse;
             DisplaySalesOrderContent(salesOrderContent);
-
         }
         /// <summary>
         /// Displays the sales order content and calls "CalculateSalesOrderValue" method to calculate the sales order totals
@@ -72,6 +64,14 @@ namespace RestaurantUI
                 soGrandTotal = soTotal + soTax;
             }
 
+            DisplaySalesOrderTotals(soTotal, soTax, soGrandTotal);
+        }
+
+        /// <summary>
+        /// Display the sales order totals in their associated textboxes
+        /// </summary>
+        private void DisplaySalesOrderTotals(decimal soTotal, decimal soTax, decimal soGrandTotal)
+        {
             TotalAmountSOTextBox.Text = soTotal.ToString("0.## Lei");
             TaxTotalAmountSOTextBox.Text = soTax.ToString("0.## Lei");
             GrandTotalAmountSOTextBox.Text = soGrandTotal.ToString("0.## Lei");
@@ -80,8 +80,6 @@ namespace RestaurantUI
         /// <summary>
         /// Cancels the "sales order finishing" process, and closes the current window
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CancelButton_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -90,8 +88,6 @@ namespace RestaurantUI
         /// <summary>
         /// Calls the SalesOrderComplete method, to mark the sales order as "finshed" and remove product quantities from stock
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void FinishSalesOrderButton_Click(object sender, EventArgs e)
         {
             if (salesOrder != null)
@@ -104,8 +100,6 @@ namespace RestaurantUI
         /// <summary>
         /// Formats the sales order content listbox so that when an item's quantity is displayed left to its name
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void SalesOrderContentListBox_Format(object sender, ListControlConvertEventArgs e)
         {
             OrderProductModel soProduct = ((OrderProductModel)e.ListItem);

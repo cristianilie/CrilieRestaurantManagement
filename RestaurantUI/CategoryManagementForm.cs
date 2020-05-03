@@ -2,12 +2,7 @@
 using RMLibrary.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RestaurantUI
@@ -23,7 +18,7 @@ namespace RestaurantUI
         /// <summary>
         /// Overloaded constructor that recieves data from the calling form
         /// </summary>
-        /// <param name="caller"></param>
+        /// <param name="caller">Parameter used to call this form and request data by forms that implement ICategoryRequester interface</param>
         public CategoryManagementForm(ICategoryRequester caller)
         {
             InitializeComponent();
@@ -35,20 +30,19 @@ namespace RestaurantUI
         /// <summary>
         /// Creates a new Category in the database
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CreateCategoryButton_Click(object sender, EventArgs e)
         {
-            if (ValidateFormInput())
+            if (ValidateFormInput() && CheckIfCategoryNameExists(CategoryNameTextBox.Text))
             {
                 CategoryModel category = new CategoryModel { Name = CategoryNameTextBox.Text };
                 GlobalConfig.Connection.CreateCategory(category);
+
                 LoadCategories();
                 lastCategoryCreated = category;
             }
             else
             {
-                MessageBox.Show("You need to fill in at least a valid Product Name");
+                MessageBox.Show("Category name must have at least 3 characters/Check if the name already exists!");
             }
         }
 
@@ -67,8 +61,6 @@ namespace RestaurantUI
         /// <summary>
         /// Exits form
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ExitFormButton_Click(object sender, EventArgs e)
         {
             callingForm.CategoryComplete(lastCategoryCreated);
@@ -76,7 +68,7 @@ namespace RestaurantUI
         }
 
         /// <summary>
-        /// Loads the category list
+        /// Loads the category list and displays it in the ProductCategoriesListBox
         /// </summary>
         private void LoadCategories()
         {
@@ -92,8 +84,6 @@ namespace RestaurantUI
         /// <summary>
         /// Updates the name of the selected category
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void UpdateCategoryButton_Click(object sender, EventArgs e)
         {
             if (ProductCategoriesListBox.SelectedItem != null)
@@ -117,8 +107,6 @@ namespace RestaurantUI
         /// <summary>
         /// When the selected item from the listbox changes, it initializes the category name textbox, with the name of the new selected item
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ProductCategoriesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ProductCategoriesListBox.SelectedItem != null)
@@ -134,6 +122,17 @@ namespace RestaurantUI
         private void ClearCategoryNameTextBoxButton_Click(object sender, EventArgs e)
         {
             ResetForm();
+        }
+
+        /// <summary>
+        /// Checks if a category name exists in the category list
+        /// if it exists it will return false, otherwise true
+        /// </summary>
+        private bool CheckIfCategoryNameExists(string categoryName)
+        {
+            CategoryList = GlobalConfig.Connection.GetCategories_All();
+
+            return CategoryList.Count(s => s.Name == categoryName) == 0;
         }
     }
 }

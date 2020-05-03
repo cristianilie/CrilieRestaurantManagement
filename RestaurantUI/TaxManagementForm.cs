@@ -2,12 +2,8 @@
 using RMLibrary.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RestaurantUI
@@ -28,8 +24,6 @@ namespace RestaurantUI
         /// <summary>
         /// Creates a new tax entry in the Tax database table
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CreateTaxButton_Click(object sender, EventArgs e)
         {
             if (ValidateForm())
@@ -42,9 +36,7 @@ namespace RestaurantUI
                 };
 
                 if (tax.DefaultSelectedTax)
-                {
                     UncheckPreviousDefaultTax();
-                }
 
                 GlobalConfig.Connection.CreateTax(tax);
                 InitializeTaxList();
@@ -54,7 +46,6 @@ namespace RestaurantUI
         /// <summary>
         /// Validates if the form textboxes are least  2 and 1 characters long, and the Tax wasn't already created
         /// </summary>
-        /// <returns></returns>
         private bool ValidateForm()
         {
             if (TaxNameTextBox.Text.Count() > 1 && TaxPercentTextBox.Text.Count() > 0)
@@ -105,8 +96,6 @@ namespace RestaurantUI
         /// <summary>
         /// When the TaxesListbox selected item changes, it initializes the Tax related textboxes, with the selected item(tax)'s properties
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void TaxesListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             TaxModel selectedTax = (TaxModel)TaxesListBox.SelectedItem;
@@ -121,8 +110,6 @@ namespace RestaurantUI
         /// <summary>
         /// Updates the database entry for the selected Tax
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void UpdateTaxButton_Click(object sender, EventArgs e)
         {
             TaxModel selectedTax = (TaxModel)TaxesListBox.SelectedItem;
@@ -156,8 +143,6 @@ namespace RestaurantUI
         /// <summary>
         /// Clears the textboxes and other selected fields
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ClearTaxTextBoxesButton_Click(object sender, EventArgs e)
         {
             ResetForm();

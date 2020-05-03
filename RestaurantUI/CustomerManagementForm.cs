@@ -2,12 +2,7 @@
 using RMLibrary.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RestaurantUI
@@ -26,9 +21,8 @@ namespace RestaurantUI
         }
 
         /// <summary>
-        /// Validates if the form textboxes are least 2, 2 and 5 characters long, and the First and Last Name aren't already created
+        /// Validates if the form textboxes are are at least a certain number of characters( 2,2,5) and the First & Last Name aren't already created
         /// </summary>
-        /// <returns></returns>
         private bool ValidateForm()
         {
             if (FirstNameTextBox.Text.Count() > 2 && LastNameTextBox.Text.Count() > 2 && DeliveryAdressTextBox.Text.Count() > 5)
@@ -79,8 +73,6 @@ namespace RestaurantUI
         /// <summary>
         /// Creates a new customer entry in the Customer database table
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CreateCustomerButton_Click(object sender, EventArgs e)
         {
             if (ValidateForm())
@@ -98,8 +90,6 @@ namespace RestaurantUI
         /// <summary>
         /// When the CustomersListBox selected item changes, it initializes the customer related textboxes, with the selected item(customer)'s properties
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void CustomersListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             CustomerModel selectedCustomer = (CustomerModel)CustomersListBox.SelectedItem;
@@ -114,8 +104,6 @@ namespace RestaurantUI
         /// <summary>
         /// Updates the database entry for the selected Customer
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void UpdateCustomerButton_Click(object sender, EventArgs e)
         {
             CustomerModel selectedCustomer = (CustomerModel)CustomersListBox.SelectedItem;
@@ -133,8 +121,6 @@ namespace RestaurantUI
         /// <summary>
         /// Clears the textboxes and other selected fields
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ClearCustomerTextBoxesButton_Click(object sender, EventArgs e)
         {
             ResetForm();

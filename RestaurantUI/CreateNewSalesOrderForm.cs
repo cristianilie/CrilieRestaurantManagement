@@ -3,12 +3,6 @@ using RMLibrary.Models;
 using RMLibrary.Models.Helpers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RestaurantUI
@@ -16,22 +10,19 @@ namespace RestaurantUI
     public partial class CreateNewSalesOrderForm : Form
     {
         public List<TableModel> TablesList { get; set; }
-
         public List<CustomerModel> CustomersList { get; set; }
-
         public List<CompanyModel> CompaniesList { get; set; }
 
         private TableModel deliveryMethodTable;
 
         private IDeliveryMethod deliveryMethod;
 
-
         private IDeliveryMethodRequester callingForm;
 
         /// <summary>
         /// Overloaded constructor that recieves data from the calling form
         /// </summary>
-        /// <param name="caller"></param>
+        /// <param name="caller">Parameter used to call this form and request data by forms that implement IDeliveryMethodRequester interface </param>
         public CreateNewSalesOrderForm(IDeliveryMethodRequester caller)
         {
             callingForm = caller;
@@ -43,8 +34,6 @@ namespace RestaurantUI
         /// Selects a table(in the restaurant) and sends the data to the calling form to open a new sales order
         /// associated with that table
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void SelectTableButton_Click(object sender, EventArgs e)
         {
             if (TablesListBox.SelectedItem != null)
@@ -96,10 +85,7 @@ namespace RestaurantUI
 
         /// <summary>
         /// Selects a Customer  and sends the company info to the calling form
-        /// 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void SelectCustomerButton_Click(object sender, EventArgs e)
         {
             if (CustomersListBox.SelectedItem != null)
@@ -113,8 +99,6 @@ namespace RestaurantUI
         /// <summary>
         /// Selects a Company as customer and sends the company info to the calling form
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void SelectCompanyButton_Click(object sender, EventArgs e)
         {
             if (CompaniesListBox.SelectedItem != null)
@@ -128,8 +112,6 @@ namespace RestaurantUI
         /// <summary>
         /// Calls the DeliveryMethodSelectionComplete method with no parameter(using the null default values) and closes the form
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void ExitButton_Click(object sender, EventArgs e)
         {
             callingForm.DeliveryMethodSelectionComplete();
