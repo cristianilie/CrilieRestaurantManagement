@@ -86,7 +86,7 @@
             this.POrdersCheckBox = new System.Windows.Forms.CheckBox();
             this.RegisterInvoiceButton = new System.Windows.Forms.Button();
             this.CancelAddOrderButton = new System.Windows.Forms.Button();
-            this.AddOrderButton = new System.Windows.Forms.Button();
+            this.AddPurchaseOrderButton = new System.Windows.Forms.Button();
             this.OrderTotalGroupBox = new System.Windows.Forms.GroupBox();
             this.POrderGrandTotalTextBox = new System.Windows.Forms.TextBox();
             this.POrderTaxTotalTextBox = new System.Windows.Forms.TextBox();
@@ -594,7 +594,7 @@
             this.PurchasingTabPage.Controls.Add(this.POrdersCheckBox);
             this.PurchasingTabPage.Controls.Add(this.RegisterInvoiceButton);
             this.PurchasingTabPage.Controls.Add(this.CancelAddOrderButton);
-            this.PurchasingTabPage.Controls.Add(this.AddOrderButton);
+            this.PurchasingTabPage.Controls.Add(this.AddPurchaseOrderButton);
             this.PurchasingTabPage.Controls.Add(this.OrderTotalGroupBox);
             this.PurchasingTabPage.Controls.Add(this.POrderContentDataGridView);
             this.PurchasingTabPage.Controls.Add(this.OrderDetailsGroupBox);
@@ -724,15 +724,15 @@
             this.CancelAddOrderButton.Text = "Cancel";
             this.CancelAddOrderButton.UseVisualStyleBackColor = true;
             // 
-            // AddOrderButton
+            // AddPurchaseOrderButton
             // 
-            this.AddOrderButton.Location = new System.Drawing.Point(683, 387);
-            this.AddOrderButton.Name = "AddOrderButton";
-            this.AddOrderButton.Size = new System.Drawing.Size(123, 23);
-            this.AddOrderButton.TabIndex = 28;
-            this.AddOrderButton.Text = "Add Order";
-            this.AddOrderButton.UseVisualStyleBackColor = true;
-            this.AddOrderButton.Click += new System.EventHandler(this.AddOrderButton_Click);
+            this.AddPurchaseOrderButton.Location = new System.Drawing.Point(683, 387);
+            this.AddPurchaseOrderButton.Name = "AddPurchaseOrderButton";
+            this.AddPurchaseOrderButton.Size = new System.Drawing.Size(123, 23);
+            this.AddPurchaseOrderButton.TabIndex = 28;
+            this.AddPurchaseOrderButton.Text = "Add Order";
+            this.AddPurchaseOrderButton.UseVisualStyleBackColor = true;
+            this.AddPurchaseOrderButton.Click += new System.EventHandler(this.AddPurchaseOrderButton_Click);
             // 
             // OrderTotalGroupBox
             // 
@@ -1078,7 +1078,7 @@
         private System.Windows.Forms.CheckBox POrdersCheckBox;
         private System.Windows.Forms.Button RegisterInvoiceButton;
         private System.Windows.Forms.Button CancelAddOrderButton;
-        private System.Windows.Forms.Button AddOrderButton;
+        private System.Windows.Forms.Button AddPurchaseOrderButton;
         private System.Windows.Forms.GroupBox OrderTotalGroupBox;
         private System.Windows.Forms.TextBox POrderGrandTotalTextBox;
         private System.Windows.Forms.TextBox POrderTaxTotalTextBox;
