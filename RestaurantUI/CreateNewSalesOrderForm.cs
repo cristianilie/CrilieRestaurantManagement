@@ -38,6 +38,7 @@ namespace RestaurantUI
         {
             if (TablesListBox.SelectedItem != null)
             {
+                deliveryMethodTable = null;
                 deliveryMethodTable = (TableModel)TablesListBox.SelectedItem;
                 callingForm.DeliveryMethodSelectionComplete(null,deliveryMethodTable);
                 this.Close();

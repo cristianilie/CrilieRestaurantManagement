@@ -1,5 +1,6 @@
 ﻿using RMLibrary;
 using RMLibrary.Models;
+using RMLibrary.RMS_Logic;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,7 +17,7 @@ namespace RestaurantUI
 
         private ISalesPriceUpdater callingForm;
         private ProductModel lastSelectedProduct;
-        private SalesPriceModel selectedActivePrice;
+
 
         /// <summary>
         /// Default constructor
@@ -26,7 +27,6 @@ namespace RestaurantUI
             InitializeComponent();
             InitializeProductList();
             InitializePriceList();
-
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace RestaurantUI
             ProductModel selectedProduct = (ProductModel)ProductsListBox.SelectedItem;
 
             if (selectedProduct != null &&
-                !CheckIfPriceAlreadyExists(decimal.Parse(PriceTextBox.Text), selectedProduct.Id))
+                !RMS_Logic.SalesPriceLogic.CheckIfPriceAlreadyExists(decimal.Parse(PriceTextBox.Text), selectedProduct.Id, IsCurrentlyActivePriceCheckBox.Checked))
             {
                 SalesPriceModel newPrice = new SalesPriceModel
                 {
@@ -70,13 +70,15 @@ namespace RestaurantUI
                 };
 
                 if (IsCurrentlyActivePriceCheckBox.Checked)
-                    UncheckPreviousActivePrice();
+                    RMS_Logic.SalesPriceLogic.UncheckPreviousActivePrice(RMS_Logic.SalesPriceLogic.GetProductActivePrice(selectedProduct.Id));
 
                 GlobalConfig.Connection.CreateSalesPrice(newPrice);
             }
             ResetForm();
             InitializePriceList();
         }
+
+
 
         /// <summary>
         /// Initializes the product list, and connects it with the ProductsListBox
@@ -103,16 +105,21 @@ namespace RestaurantUI
         /// <summary>
         /// Imitializes the Price List related to the selected product
         /// </summary>
-        private void InitializeSelectedProductPriceList()
+        private List<SalesPriceModel> InitializeSelectedProductPriceList(ProductModel selectedProduct)
         {
-            SelectedProductPriceList = GetSelectedProductPrices();
+            InitializePriceList();
+            if (selectedProduct != null)
+                SelectedProductPriceList = RMS_Logic.SalesPriceLogic.GetSelectedProductPrices(selectedProduct, PriceList_All);
 
             SelectedProductPricesListBox.DataSource = null;
             SelectedProductPricesListBox.DisplayMember = "SalesPrice";
             SelectedProductPricesListBox.DataSource = SelectedProductPriceList;
 
-            SelectedProductPricesListBox.SelectedItem = SelectedProductPriceList.Where(c => c.CurrentlyActivePrice == true)
+            if(SelectedProductPriceList != null)
+               SelectedProductPricesListBox.SelectedItem = SelectedProductPriceList.Where(c => c.CurrentlyActivePrice == true)
                                                                                 .FirstOrDefault() ?? null;
+
+            return SelectedProductPriceList;
         }
 
         /// <summary>
@@ -134,28 +141,17 @@ namespace RestaurantUI
         /// </summary>
         private void ProductsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            InitializeSelectedProductPriceList();
-            SalesPriceModel selectedPrice = SelectedProductPriceList.Where(p => p.CurrentlyActivePrice == true).FirstOrDefault();
+            SelectedProductPriceList = InitializeSelectedProductPriceList((ProductModel)ProductsListBox.SelectedItem);
+            SalesPriceModel selectedPrice = new SalesPriceModel();
+
+            if (SelectedProductPriceList != null)
+            {
+                selectedPrice = SelectedProductPriceList.Where(p => p.CurrentlyActivePrice == true).FirstOrDefault();
+            }
+
             PriceTextBox.Text = selectedPrice == null ? "" : selectedPrice.SalesPrice.ToString();
             lastSelectedProduct = (ProductModel)ProductsListBox.SelectedItem;
             IsCurrentlyActivePriceCheckBox.Checked = selectedPrice == null ? false : selectedPrice.CurrentlyActivePrice;
-        }
-
-        /// <summary>
-        /// Returns a list of prices associated with the selected product
-        /// </summary>
-        /// <returns>A list of sales prices associated with the selected product</returns>
-        private List<SalesPriceModel> GetSelectedProductPrices()
-        {
-            ProductModel selectedProduct = (ProductModel)ProductsListBox.SelectedItem;
-            List<SalesPriceModel> output = new List<SalesPriceModel>();
-
-            if (selectedProduct != null && PriceList_All != null)
-                output = PriceList_All.Where(p => p.ProductId == selectedProduct.Id).ToList();
-
-            selectedActivePrice = output.Where(q => q.CurrentlyActivePrice == true).FirstOrDefault();
-
-            return output;
         }
 
         /// <summary>
@@ -165,32 +161,20 @@ namespace RestaurantUI
         {
             ProductModel selectedProduct = (ProductModel)ProductsListBox.SelectedItem;
             if (selectedProduct != null &&
-                !CheckIfPriceAlreadyExists(decimal.Parse(PriceTextBox.Text), selectedProduct.Id))
+                !RMS_Logic.SalesPriceLogic.CheckIfPriceAlreadyExists(decimal.Parse(PriceTextBox.Text), selectedProduct.Id, IsCurrentlyActivePriceCheckBox.Checked))
             {
                 SalesPriceModel newPrice = (SalesPriceModel)SelectedProductPricesListBox.SelectedItem;
                                 newPrice.SalesPrice = decimal.Parse(PriceTextBox.Text);
                                 newPrice.CurrentlyActivePrice = IsCurrentlyActivePriceCheckBox.Checked;
 
                 if (newPrice.CurrentlyActivePrice)
-                    UncheckPreviousActivePrice();
+                    RMS_Logic.SalesPriceLogic.UncheckPreviousActivePrice(RMS_Logic.SalesPriceLogic.GetProductActivePrice(selectedProduct.Id));
 
                 GlobalConfig.Connection.UpdateSalesPriceModel(newPrice);
-                ResetForm();
-                InitializePriceList();
+                InitializeSelectedProductPriceList(selectedProduct);
             }
         }
 
-        /// <summary>
-        /// Searches for the current "active price", sets it to false and updates it into the database
-        /// </summary>
-        private void UncheckPreviousActivePrice()
-        {
-            if (selectedActivePrice != null)
-            {
-                selectedActivePrice.CurrentlyActivePrice = false;
-                GlobalConfig.Connection.UpdateSalesPriceModel(selectedActivePrice);
-            }
-        }
 
         /// <summary>
         /// Updates the textbox and checkbox related to the selected price
@@ -212,8 +196,7 @@ namespace RestaurantUI
             if (selectedPrice != null)
             {
                 GlobalConfig.Connection.DeleteSalesPrice(selectedPrice);
-                ResetForm();
-                InitializePriceList();
+                InitializeSelectedProductPriceList((ProductModel)ProductsListBox.SelectedItem);
             }
         }
 
@@ -242,17 +225,6 @@ namespace RestaurantUI
                 callingForm.SalesPriceUpdateComplete(lastSelectedProduct);
                 this.Close();
             }
-        }
-
-        /// <summary>
-        /// Checks if the price already exists for the selected product
-        /// </summary>
-        /// <returns>true if price exists/ false otherwise</returns>
-        private bool CheckIfPriceAlreadyExists(decimal priceToCheck, int productId)
-        {
-            InitializePriceList();
-
-            return PriceList_All.Count(p => p.SalesPrice == priceToCheck && p.ProductId == productId) > 0;
         }
     }
 }

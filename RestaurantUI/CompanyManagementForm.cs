@@ -1,5 +1,6 @@
 ﻿using RMLibrary;
 using RMLibrary.Models;
+using RMLibrary.RMS_Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace RestaurantUI
         /// </summary>
         private void CreateCompanyButton_Click(object sender, EventArgs e)
         {
-            if (ValidateForm())
+            if (ValidateForm(null))
             {
                 CompanyModel company = new CompanyModel { 
                     Name = CompanyNameTextBox.Text, 
@@ -47,13 +48,11 @@ namespace RestaurantUI
         /// Validates if the form textboxes contain at least 5 characters long, and the Company Name and Data
         /// doesnt already exists
         /// </summary>
-        /// <returns>true - if company details are valid and company name doesnt already exists in the database
-        /// false - otherwise</returns>
-        private bool ValidateForm()
+        private bool ValidateForm(CompanyModel selectedCompany)
         {
             if (CompanyNameTextBox.Text.Count() > 4 && CompanyDataTextBox.Text.Count() > 4 && CompanyAdressTextBox.Text.Count() > 4)
             {
-                if (CompaniesList.Count(c => c.Name == CompanyNameTextBox.Text || c.Data == CompanyDataTextBox.Text) > 0)
+                if (RMS_Logic.CompanyLogic.CheckIfCompanyNameExists(CompanyNameTextBox.Text, CompanyDataTextBox.Text, selectedCompany))
                 {
                     MessageBox.Show("Company Name/Data already exists");
                     return false;
@@ -69,6 +68,7 @@ namespace RestaurantUI
             }
             return false;
         }
+
 
         /// <summary>
         /// Initializes the companies list, and connects it with the companies listbox
@@ -117,7 +117,7 @@ namespace RestaurantUI
         private void UpdateCompanyButton_Click(object sender, EventArgs e)
         {
             CompanyModel selectedCompany = (CompanyModel)CompaniesListBox.SelectedItem;
-            if (selectedCompany != null && ValidateForm())
+            if (selectedCompany != null && ValidateForm(selectedCompany))
             {
                 selectedCompany.Name = CompanyNameTextBox.Text;
                 selectedCompany.Data = CompanyDataTextBox.Text;

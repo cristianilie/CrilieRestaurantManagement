@@ -1,5 +1,6 @@
 ﻿using RMLibrary;
 using RMLibrary.Models;
+using RMLibrary.RMS_Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,11 +24,11 @@ namespace RestaurantUI
         /// <summary>
         /// Validates if the form textboxes are are at least a certain number of characters( 2,2,5) and the First & Last Name aren't already created
         /// </summary>
-        private bool ValidateForm()
+        private bool ValidateForm(CustomerModel selectedCustomer)
         {
             if (FirstNameTextBox.Text.Count() > 2 && LastNameTextBox.Text.Count() > 2 && DeliveryAdressTextBox.Text.Count() > 5)
             {
-                if (CustomerList.Count(c => c.FirstName == FirstNameTextBox.Text && c.LastName == LastNameTextBox.Text) > 0)
+                if (RMS_Logic.CustomerLogic.CheckIfCustomerNameExists(FirstNameTextBox.Text, LastNameTextBox.Text, selectedCustomer))
                 {
                     MessageBox.Show("Customer First and Last Name already exists");
                     return false;
@@ -43,6 +44,8 @@ namespace RestaurantUI
             }
             return false;
         }
+
+
 
         /// <summary>
         /// Initializes the customers list, and connects it with the customers listbox
@@ -75,7 +78,7 @@ namespace RestaurantUI
         /// </summary>
         private void CreateCustomerButton_Click(object sender, EventArgs e)
         {
-            if (ValidateForm())
+            if (ValidateForm(null))
             {
                 CustomerModel customer = new CustomerModel { 
                                                              FirstName = FirstNameTextBox.Text, 
@@ -107,7 +110,7 @@ namespace RestaurantUI
         private void UpdateCustomerButton_Click(object sender, EventArgs e)
         {
             CustomerModel selectedCustomer = (CustomerModel)CustomersListBox.SelectedItem;
-            if (selectedCustomer != null && ValidateForm())
+            if (selectedCustomer != null && ValidateForm(selectedCustomer))
             {
                 selectedCustomer.FirstName = FirstNameTextBox.Text;
                 selectedCustomer.LastName = LastNameTextBox.Text;

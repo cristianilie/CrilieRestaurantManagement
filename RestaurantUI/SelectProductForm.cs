@@ -1,5 +1,6 @@
 ﻿using RMLibrary;
 using RMLibrary.Models;
+using RMLibrary.RMS_Logic;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -26,18 +27,7 @@ namespace RestaurantUI
             if(caller != null)
                 callingForm = caller;
 
-            ProductList = GetMatchingProducts(searchedName);
-        }
-
-        /// <summary>
-        /// Returns a list of products whose names contain the searched text
-        /// </summary>
-        /// <param name="searchedProductName">The searched text</param>
-        private List<ProductModel> GetMatchingProducts(string searchedProductName)
-        {
-            return searchedProductName == "" || searchedProductName == " " ?
-                                 GlobalConfig.Connection.GetProducts_All() :
-                                 GlobalConfig.Connection.GetProducts_All().Where(p => p.Name.ToLower().Contains(searchedProductName.ToLower())).ToList();
+            ProductList = RMS_Logic.SelectProduct.GetMatchingProducts(searchedName);
         }
 
         /// <summary>

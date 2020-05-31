@@ -1,5 +1,6 @@
 ﻿using RMLibrary;
 using RMLibrary.Models;
+using RMLibrary.RMS_Logic;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -36,7 +37,7 @@ namespace RestaurantUI
                 };
 
                 if (tax.DefaultSelectedTax)
-                    UncheckPreviousDefaultTax();
+                    RMS_Logic.TaxLogic.UncheckPreviousDefaultTax();
 
                 GlobalConfig.Connection.CreateTax(tax);
                 InitializeTaxList();
@@ -116,7 +117,7 @@ namespace RestaurantUI
             if (selectedTax != null)
             {
                 if (IsDefaultTaxCheckBox.Checked)
-                    UncheckPreviousDefaultTax();
+                    RMS_Logic.TaxLogic.UncheckPreviousDefaultTax();
 
                 selectedTax.Name = TaxNameTextBox.Text;
                 selectedTax.Percent = int.Parse(TaxPercentTextBox.Text);
@@ -127,18 +128,6 @@ namespace RestaurantUI
             }
         }
 
-        /// <summary>
-        /// Searches for the current "default selected tax", sets it to false and updates it into the database
-        /// </summary>
-        private void UncheckPreviousDefaultTax()
-        {
-            TaxModel previousDefaultTax = TaxList.Where(q => q.DefaultSelectedTax == true).FirstOrDefault();
-            if (previousDefaultTax != null)
-            {
-                previousDefaultTax.DefaultSelectedTax = false;
-                GlobalConfig.Connection.UpdateTaxModel(previousDefaultTax);
-            }
-        }
 
         /// <summary>
         /// Clears the textboxes and other selected fields

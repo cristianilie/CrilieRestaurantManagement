@@ -12,7 +12,6 @@ namespace RestaurantUI
     {
         public List<ProductModel> ProductList { get; set; }
         public List<PurchasePriceModel> ProductPurchasePriceList { get; set; }
-
         public List<PurchasePriceModel> SelectedProduct_PurchasePriceList { get; set; }
 
         /// <summary>

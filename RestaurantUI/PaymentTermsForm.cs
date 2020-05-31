@@ -1,8 +1,8 @@
 ﻿using RMLibrary;
 using RMLibrary.Models;
+using RMLibrary.RMS_Logic;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -53,14 +53,6 @@ namespace RestaurantUI
         }
 
         /// <summary>
-        /// Check if a payment term(as number of days) already exists
-        /// </summary>
-        private bool CheckIfPaymentTermExists(int paymentTermDays)
-        {
-            return PaymentTermsList.Where(t => t.PaymentTerm_Days == paymentTermDays).Count() > 0;
-        }
-
-        /// <summary>
         /// Initializes the PaymentTerm list, and connects it with the PaymentTermsListBox
         /// </summary>
         private void InitializePaymentTermList()
@@ -99,9 +91,9 @@ namespace RestaurantUI
                 };
 
                 if (paymentTerm.IsDefaultPaymentTerm)
-                    UncheckPreviousDefaultPaymentTerm();
+                    RMS_Logic.PaymentTermLogic.UncheckPreviousDefaultPaymentTerm();
 
-                if (!CheckIfPaymentTermExists(paymentTerm.PaymentTerm_Days))
+                if (!RMS_Logic.PaymentTermLogic.CheckIfPaymentTermExists(paymentTerm.PaymentTerm_Days, null))
                 {
                     GlobalConfig.Connection.CreatePaymentTerm(paymentTerm);
                     InitializePaymentTermList();
@@ -111,19 +103,6 @@ namespace RestaurantUI
                     MessageBox.Show("Payment Term already exists!");
                 }
 
-            }
-        }
-
-        /// <summary>
-        /// Unchecks the previous default payment term
-        /// </summary>
-        private void UncheckPreviousDefaultPaymentTerm()
-        {
-            PaymentTermsModel previousDefaultPT = PaymentTermsList.Where(q => q.IsDefaultPaymentTerm == true).FirstOrDefault();
-            if (previousDefaultPT != null)
-            {
-                previousDefaultPT.IsDefaultPaymentTerm = false;
-                GlobalConfig.Connection.UpdatePaymentTermModel(previousDefaultPT);
             }
         }
 
@@ -144,9 +123,9 @@ namespace RestaurantUI
             if (selectedPaymentTerm != null)
             {
                 if (IsDefaultPaymentTermCheckBox.Checked)
-                    UncheckPreviousDefaultPaymentTerm();
+                    RMS_Logic.PaymentTermLogic.UncheckPreviousDefaultPaymentTerm();
 
-                if (ValidateForm() && !CheckIfPaymentTermExists(selectedPaymentTerm.PaymentTerm_Days) )
+                if (ValidateForm() && !RMS_Logic.PaymentTermLogic.CheckIfPaymentTermExists(selectedPaymentTerm.PaymentTerm_Days, selectedPaymentTerm) )
                 {
                     selectedPaymentTerm.PaymentTerm_Days = int.Parse(PaymentTermTextBox.Text);
                     selectedPaymentTerm.IsDefaultPaymentTerm = IsDefaultPaymentTermCheckBox.Checked;
@@ -155,7 +134,7 @@ namespace RestaurantUI
                 }
                 else
                 {
-                    if(CheckIfPaymentTermExists(selectedPaymentTerm.PaymentTerm_Days))
+                    if(RMS_Logic.PaymentTermLogic.CheckIfPaymentTermExists(selectedPaymentTerm.PaymentTerm_Days, selectedPaymentTerm))
                         MessageBox.Show("Payment Term already exists!");
                 }
 

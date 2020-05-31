@@ -117,17 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="SearchByVendorNameButton.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJ
-        TUUH4wseCQg77RGKkgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEPSURBVDhP
-        nZIxSgNBFEBjqjS2QiQXsLQ3pMkFLOyC6AXEVBaWsdYDhFxAsbTwArmCkBMERWwsTCDqeyMLP8u4S/Lg
-        wf5h//8zf6YR2METfMZ3/MIZ3mEHK9nFJ/zBN7zHCU5xhZ94jFnsbPI3jrCFkUN8wSX2XCjjtu18k6I8
-        bZyjhZouRDzzK5Y7lxmijbopCjiwh7/PSg7QAhZaw2k7sDr20QLXKQp4VU67jj5aYJCiwC16VU67ikf0
-        JvZSFPCReM9O2GnnuEC7/3tUH4nVvSqH5MAs5rbtbLIu8Ayz+EjcRfFzoYXtbLKxxz3HLD6SI7zEK3Rg
-        xZntbHJtkSpMikVOcWNikQ8XtsHOJDfGv2C+R4W+whqUAAAAAElFTkSuQmCC
-</value>
-  </data>
 </root>

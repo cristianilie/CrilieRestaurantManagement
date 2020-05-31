@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchPurchaseDocumentForm));
             this.SelectLabel = new System.Windows.Forms.Label();
             this.DocumentLabel = new System.Windows.Forms.Label();
             this.POrderContentDataGridView = new System.Windows.Forms.DataGridView();
@@ -37,9 +36,9 @@
             this.FilterDocumentGroupBox = new System.Windows.Forms.GroupBox();
             this.FilterDocumentDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.DocumentDateLabel = new System.Windows.Forms.Label();
-            this.SearchByVendorNameButton = new System.Windows.Forms.Button();
             this.SearchProductTextBox = new System.Windows.Forms.TextBox();
             this.VendorNameLabel = new System.Windows.Forms.Label();
+            this.SearchDocument = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.POrderContentDataGridView)).BeginInit();
             this.FilterDocumentGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -89,7 +88,7 @@
             // 
             this.CancelSelectButton.BackColor = System.Drawing.Color.Gray;
             this.CancelSelectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CancelSelectButton.Location = new System.Drawing.Point(846, 265);
+            this.CancelSelectButton.Location = new System.Drawing.Point(833, 265);
             this.CancelSelectButton.Name = "CancelSelectButton";
             this.CancelSelectButton.Size = new System.Drawing.Size(123, 23);
             this.CancelSelectButton.TabIndex = 42;
@@ -99,15 +98,15 @@
             // 
             // FilterDocumentGroupBox
             // 
+            this.FilterDocumentGroupBox.Controls.Add(this.SearchDocument);
             this.FilterDocumentGroupBox.Controls.Add(this.FilterDocumentDateTimePicker);
             this.FilterDocumentGroupBox.Controls.Add(this.DocumentDateLabel);
-            this.FilterDocumentGroupBox.Controls.Add(this.SearchByVendorNameButton);
             this.FilterDocumentGroupBox.Controls.Add(this.SearchProductTextBox);
             this.FilterDocumentGroupBox.Controls.Add(this.VendorNameLabel);
             this.FilterDocumentGroupBox.ForeColor = System.Drawing.Color.Gold;
             this.FilterDocumentGroupBox.Location = new System.Drawing.Point(696, 38);
             this.FilterDocumentGroupBox.Name = "FilterDocumentGroupBox";
-            this.FilterDocumentGroupBox.Size = new System.Drawing.Size(260, 118);
+            this.FilterDocumentGroupBox.Size = new System.Drawing.Size(260, 142);
             this.FilterDocumentGroupBox.TabIndex = 43;
             this.FilterDocumentGroupBox.TabStop = false;
             this.FilterDocumentGroupBox.Text = "Filter By";
@@ -129,22 +128,11 @@
             this.DocumentDateLabel.TabIndex = 45;
             this.DocumentDateLabel.Text = "Doc. Date";
             // 
-            // SearchByVendorNameButton
-            // 
-            this.SearchByVendorNameButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("SearchByVendorNameButton.BackgroundImage")));
-            this.SearchByVendorNameButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.SearchByVendorNameButton.Location = new System.Drawing.Point(228, 37);
-            this.SearchByVendorNameButton.Margin = new System.Windows.Forms.Padding(0);
-            this.SearchByVendorNameButton.Name = "SearchByVendorNameButton";
-            this.SearchByVendorNameButton.Size = new System.Drawing.Size(23, 24);
-            this.SearchByVendorNameButton.TabIndex = 16;
-            this.SearchByVendorNameButton.UseVisualStyleBackColor = true;
-            // 
             // SearchProductTextBox
             // 
             this.SearchProductTextBox.Location = new System.Drawing.Point(108, 38);
             this.SearchProductTextBox.Name = "SearchProductTextBox";
-            this.SearchProductTextBox.Size = new System.Drawing.Size(138, 22);
+            this.SearchProductTextBox.Size = new System.Drawing.Size(143, 22);
             this.SearchProductTextBox.TabIndex = 15;
             // 
             // VendorNameLabel
@@ -156,12 +144,24 @@
             this.VendorNameLabel.TabIndex = 14;
             this.VendorNameLabel.Text = "Vendor Name";
             // 
+            // SearchDocument
+            // 
+            this.SearchDocument.BackColor = System.Drawing.Color.Gray;
+            this.SearchDocument.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SearchDocument.Location = new System.Drawing.Point(108, 113);
+            this.SearchDocument.Name = "SearchDocument";
+            this.SearchDocument.Size = new System.Drawing.Size(143, 23);
+            this.SearchDocument.TabIndex = 47;
+            this.SearchDocument.Text = "Search";
+            this.SearchDocument.UseVisualStyleBackColor = false;
+            this.SearchDocument.Click += new System.EventHandler(this.SearchDocument_Click);
+            // 
             // SearchPurchaseDocumentForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
-            this.ClientSize = new System.Drawing.Size(985, 324);
+            this.ClientSize = new System.Drawing.Size(976, 324);
             this.Controls.Add(this.FilterDocumentGroupBox);
             this.Controls.Add(this.CancelSelectButton);
             this.Controls.Add(this.SelectDocumentButton);
@@ -193,6 +193,6 @@
         private System.Windows.Forms.Label VendorNameLabel;
         private System.Windows.Forms.DateTimePicker FilterDocumentDateTimePicker;
         private System.Windows.Forms.Label DocumentDateLabel;
-        private System.Windows.Forms.Button SearchByVendorNameButton;
+        private System.Windows.Forms.Button SearchDocument;
     }
 }

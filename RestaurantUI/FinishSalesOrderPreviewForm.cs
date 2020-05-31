@@ -1,5 +1,6 @@
 ﻿using RMLibrary;
 using RMLibrary.Models;
+using RMLibrary.RMS_Logic;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,8 +14,10 @@ namespace RestaurantUI
         private ISalesOrderPreviewer callingForm;
         private SalesOrderModel salesOrder;
         private List<OrderProductModel> SalesOrderContentList;
-        private List<SalesPriceModel> SalesPricesList;
         private TaxModel taxToUse;
+
+        public OrderTotal SalesOrderTotal { get; set; }
+
 
         /// <summary>
         /// Overloaded constructor that recieves data from the calling form that will be used to preview the "bill"
@@ -41,40 +44,18 @@ namespace RestaurantUI
             SalesOrderContentListBox.DisplayMember = "ProductName";
             SalesOrderContentListBox.DataSource = SalesOrderContentList;
 
-            CalculateSalesOrderValue();
+            SalesOrderTotal = RMS_Logic.SalesLogic.CalculateSalesOrderTotal(taxToUse, SalesOrderContentList);
+            DisplaySalesOrderTotals(SalesOrderTotal);
         }
-
-        /// <summary>
-        /// Calculates the sales order totals
-        /// </summary>
-        private void CalculateSalesOrderValue()
-        {
-            decimal soTotal = 0;
-            decimal soTax = 0;
-            decimal soGrandTotal = 0;
-            SalesPricesList = GlobalConfig.Connection.GetSalesPrices_All().Where(p => p.CurrentlyActivePrice == true).ToList();
-
-            for (int i = 0; i < SalesOrderContentList.Count; i++)
-            {
-                decimal productPrice = SalesPricesList.Where(p => p.ProductId == SalesOrderContentList[i].ProductId && p.CurrentlyActivePrice == true)
-                                                  .Single().SalesPrice;
-
-                soTotal += SalesOrderContentList[i].OrderedQuantity * productPrice;
-                soTax += SalesOrderContentList[i].OrderedQuantity * (productPrice / 100 * (taxToUse.Percent));
-                soGrandTotal = soTotal + soTax;
-            }
-
-            DisplaySalesOrderTotals(soTotal, soTax, soGrandTotal);
-        }
-
+        
         /// <summary>
         /// Display the sales order totals in their associated textboxes
         /// </summary>
-        private void DisplaySalesOrderTotals(decimal soTotal, decimal soTax, decimal soGrandTotal)
+        private void DisplaySalesOrderTotals(OrderTotal orderTotal)
         {
-            TotalAmountSOTextBox.Text = soTotal.ToString("0.## Lei");
-            TaxTotalAmountSOTextBox.Text = soTax.ToString("0.## Lei");
-            GrandTotalAmountSOTextBox.Text = soGrandTotal.ToString("0.## Lei");
+            TotalAmountSOTextBox.Text = orderTotal.Total.ToString("0.## Lei");
+            TaxTotalAmountSOTextBox.Text = orderTotal.TaxTotal.ToString("0.## Lei");
+            GrandTotalAmountSOTextBox.Text = orderTotal.GrandTotal.ToString("0.## Lei");
         }
 
         /// <summary>

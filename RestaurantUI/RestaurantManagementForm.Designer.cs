@@ -237,7 +237,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(748, 213);
+            this.label22.Location = new System.Drawing.Point(771, 213);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(18, 15);
             this.label22.TabIndex = 25;
@@ -248,8 +248,9 @@
             this.ProductTaxComboBox.FormattingEnabled = true;
             this.ProductTaxComboBox.Location = new System.Drawing.Point(683, 210);
             this.ProductTaxComboBox.Name = "ProductTaxComboBox";
-            this.ProductTaxComboBox.Size = new System.Drawing.Size(59, 23);
+            this.ProductTaxComboBox.Size = new System.Drawing.Size(82, 23);
             this.ProductTaxComboBox.TabIndex = 24;
+            this.ProductTaxComboBox.SelectedIndexChanged += new System.EventHandler(this.ProductTaxComboBox_SelectedIndexChanged);
             // 
             // OrderTaxLabel
             // 
@@ -637,6 +638,7 @@
             this.PaymentTermComboBox.Name = "PaymentTermComboBox";
             this.PaymentTermComboBox.Size = new System.Drawing.Size(52, 23);
             this.PaymentTermComboBox.TabIndex = 42;
+            this.PaymentTermComboBox.SelectedIndexChanged += new System.EventHandler(this.PaymentTermComboBox_SelectedIndexChanged);
             // 
             // ClearButton
             // 
@@ -662,8 +664,9 @@
             this.POrderTaxFilterComboBox.FormattingEnabled = true;
             this.POrderTaxFilterComboBox.Location = new System.Drawing.Point(684, 175);
             this.POrderTaxFilterComboBox.Name = "POrderTaxFilterComboBox";
-            this.POrderTaxFilterComboBox.Size = new System.Drawing.Size(52, 23);
+            this.POrderTaxFilterComboBox.Size = new System.Drawing.Size(78, 23);
             this.POrderTaxFilterComboBox.TabIndex = 36;
+            this.POrderTaxFilterComboBox.SelectedIndexChanged += new System.EventHandler(this.POrderTaxFilterComboBox_SelectedIndexChanged);
             // 
             // PurchaseOrderLabel
             // 
@@ -1006,6 +1009,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "RestaurantManagementForm";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Restaurant Management System";
             this.RMSTabControl.ResumeLayout(false);
             this.SalesTabPage.ResumeLayout(false);

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using RMLibrary;
 using RMLibrary.Models;
+using RMLibrary.RMS_Logic;
 
 namespace RestaurantUI
 {
@@ -30,8 +31,10 @@ namespace RestaurantUI
         /// </summary>
         private void CreateProductButton_Click(object sender, EventArgs e)
         {
-            ProductModel product = new ProductModel();
-            product.Name = ProductNameTextBox.Text;
+            ProductModel product = new ProductModel
+            {
+                Name = ProductNameTextBox.Text
+            };
 
             if (ValidateFormInput() && ProductValidation(product))
             {
@@ -91,14 +94,17 @@ namespace RestaurantUI
         /// </summary>
         private void InitializeLists()
         {
+            ProductList = GlobalConfig.Connection.GetProducts_All();
             ProductsListBox.DataSource = null;
             ProductsListBox.DataSource = ProductList;
             ProductsListBox.DisplayMember = "Name";
 
+            RecipeList = GlobalConfig.Connection.GetRecipes_All();
             RecipesListBox.DataSource = null;
             RecipesListBox.DataSource = RecipeList;
             RecipesListBox.DisplayMember = "Name";
 
+            CategoryList = GlobalConfig.Connection.GetCategories_All();
             ProductCategoryComboBox.DataSource = null;
             ProductCategoryComboBox.DataSource = CategoryList;
             ProductCategoryComboBox.DisplayMember = "Name";
@@ -214,9 +220,12 @@ namespace RestaurantUI
         {
             ProductModel selectedProduct = (ProductModel)ProductsListBox.SelectedItem;
             RecipeModel selectedRecipe = (RecipeModel)RecipesListBox.SelectedItem;
-            selectedProduct.RecipeId = selectedRecipe.Id;
 
-            GlobalConfig.Connection.UpdateProductModel(selectedProduct);
+            if (selectedRecipe != null)
+            {
+                selectedProduct.RecipeId = selectedRecipe.Id;
+                GlobalConfig.Connection.UpdateProductModel(selectedProduct);
+            }
         }
 
         /// <summary>
@@ -230,7 +239,7 @@ namespace RestaurantUI
             if (ProductValidation(selectedProduct))
             {
                 UpdateProductModel(selectedProduct, selectedRecipe);
-                ProductCategoryModel existingProductCategory = GetExistingProductCategory(selectedProduct);
+                ProductCategoryModel existingProductCategory = RMS_Logic.ProductLogic.GetExistingProductCategory(selectedProduct);
                 CategoryModel selectedCategory = (CategoryModel)ProductCategoryComboBox.SelectedItem;
 
                 UpdateProductCategoryModel(selectedProduct, existingProductCategory, selectedCategory);
@@ -243,7 +252,8 @@ namespace RestaurantUI
         /// </summary>
         private bool ProductValidation(ProductModel selectedProduct)
         {
-            return selectedProduct != null && !CheckProductNameLength(ProductNameTextBox.Text) && !CheckIfProductNameExists(ProductNameTextBox.Text);
+            return selectedProduct != null && CheckProductNameLength(ProductNameTextBox.Text) &&
+                     !RMS_Logic.ProductLogic.CheckIfProductNameExists(ProductNameTextBox.Text, selectedProduct.Id);
         }
 
         /// <summary>
@@ -274,14 +284,7 @@ namespace RestaurantUI
                    (existingProductCategory.CategoryId != selectedCategory.Id);
         }
 
-        /// <summary>
-        /// Retrieves the selected product's category, or "null" if the product isn't associated with a category
-        /// </summary>
-        private ProductCategoryModel GetExistingProductCategory(ProductModel selectedProduct)
-        {
-            return SelectedProductCategoryList.Where(c => c.ProductId == selectedProduct.Id)
-                                              .FirstOrDefault();
-        }
+
 
         /// <summary>
         /// Updates the product model
@@ -296,13 +299,7 @@ namespace RestaurantUI
             GlobalConfig.Connection.UpdateProductModel(selectedProduct);
         }
 
-        /// <summary>
-        /// Checks if the product name already exists
-        /// </summary>
-        private bool CheckIfProductNameExists(string productName)
-        {
-            return ProductList.Where(p => p.Name.ToLower() == productName.ToLower()).Count() > 0;
-        }
+
 
         /// <summary>
         /// Checks if the product name is at least 3 characters long

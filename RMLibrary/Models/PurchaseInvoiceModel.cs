@@ -11,6 +11,5 @@ namespace RMLibrary.Models
 
         public int RelatedPurchaseOrderId { get; set; }
 
-
     }
 }

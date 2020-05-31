@@ -54,6 +54,7 @@
     <Compile Include="Models\Helpers\Enums.cs" />
     <Compile Include="Models\Helpers\IDeliveryMethod.cs" />
     <Compile Include="Models\OrderModel.cs" />
+    <Compile Include="Models\OrderTotal.cs" />
     <Compile Include="Models\PaymentTermsModel.cs" />
     <Compile Include="Models\PO_ProductList_Join.cs" />
     <Compile Include="Models\PurchaseInvoiceModel.cs" />
@@ -72,6 +73,20 @@
     <Compile Include="Models\TableModel.cs" />
     <Compile Include="Models\TaxModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RMS_Logic\CategoryManagementLogic.cs" />
+    <Compile Include="RMS_Logic\CompanyManagementLogic.cs" />
+    <Compile Include="RMS_Logic\CustomerManagementLogic.cs" />
+    <Compile Include="RMS_Logic\PaymentTermManagementLogic.cs" />
+    <Compile Include="RMS_Logic\ProductManagementLogic.cs" />
+    <Compile Include="RMS_Logic\ProductRecipeManagementLogic.cs" />
+    <Compile Include="RMS_Logic\PurchasingManagementLogic.cs" />
+    <Compile Include="RMS_Logic\RMS_Logic.cs" />
+    <Compile Include="RMS_Logic\SalesManagementLogic.cs" />
+    <Compile Include="RMS_Logic\SalesPriceManagementLogic.cs" />
+    <Compile Include="RMS_Logic\SearchPurchaseDocumentLogic.cs" />
+    <Compile Include="RMS_Logic\SelectProductLogic.cs" />
+    <Compile Include="RMS_Logic\TableManagementLogic.cs" />
+    <Compile Include="RMS_Logic\TaxManagementLogic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

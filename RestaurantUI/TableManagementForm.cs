@@ -1,5 +1,6 @@
 ﻿using RMLibrary;
 using RMLibrary.Models;
+using RMLibrary.RMS_Logic;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,7 +30,7 @@ namespace RestaurantUI
             if (ValidateForm())
             {
                 TableModel selectedTable = (TableModel)TablesListBox.SelectedItem;
-                if (CheckIfTableNameExists())
+                if (RMS_Logic.TableLogic.CheckIfTableNameExists(TableNameTextBox.Text))
                     MessageBox.Show("Table name already exists! Please pick another table name");
                 else
                     GlobalConfig.Connection.CreateTable(new TableModel { Name = TableNameTextBox.Text });
@@ -37,13 +38,7 @@ namespace RestaurantUI
             InitializeTablesList();
         }
 
-        /// <summary>
-        /// Checks if the name of the table we are trying to create already exists
-        /// </summary>
-        private bool CheckIfTableNameExists()
-        {
-            return TablesList.Where(c => c.Name == TableNameTextBox.Text).Count() > 0;
-        }
+
 
         /// <summary>
         /// Checks if the new table name has at leat 3 characters
@@ -103,7 +98,7 @@ namespace RestaurantUI
         {
             if (ValidateForm())
             {
-                if (CheckIfTableNameExists())
+                if (RMS_Logic.TableLogic.CheckIfTableNameExists(TableNameTextBox.Text))
                 {
                     MessageBox.Show("Table name already exists! Please pick another table name");
                 }

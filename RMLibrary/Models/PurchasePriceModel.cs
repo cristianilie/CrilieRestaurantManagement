@@ -17,5 +17,7 @@ namespace RMLibrary.Models
         public DateTime PurchaseDate { get; set; }
 
         public int PurchaseOrderId { get; set; }
+
+
     }
 }

@@ -1,12 +1,9 @@
 ﻿using Dapper;
 using RMLibrary.Models;
-using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RMLibrary.DataAcces
 {
@@ -134,7 +131,6 @@ namespace RMLibrary.DataAcces
             }
         }
 
-
         /// <summary>
         /// Creates a new Product entity in the database
         /// </summary>
@@ -222,7 +218,6 @@ namespace RMLibrary.DataAcces
                 connection.Execute("dbo.spSalesOrder_Delete", parameters, commandType: CommandType.StoredProcedure);
             }
         }
-
 
         /// <summary>
         /// Deletes a Sales Price entry from the database
@@ -329,7 +324,6 @@ namespace RMLibrary.DataAcces
                 return model;
             }
         }
-
 
         /// <summary>
         /// Deletes a  Recipe Content entry in the database by RecipeId, and ProductId
@@ -477,7 +471,6 @@ namespace RMLibrary.DataAcces
             }
             return output;
         }
-
 
         /// <summary>
         /// Retrieves a list of all Tax entries 

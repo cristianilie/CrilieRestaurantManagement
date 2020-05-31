@@ -1,5 +1,6 @@
 ﻿using RMLibrary;
 using RMLibrary.Models;
+using RMLibrary.RMS_Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace RestaurantUI
         /// </summary>
         private void CreateCategoryButton_Click(object sender, EventArgs e)
         {
-            if (ValidateFormInput() && CheckIfCategoryNameExists(CategoryNameTextBox.Text))
+            if (ValidateFormInput() && !RMS_Logic.CategoryLogic.CheckIfCategoryNameExists(CategoryNameTextBox.Text))
             {
                 CategoryModel category = new CategoryModel { Name = CategoryNameTextBox.Text };
                 GlobalConfig.Connection.CreateCategory(category);
@@ -49,7 +50,6 @@ namespace RestaurantUI
         /// <summary>
         /// Validates if the category name textbox contains at least 2 characters
         /// </summary>
-        /// <returns>Returns "true" if category name textbox contains at least 2 characters, and "false" otherwise </returns>
         private bool ValidateFormInput()
         {
             if (CategoryNameTextBox.Text.Count() < 3)
@@ -124,15 +124,6 @@ namespace RestaurantUI
             ResetForm();
         }
 
-        /// <summary>
-        /// Checks if a category name exists in the category list
-        /// if it exists it will return false, otherwise true
-        /// </summary>
-        private bool CheckIfCategoryNameExists(string categoryName)
-        {
-            CategoryList = GlobalConfig.Connection.GetCategories_All();
 
-            return CategoryList.Count(s => s.Name == categoryName) == 0;
-        }
     }
 }

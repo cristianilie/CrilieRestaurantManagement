@@ -1,5 +1,6 @@
 ﻿using RMLibrary;
 using RMLibrary.Models;
+using RMLibrary.RMS_Logic;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -149,7 +150,11 @@ namespace RestaurantUI
             }
             else
             {
-                SelectedRecipeContent.Add(new RecipeAndContentModel { ProductId = p.Id, ProductName = p.Name, ProductQuantity = 1 });
+                SelectedRecipeContent.Add(new RecipeAndContentModel { 
+                                                                        ProductId = p.Id, 
+                                                                        ProductName = p.Name, 
+                                                                        ProductQuantity = 1 
+                                                                     });
             }
             InitializeRecipeContentList(true);
         }
@@ -178,13 +183,16 @@ namespace RestaurantUI
             {
                 RecipeModel newRecipeMdl = GlobalConfig.Connection.CreateRecipe(new RecipeModel { Name = RecipeNameTextBox.Text });
 
-                RecipeContentModel recipeContent = new RecipeContentModel();
+                RecipeContentModel recipeContent;
 
                 foreach (var ingredient in SelectedRecipeContent)
                 {
-                    recipeContent.RecipeId = newRecipeMdl.Id;
-                    recipeContent.ProductId = ingredient.ProductId;
-                    recipeContent.ProductQuantity = ingredient.ProductQuantity;
+                    recipeContent = new RecipeContentModel
+                    {
+                        RecipeId = newRecipeMdl.Id,
+                        ProductId = ingredient.ProductId,
+                        ProductQuantity = ingredient.ProductQuantity
+                    };
 
                     GlobalConfig.Connection.CreateRecipeContent(recipeContent);
                 }
@@ -246,118 +254,14 @@ namespace RestaurantUI
 
                 List<RecipeAndContentModel> ExistingRecipeContent = GlobalConfig.Connection.GetRecipeAndContent((RecipeModel)RecipesListBox.SelectedItem);
 
-                AddNewIngredientsToRecipe(IngredientsToAdd(ExistingRecipeContent));
-                RemoveOldIngredientsToRecipe(IngredientsToRemove(ExistingRecipeContent));
-                UpdateIngredientsQuantitiesToRecipe(GetIngredientsWithDifferentQty(ExistingRecipeContent));
+                RMS_Logic.RecipeLogic.AddNewIngredientsToRecipe(RMS_Logic.RecipeLogic.IngredientsToAdd(ExistingRecipeContent, SelectedRecipeContent));
+                RMS_Logic.RecipeLogic.RemoveOldIngredientsToRecipe(RMS_Logic.RecipeLogic.IngredientsToRemove(ExistingRecipeContent, SelectedRecipeContent));
+                RMS_Logic.RecipeLogic.UpdateIngredientsQuantitiesToRecipe(RMS_Logic.RecipeLogic.GetIngredientsWithDifferentQty(ExistingRecipeContent, SelectedRecipeContent));
 
                 InitializeRecipeList();
                 InitializeRecipeContentList();
                 ResetForm();
             }
-        }
-
-        /// <summary>
-        /// Updates(in the database) the ingredients with modified quantities
-        /// </summary>
-        private void UpdateIngredientsQuantitiesToRecipe(List<RecipeContentModel> ingredientsToUpdate)
-        {
-            foreach (RecipeContentModel ingredient in ingredientsToUpdate)
-            {
-                GlobalConfig.Connection.UpdateRecipeContentModel(ingredient);
-            }
-        }
-
-        /// <summary>
-        /// Removes ingredients from the existing(saved in the database) recipe
-        /// </summary>
-        private void RemoveOldIngredientsToRecipe(List<RecipeContentModel> ingredientsToRemove)
-        {
-            foreach (RecipeContentModel ingredient in ingredientsToRemove)
-            {
-                GlobalConfig.Connection.RemoveRecipeContent(ingredient);
-            }
-        }
-
-        /// <summary>
-        /// Adds new ingredients to the selected recipe
-        /// </summary>
-        private void AddNewIngredientsToRecipe(List<RecipeContentModel> ingredientsToAdd)
-        {
-            foreach (RecipeContentModel ingredient in ingredientsToAdd)
-            {
-                GlobalConfig.Connection.CreateRecipeContent(ingredient);
-            }
-        }
-
-        /// <summary>
-        /// Checks for new ingredients to add in the selected recipe
-        /// </summary>
-        /// <returns>List with new ingredients to add</returns>
-        List<RecipeContentModel> IngredientsToAdd(List<RecipeAndContentModel> savedRecipe)
-        {
-            List<RecipeAndContentModel> Differences = new List<RecipeAndContentModel>();
-
-            foreach (var item in SelectedRecipeContent)
-            {
-                if (savedRecipe.Where(c => c.ProductId == item.ProductId).Count() == 0)
-                    Differences.Add(item);
-            }
-
-            List<RecipeContentModel> output = new List<RecipeContentModel>();
-            foreach (var item in Differences)
-            {
-                output.Add(new RecipeContentModel { ProductId = item.ProductId, RecipeId = savedRecipe[0].RecipeId, ProductQuantity = item.ProductQuantity });
-            }
-
-            return output;
-        }
-
-        /// <summary>
-        /// Checks for ingredients to remove from the selected recipe
-        /// </summary>
-        List<RecipeContentModel> IngredientsToRemove(List<RecipeAndContentModel> savedRecipe)
-        {
-            List<RecipeAndContentModel> Differences = new List<RecipeAndContentModel>();
-
-            foreach (var item in savedRecipe)
-            {
-                if (SelectedRecipeContent.Where(c => c.ProductId == item.ProductId).Count() == 0)
-                    Differences.Add(item);
-            }
-
-            List<RecipeContentModel> Output = new List<RecipeContentModel>();
-            foreach (var item in Differences)
-            {
-                Output.Add(new RecipeContentModel { ProductId = item.ProductId, RecipeId = savedRecipe[0].RecipeId, ProductQuantity = item.ProductQuantity });
-            }
-
-            return Output;
-        }
-
-        /// <summary>
-        /// Checks for items with a modified quantity to update in the selected recipe
-        /// </summary>
-        /// <returns>List of ingredients to update quantity for</returns>
-        private List<RecipeContentModel> GetIngredientsWithDifferentQty(List<RecipeAndContentModel> savedRecipe)
-        {
-            List<RecipeAndContentModel> CommonIngredients = new List<RecipeAndContentModel>();
-
-            foreach (var item in savedRecipe)
-            {
-                RecipeAndContentModel selectedIngredient = SelectedRecipeContent.Where(c => c.ProductId == item.ProductId).FirstOrDefault();
-                RecipeAndContentModel savedIngredient = savedRecipe.Where(c => c.ProductId == item.ProductId).FirstOrDefault();
-
-                if (selectedIngredient != null && selectedIngredient.ProductQuantity != savedIngredient.ProductQuantity)
-                    CommonIngredients.Add(selectedIngredient);
-            }
-
-            List<RecipeContentModel> Output = new List<RecipeContentModel>();
-            foreach (var item in CommonIngredients)
-            {
-                Output.Add(new RecipeContentModel { ProductId = item.ProductId, RecipeId = savedRecipe[0].RecipeId, ProductQuantity = item.ProductQuantity });
-            }
-
-            return Output;
         }
 
         /// <summary>
