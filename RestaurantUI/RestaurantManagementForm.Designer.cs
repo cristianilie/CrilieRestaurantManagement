@@ -47,6 +47,7 @@
             this.TaxTotalLabel = new System.Windows.Forms.Label();
             this.TotalLabel = new System.Windows.Forms.Label();
             this.ProductStockDetailsGroupBox = new System.Windows.Forms.GroupBox();
+            this.CreateProductFromRecipeButton = new System.Windows.Forms.Button();
             this.ProductTotalStockQuantityLabel = new System.Windows.Forms.Label();
             this.ProductBookedQuantityLabel = new System.Windows.Forms.Label();
             this.ProductAvailableQuantityLabel = new System.Windows.Forms.Label();
@@ -74,6 +75,8 @@
             this.ActiveOrdersListBox = new System.Windows.Forms.ListBox();
             this.ActiveOrdersLabel = new System.Windows.Forms.Label();
             this.PurchasingTabPage = new System.Windows.Forms.TabPage();
+            this.DeletePurchaseOrderButton = new System.Windows.Forms.Button();
+            this.LastDocumentButton = new System.Windows.Forms.Button();
             this.CreateNewPaymentTermLinkLabel = new System.Windows.Forms.LinkLabel();
             this.PaymentTermLabel = new System.Windows.Forms.Label();
             this.PaymentTermComboBox = new System.Windows.Forms.ComboBox();
@@ -329,6 +332,7 @@
             // 
             // ProductStockDetailsGroupBox
             // 
+            this.ProductStockDetailsGroupBox.Controls.Add(this.CreateProductFromRecipeButton);
             this.ProductStockDetailsGroupBox.Controls.Add(this.ProductTotalStockQuantityLabel);
             this.ProductStockDetailsGroupBox.Controls.Add(this.ProductBookedQuantityLabel);
             this.ProductStockDetailsGroupBox.Controls.Add(this.ProductAvailableQuantityLabel);
@@ -337,10 +341,20 @@
             this.ProductStockDetailsGroupBox.Controls.Add(this.ProductTotalStockLabel);
             this.ProductStockDetailsGroupBox.Location = new System.Drawing.Point(638, 250);
             this.ProductStockDetailsGroupBox.Name = "ProductStockDetailsGroupBox";
-            this.ProductStockDetailsGroupBox.Size = new System.Drawing.Size(162, 115);
+            this.ProductStockDetailsGroupBox.Size = new System.Drawing.Size(162, 146);
             this.ProductStockDetailsGroupBox.TabIndex = 20;
             this.ProductStockDetailsGroupBox.TabStop = false;
             this.ProductStockDetailsGroupBox.Text = "Product Stock Details";
+            // 
+            // CreateProductFromRecipeButton
+            // 
+            this.CreateProductFromRecipeButton.Location = new System.Drawing.Point(5, 92);
+            this.CreateProductFromRecipeButton.Name = "CreateProductFromRecipeButton";
+            this.CreateProductFromRecipeButton.Size = new System.Drawing.Size(151, 41);
+            this.CreateProductFromRecipeButton.TabIndex = 14;
+            this.CreateProductFromRecipeButton.Text = "Create product from recipe ingredients";
+            this.CreateProductFromRecipeButton.UseVisualStyleBackColor = true;
+            this.CreateProductFromRecipeButton.Click += new System.EventHandler(this.CreateProductFromRecipeButton_Click);
             // 
             // ProductTotalStockQuantityLabel
             // 
@@ -583,6 +597,8 @@
             // 
             // PurchasingTabPage
             // 
+            this.PurchasingTabPage.Controls.Add(this.DeletePurchaseOrderButton);
+            this.PurchasingTabPage.Controls.Add(this.LastDocumentButton);
             this.PurchasingTabPage.Controls.Add(this.CreateNewPaymentTermLinkLabel);
             this.PurchasingTabPage.Controls.Add(this.PaymentTermLabel);
             this.PurchasingTabPage.Controls.Add(this.PaymentTermComboBox);
@@ -607,6 +623,26 @@
             this.PurchasingTabPage.TabIndex = 1;
             this.PurchasingTabPage.Text = "PURCHASING";
             this.PurchasingTabPage.UseVisualStyleBackColor = true;
+            // 
+            // DeletePurchaseOrderButton
+            // 
+            this.DeletePurchaseOrderButton.Location = new System.Drawing.Point(684, 387);
+            this.DeletePurchaseOrderButton.Name = "DeletePurchaseOrderButton";
+            this.DeletePurchaseOrderButton.Size = new System.Drawing.Size(123, 23);
+            this.DeletePurchaseOrderButton.TabIndex = 63;
+            this.DeletePurchaseOrderButton.Text = "Delete Order";
+            this.DeletePurchaseOrderButton.UseVisualStyleBackColor = true;
+            this.DeletePurchaseOrderButton.Click += new System.EventHandler(this.DeletePurchaseOrderButton_Click);
+            // 
+            // LastDocumentButton
+            // 
+            this.LastDocumentButton.Location = new System.Drawing.Point(684, 91);
+            this.LastDocumentButton.Name = "LastDocumentButton";
+            this.LastDocumentButton.Size = new System.Drawing.Size(123, 23);
+            this.LastDocumentButton.TabIndex = 62;
+            this.LastDocumentButton.Text = "Last Document";
+            this.LastDocumentButton.UseVisualStyleBackColor = true;
+            this.LastDocumentButton.Click += new System.EventHandler(this.LastDocumentButton_Click);
             // 
             // CreateNewPaymentTermLinkLabel
             // 
@@ -642,7 +678,7 @@
             // 
             // ClearButton
             // 
-            this.ClearButton.Location = new System.Drawing.Point(683, 358);
+            this.ClearButton.Location = new System.Drawing.Point(683, 326);
             this.ClearButton.Name = "ClearButton";
             this.ClearButton.Size = new System.Drawing.Size(123, 23);
             this.ClearButton.TabIndex = 40;
@@ -664,9 +700,10 @@
             this.POrderTaxFilterComboBox.FormattingEnabled = true;
             this.POrderTaxFilterComboBox.Location = new System.Drawing.Point(684, 175);
             this.POrderTaxFilterComboBox.Name = "POrderTaxFilterComboBox";
-            this.POrderTaxFilterComboBox.Size = new System.Drawing.Size(78, 23);
+            this.POrderTaxFilterComboBox.Size = new System.Drawing.Size(118, 23);
             this.POrderTaxFilterComboBox.TabIndex = 36;
             this.POrderTaxFilterComboBox.SelectedIndexChanged += new System.EventHandler(this.POrderTaxFilterComboBox_SelectedIndexChanged);
+            this.POrderTaxFilterComboBox.Format += new System.Windows.Forms.ListControlConvertEventHandler(this.POrderTaxFilterComboBox_Format);
             // 
             // PurchaseOrderLabel
             // 
@@ -729,7 +766,7 @@
             // 
             // AddPurchaseOrderButton
             // 
-            this.AddPurchaseOrderButton.Location = new System.Drawing.Point(683, 387);
+            this.AddPurchaseOrderButton.Location = new System.Drawing.Point(683, 355);
             this.AddPurchaseOrderButton.Name = "AddPurchaseOrderButton";
             this.AddPurchaseOrderButton.Size = new System.Drawing.Size(123, 23);
             this.AddPurchaseOrderButton.TabIndex = 28;
@@ -1119,6 +1156,9 @@
         private System.Windows.Forms.TextBox GrandTotalAmountSOTextBox;
         private System.Windows.Forms.TextBox TaxTotalAmountSOTextBox;
         private System.Windows.Forms.TextBox TotalAmountSOTextBox;
+        private System.Windows.Forms.Button LastDocumentButton;
+        private System.Windows.Forms.Button DeletePurchaseOrderButton;
+        private System.Windows.Forms.Button CreateProductFromRecipeButton;
     }
 }
 

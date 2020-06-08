@@ -187,7 +187,7 @@
             this.AddRecipeItemButton.UseVisualStyleBackColor = true;
             this.AddRecipeItemButton.Click += new System.EventHandler(this.AddRecipeItemButton_Click);
             // 
-            // NewProductRecipeForm
+            // ProductRecipeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -212,7 +212,7 @@
             this.ForeColor = System.Drawing.Color.DarkOrange;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "NewProductRecipeForm";
+            this.Name = "ProductRecipeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NewProductRecipeForm";
             this.ResumeLayout(false);

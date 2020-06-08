@@ -38,9 +38,17 @@ namespace RestaurantUI
         private void ChangeUIByDocType(RequestedPurchasingDocument documentType)
         {
             if (documentType == RequestedPurchasingDocument.PurchaseOrder)
+            {
                 DocumentLabel.Text = "Order";
+                ActivePOCheckBox.Enabled = true;
+                FinishedPOCheckBox.Enabled = true;
+            }
             else
+            {
                 DocumentLabel.Text = "Invoice";
+                ActivePOCheckBox.Enabled = false;
+                FinishedPOCheckBox.Enabled = false;
+            }
         }
 
         /// <summary>
@@ -102,6 +110,12 @@ namespace RestaurantUI
                 PurchaseOrderList = RMS_Logic.SearchPurchaseDocumentLogic.
                                     FilterPurchaseOrder_ListBy(PurchaseOrderList, SearchProductTextBox.Text, FilterDocumentDateTimePicker.Value.Date);
 
+                if (ActivePOCheckBox.Checked && !FinishedPOCheckBox.Checked)
+                    PurchaseOrderList = RMS_Logic.SearchPurchaseDocumentLogic.FilterPurchaseOrderList_ByOrderStatus(PurchaseOrderList, OrderStatus.Active);
+
+                if (!ActivePOCheckBox.Checked && FinishedPOCheckBox.Checked)
+                    PurchaseOrderList = RMS_Logic.SearchPurchaseDocumentLogic.FilterPurchaseOrderList_ByOrderStatus(PurchaseOrderList, OrderStatus.Finished);
+
                 POrderContentDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 POrderContentDataGridView.DataSource = null;
                 POrderContentDataGridView.AutoGenerateColumns = true;
@@ -119,6 +133,8 @@ namespace RestaurantUI
                 POrderContentDataGridView.DataSource = PurchaseInvoiceList;
             }
         }
+
+
 
         /// <summary>
         /// Searches a document by vendor name and other active date filters

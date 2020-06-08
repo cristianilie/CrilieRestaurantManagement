@@ -219,7 +219,7 @@ namespace RMLibrary.RMS_Logic
         /// <summary>
         /// Validates if the selected product is not null and has a quantity >= than the quantity we want to sell
         /// </summary>
-        public bool CheckProductoToSellAvailability(ProductStockModel selectedProductStock, int productQtyToAdd)
+        public bool CheckProductToSellAvailability(ProductStockModel selectedProductStock, int productQtyToAdd)
         {
             return selectedProductStock != null && selectedProductStock.AvailableQuantity >= productQtyToAdd;
         }

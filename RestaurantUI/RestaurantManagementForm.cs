@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace RestaurantUI
 {
-    public partial class RestaurantManagementForm : Form, IDeliveryMethodRequester, ICompanyRequester, IProductRequester, IPaymentTermRequester, IDocumentRequester, ISalesPriceUpdater, ISalesOrderPreviewer
+    public partial class RestaurantManagementForm : Form, IDeliveryMethodRequester, ICompanyRequester, IProductRequester, IPaymentTermRequester, IDocumentRequester, ISalesPriceUpdater, ISalesOrderPreviewer, IProductRecipeRequester
     {
         private PurchaseOrderState CurrentPOState;
 
@@ -170,7 +170,7 @@ namespace RestaurantUI
             ProductModel selectedProduct = (ProductModel)ProductListListBox.SelectedItem;
             ProductStockModel selectedProductStock = GlobalConfig.Connection.GetProductStock_Single(selectedProduct.Id);
 
-            if (RMS_Logic.SalesLogic.CheckProductoToSellAvailability(selectedProductStock, productQtyToAdd))
+            if (RMS_Logic.SalesLogic.CheckProductToSellAvailability(selectedProductStock, productQtyToAdd))
             {
                 if (ValidateSelectedOrderAvailability(selectedOrder) && selectedProduct != null && ValidateDefaultTax())
                 {
@@ -394,7 +394,7 @@ namespace RestaurantUI
         {
             SalesOrderModel selectedOrder = (SalesOrderModel)ActiveOrdersListBox.SelectedItem;
             TaxModel taxToUse = (TaxModel)ProductTaxComboBox.SelectedItem;
-            if (selectedOrder != null && selectedOrder.Status != OrderStatus.Finished)
+            if (selectedOrder != null)
             {
                 FinishSalesOrderPreviewForm finishForm = new FinishSalesOrderPreviewForm(this, selectedOrder, SalesOrderContentList, taxToUse);
                 finishForm.Show();
@@ -591,6 +591,13 @@ namespace RestaurantUI
         {
             InitializeProductStockDetails_GroupBox();
             InitializeSelectedProductPriceDetails();
+
+            ProductModel selectedProduct = (ProductModel)ProductListListBox.SelectedItem;
+         
+            if (selectedProduct != null && selectedProduct.RecipeId != null)
+                CreateProductFromRecipeButton.Enabled = true;
+            else
+                CreateProductFromRecipeButton.Enabled = false;
         }
 
         /// <summary>
@@ -600,6 +607,11 @@ namespace RestaurantUI
         {
             OrderStatus selectedSO_Status = (OrderStatus)Enum.Parse(typeof(OrderStatus), OrderStatusFilterComboBox.SelectedValue.ToString());
             InitializeSalesOrdersList(selectedSO_Status);
+
+            if (selectedSO_Status == OrderStatus.Active)
+                FinishOrderButton.Text = "Finish Order";
+            else
+                FinishOrderButton.Text = "Preview Order";
         }
 
         /// <summary>
@@ -612,6 +624,36 @@ namespace RestaurantUI
             GrandTotalAmountSOTextBox.Text = salesOrderTotal.GrandTotal.ToString("0.## Lei");
         }
 
+        /// <summary>
+        /// Updates the sales order totals, calculated at the new selected tax
+        /// </summary>
+        private void ProductTaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((SalesOrderModel)ActiveOrdersListBox.SelectedItem != null)
+            {
+                SalesOrderTotal = RMS_Logic.SalesLogic.CalculateSalesOrderTotal((TaxModel)ProductTaxComboBox.SelectedItem, SalesOrderContentList);
+                DisplaySalesOrderTotals(SalesOrderTotal);
+            }
+        }
+
+        /// <summary>
+        /// Finishes the stock quantities creation process for products made by recipes
+        /// </summary>
+        public void ProductCreationComplete()
+        {
+            InitializeProductsList(0);
+        }
+
+        /// <summary>
+        /// Opens the ProductStockFromRecipeIngredientsForm to create stock for a product made by a recipe(if the recipe ingredients are in stock)
+        /// </summary>
+        private void CreateProductFromRecipeButton_Click(object sender, EventArgs e)
+        {
+            ProductModel selectedProduct = (ProductModel)ProductListListBox.SelectedItem;
+
+            ProductStockFromRecipeIngredientsForm form = new ProductStockFromRecipeIngredientsForm(this, selectedProduct);
+            form.Show();
+        }
         #endregion
 
 
@@ -660,7 +702,7 @@ namespace RestaurantUI
             POrderTaxFilterComboBox.DataSource = null;
             POrderTaxFilterComboBox.DisplayMember = "Name";
             POrderTaxFilterComboBox.DataSource = TaxList;
-            ProductTaxComboBox.SelectedItem = TaxList.Where(c => c.DefaultSelectedTax == true).FirstOrDefault();
+            POrderTaxFilterComboBox.SelectedItem = TaxList.Where(c => c.DefaultSelectedTax == true).FirstOrDefault();
         }
 
         /// <summary>
@@ -699,16 +741,25 @@ namespace RestaurantUI
         private void DeactivateButtons_Purchasing()
         {
             if (CurrentPOState == PurchaseOrderState.NewEmptyPO_NotAdded)
+            {
+                AddPurchaseOrderButton.Enabled = true;
                 RegisterInvoiceButton.Enabled = false;
+                DeletePurchaseOrderButton.Enabled = false;
+            }
 
             if (CurrentPOState == PurchaseOrderState.NewPO_Added)
             {
                 RegisterInvoiceButton.Enabled = true;
                 AddPurchaseOrderButton.Enabled = false;
+                DeletePurchaseOrderButton.Enabled = true;
             }
 
             if (CurrentPOState == PurchaseOrderState.InvoicedPO)
+            {
+                AddPurchaseOrderButton.Enabled = false;
                 RegisterInvoiceButton.Enabled = false;
+                DeletePurchaseOrderButton.Enabled = false;
+            }
         }
 
         /// <summary>
@@ -855,10 +906,34 @@ namespace RestaurantUI
             if (POrderContentDataGridView.CurrentCell.Value != null)
                 AddSearchedProductToRow(POrderContentDataGridView.CurrentCell.Value.ToString());
 
+            if (POrderContentDataGridView.CurrentCell.ColumnIndex == 4)
+                UpdateRowTaxId_IfValid();
+
             AddNewRowIfNoneAvailable();
             POrderContentDataGridView.Refresh();
-            PurchaseOrderTotal = RMS_Logic.PurchasingLogic.CalculatePurchaseOrderTotal(PurchaseOrderContentList, (TaxModel)POrderTaxFilterComboBox.SelectedItem);
+            PurchaseOrderTotal = RMS_Logic.PurchasingLogic.CalculatePurchaseOrderTotal(PurchaseOrderContentList);
             DisplayPurchaseDocumentTotals(PurchaseOrderTotal);
+        }
+
+        /// <summary>
+        /// Validates if the inserted tax Id exists. If its not valid => uses default tax & shows error message
+        /// </summary>
+        private void UpdateRowTaxId_IfValid()
+        {
+            int cellTaxId = int.Parse(POrderContentDataGridView.CurrentCell.Value.ToString());
+
+            if (cellTaxId != ((TaxModel)POrderTaxFilterComboBox.SelectedItem).Id)
+            {
+                if (GlobalConfig.Connection.GetTaxes_All().Where(t => t.Id == cellTaxId).Count() > 0)
+                {
+                    PurchaseOrderContentList[POrderContentDataGridView.CurrentCell.RowIndex].TaxId = cellTaxId;
+                }
+                else
+                {
+                    PurchaseOrderContentList[POrderContentDataGridView.CurrentCell.RowIndex].TaxId = ((TaxModel)POrderTaxFilterComboBox.SelectedItem).Id;
+                    MessageBox.Show("Invalid Tax Id / Using Current Default Tax");
+                }
+            }
         }
 
         /// <summary>
@@ -911,10 +986,9 @@ namespace RestaurantUI
                 int orderId = purchaseOrder.Id;
                 OrderNumberTextBox.Text = orderId.ToString();
 
-                //RMS_Logic.PurchasingLogic.AddPurchaseProductAndPrice(orderId,
-                //                                                     PurchaseOrderContentList,
-                //                                                     DocumentPostingDateTimePicker.Value,
-                //                                                     (TaxModel)POrderTaxFilterComboBox.SelectedItem);
+                RMS_Logic.PurchasingLogic.AddPurchaseProductAndPrice(orderId,
+                                                                     PurchaseOrderContentList,
+                                                                     DocumentPostingDateTimePicker.Value);
 
                 SelectedPurchaseOrder = purchaseOrder;
                 ClearPurchaseOrderFormFields();
@@ -1060,7 +1134,7 @@ namespace RestaurantUI
 
             List<OrderProductModel> poProductList = GlobalConfig.Connection.GetPurchaseOrderProductList_ByPO_Id(model.Id);
             DisplayPurchaseDocumentContent(RMS_Logic.PurchasingLogic.TransformPOContent(poProductList));
-            PurchaseOrderTotal = RMS_Logic.PurchasingLogic.CalculatePurchaseOrderTotal(PurchaseOrderContentList, (TaxModel)POrderTaxFilterComboBox.SelectedItem);
+            PurchaseOrderTotal = RMS_Logic.PurchasingLogic.CalculatePurchaseOrderTotal(PurchaseOrderContentList);
             DisplayPurchaseDocumentTotals(PurchaseOrderTotal);
         }
 
@@ -1094,7 +1168,7 @@ namespace RestaurantUI
 
             List<OrderProductModel> invoiceProductList = GlobalConfig.Connection.GetPurchaseOrderProductList_ByPO_Id(model.RelatedPurchaseOrderId);
             DisplayPurchaseDocumentContent(RMS_Logic.PurchasingLogic.TransformPOContent(invoiceProductList));
-            PurchaseOrderTotal = RMS_Logic.PurchasingLogic.CalculatePurchaseOrderTotal(PurchaseOrderContentList, (TaxModel)POrderTaxFilterComboBox.SelectedItem);
+            PurchaseOrderTotal = RMS_Logic.PurchasingLogic.CalculatePurchaseOrderTotal(PurchaseOrderContentList);
             DisplayPurchaseDocumentTotals(PurchaseOrderTotal);
         }
 
@@ -1110,7 +1184,8 @@ namespace RestaurantUI
                 CreateInvoice();
                 ClosePurchaseOrder();
                 RMS_Logic.PurchasingLogic.AddInvoicedProductsToStock(PurchaseOrderContentList);
-                ClearPurchaseOrderFormFields(); ;
+                RMS_Logic.PurchasingLogic.UpdatePurchasePrices(PurchaseOrderContentList, SelectedPurchaseOrder.Id);
+                ClearPurchaseOrderFormFields();
             }
         }
 
@@ -1180,30 +1255,97 @@ namespace RestaurantUI
             }
         }
 
-        #endregion
-
-        private void ProductTaxComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if ((SalesOrderModel)ActiveOrdersListBox.SelectedItem != null)
-            {
-                SalesOrderTotal = RMS_Logic.SalesLogic.CalculateSalesOrderTotal((TaxModel)ProductTaxComboBox.SelectedItem, SalesOrderContentList);
-                DisplaySalesOrderTotals(SalesOrderTotal);
-            }
-        }
-
+        /// <summary>
+        /// Updates the tax change on the selected purchase order content in the datagridview
+        /// </summary>
         private void POrderTaxFilterComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (PurchaseOrderContentList != null)
             {
                 POrderContentDataGridView.Refresh();
-                PurchaseOrderTotal = RMS_Logic.PurchasingLogic.CalculatePurchaseOrderTotal(PurchaseOrderContentList, (TaxModel)POrderTaxFilterComboBox.SelectedItem);
+
+                foreach (PurchaseOrderDetails_Join row in PurchaseOrderContentList)
+                {
+                    if (row.ProductId != 0 && row.ProductName != null)
+                        row.TaxId = ((TaxModel)POrderTaxFilterComboBox.SelectedItem).Id;
+                }
+
+                PurchaseOrderTotal = RMS_Logic.PurchasingLogic.CalculatePurchaseOrderTotal(PurchaseOrderContentList);
                 DisplayPurchaseDocumentTotals(PurchaseOrderTotal);
+                POrderContentDataGridView.Refresh();
             }
         }
 
+        /// <summary>
+        /// Updates the due date for the purchase invoice when the payment term is changed
+        /// </summary>
         private void PaymentTermComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateDueDate();
         }
+
+        /// <summary>
+        /// Formats the purchase order tax combobox so that is shows the tax id before the tax name
+        /// </summary>
+        private void POrderTaxFilterComboBox_Format(object sender, ListControlConvertEventArgs e)
+        {
+            TaxModel tax = ((TaxModel)e.ListItem);
+
+            e.Value = $"[{tax.Id}] {tax.Name}";
+        }
+
+        /// <summary>
+        /// Retrieves the last purchase document created according to what checkbox is selected (purchase order/invoice)
+        /// </summary>
+        private void LastDocumentButton_Click(object sender, EventArgs e)
+        {
+            RequestedPurchasingDocument _documentType = RequestedPurchasingDocument.PurchaseOrder;
+
+            if (POrdersCheckBox.Checked && !PInvoicesCheckBox.Checked)
+            {
+                _documentType = RequestedPurchasingDocument.PurchaseOrder;
+                PurchaseOrderModel po_model = GlobalConfig.Connection.GetPurchaseOrders_All().OrderByDescending(f => f.Id).FirstOrDefault();
+
+                if (po_model != null)
+                    DisplaySearchedPurchaseOrder(po_model);
+
+                if (po_model.Status == OrderStatus.Active)
+                    DisplaySettingsForActivePurchaseOrders(po_model);
+
+                CurrentPOState = po_model.Status == OrderStatus.Active ? PurchaseOrderState.NewPO_Added : PurchaseOrderState.InvoicedPO;
+                DeactivateButtons_Purchasing();
+            }
+
+            if (PInvoicesCheckBox.Checked && !POrdersCheckBox.Checked)
+            {
+                _documentType = RequestedPurchasingDocument.PurchaseInvoice;
+                PurchaseInvoiceModel inv_model = GlobalConfig.Connection.GetPurchaseInvoices_All().OrderByDescending(f => f.Id).FirstOrDefault();
+
+                if (inv_model != null)
+                    DisplaySearchedPurchaseInvoice(inv_model);
+
+                CurrentPOState = PurchaseOrderState.InvoicedPO;
+                DeactivateButtons_Purchasing();
+            }
+
+            ChangePurchasingDocument_UI_Elements(_documentType);
+        }
+
+        /// <summary>
+        /// Deletes a Purchase Order if it was not yet invoiced
+        /// </summary>
+        private void DeletePurchaseOrderButton_Click(object sender, EventArgs e)
+        {
+            if (SelectedPurchaseOrder != null && SelectedPurchaseOrder.Status != OrderStatus.Finished)
+            {
+                RMS_Logic.PurchasingLogic.DeletePurchaseProductAndPrice(SelectedPurchaseOrder.Id, PurchaseOrderContentList);
+                GlobalConfig.Connection.Delete_PurchaseOrder(SelectedPurchaseOrder.Id);
+
+                ClearPurchaseOrderFormFields();
+                ChangePurchasingDocument_UI_Elements(RequestedPurchasingDocument.PurchaseOrder);
+            }
+        }
+
+        #endregion
     }
 }

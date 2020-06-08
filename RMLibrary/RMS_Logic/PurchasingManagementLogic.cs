@@ -11,7 +11,7 @@ namespace RMLibrary.RMS_Logic
         /// <summary>
         /// Add Purchase Order products and their prices to the database
         /// </summary>
-        public void AddPurchaseProductAndPrice(int orderId, List<PurchaseOrderDetails_Join> PurchaseOrderContentList, DateTime documentPostingDate, TaxModel tax)
+        public void AddPurchaseProductAndPrice(int orderId, List<PurchaseOrderDetails_Join> PurchaseOrderContentList, DateTime documentPostingDate)
         {
             foreach (var row in PurchaseOrderContentList)
             {
@@ -20,27 +20,36 @@ namespace RMLibrary.RMS_Logic
                     row.Quantity != 0)
                 {
                     CreatePurchaseOrderProuct(orderId, row);
-                    CreatePurchaseOrderPrice(orderId, row, documentPostingDate, tax);
+                    CreatePurchaseOrderPrice(orderId, PurchaseOrderContentList.IndexOf(row), row, documentPostingDate);
                 }
             }
         }
 
-        public void AddProductsToPendingStock()
+        /// <summary>
+        /// Deletes purchase rder products and their prices from the database
+        /// </summary>
+        public void DeletePurchaseProductAndPrice(int orderId, List<PurchaseOrderDetails_Join> PurchaseOrderContentList)
         {
-
+            foreach (PurchaseOrderDetails_Join row in PurchaseOrderContentList)
+            {
+                GlobalConfig.Connection.DeletePurchasePrice(row.ProductId, orderId);
+                GlobalConfig.Connection.Delete_PO_Product(row.ProductId, orderId);
+            }
         }
 
         /// <summary>
         /// Creates a purchase price for the product on the "row" recieved as a parameter
         /// </summary>
-        public void CreatePurchaseOrderPrice(int orderId, PurchaseOrderDetails_Join row, DateTime documentPostingDate, TaxModel tax)
+        public void CreatePurchaseOrderPrice(int orderId, int rowIndex, PurchaseOrderDetails_Join row, DateTime documentPostingDate)
         {
             PurchasePriceModel purchasePrice = new PurchasePriceModel()
             {
                 ProductId = row.ProductId,
-                PurchasePrice = row.PurchasePrice + row.PurchasePrice * tax.Percent / 100,
+                PurchasePrice = row.PurchasePrice,
                 PurchaseDate = documentPostingDate.Date,
-                PurchaseOrderId = orderId
+                PurchaseOrderId = orderId,
+                RowIndex = rowIndex,
+                TaxId = row.TaxId
             };
 
             GlobalConfig.Connection.CreatePurchasePrice(purchasePrice);
@@ -129,6 +138,22 @@ namespace RMLibrary.RMS_Logic
         }
 
         /// <summary>
+        /// Updates the purchase prices when registering a purchase invoice
+        /// </summary>
+        public void UpdatePurchasePrices(List<PurchaseOrderDetails_Join> PurchaseOrderContentList, int purchaseOrderId)
+        {
+            foreach (PurchaseOrderDetails_Join row in PurchaseOrderContentList)
+            {
+                PurchasePriceModel purchasePrice = GlobalConfig.Connection.GetPurchasePrice_By_Id(purchaseOrderId, row.ProductId, PurchaseOrderContentList.IndexOf(row));
+                purchasePrice.PurchasePrice = row.PurchasePrice;
+                purchasePrice.TaxId = row.TaxId;
+
+                GlobalConfig.Connection.UpdatePurchasePriceModel(purchasePrice);
+            }
+
+        }
+
+        /// <summary>
         /// Converts Purchase Order products(OrderProductModel) into PurchaseOrderDetails_Join to be properly displayed 
         /// in the datagrid
         /// </summary>
@@ -145,7 +170,7 @@ namespace RMLibrary.RMS_Logic
                 {
                     ProductId = poProduct.ProductId,
                     ProductName = poProduct.ProductName,
-                    PurchasePrice = GlobalConfig.Connection.GetPurchasePrice_By_Id(poProduct.OrderId, poProduct.ProductId).PurchasePrice,
+                    PurchasePrice = GlobalConfig.Connection.GetPurchasePrice_By_Id(poProduct.OrderId, poProduct.ProductId, poProductList.IndexOf(poProduct)).PurchasePrice,
                     Quantity = poProduct.OrderedQuantity,
                     TaxId = poProduct.TaxId
                 });
@@ -255,27 +280,34 @@ namespace RMLibrary.RMS_Logic
             return (PurchaseOrderContentList[index].ProductId != 0 &&
                                 PurchaseOrderContentList[index].PurchasePrice != 0 &&
                                 !(PurchaseOrderContentList[index].PurchasePrice < 0) &&
-                                PurchaseOrderContentList[index].Quantity > 0) &&
-                                taxToUse != null ||
-                                (PurchaseOrderContentList[index].ProductName != null || PurchaseOrderContentList[index].ProductName != "");
+                                PurchaseOrderContentList[index].Quantity > 0)&&
+                                taxToUse != null &&
+                                (PurchaseOrderContentList[index].ProductName != null && PurchaseOrderContentList[index].ProductName != "");
         }
 
         /// <summary>
         /// Calculates the Purchase Order total Value
         /// </summary>
-        public OrderTotal CalculatePurchaseOrderTotal(List<PurchaseOrderDetails_Join> PurchaseOrderContentList, TaxModel taxToUse)
+        public OrderTotal CalculatePurchaseOrderTotal(List<PurchaseOrderDetails_Join> PurchaseOrderContentList)
         {
             OrderTotal purchaseOrderTotal = new OrderTotal();
+            TaxModel taxToUse = GlobalConfig.Connection.GetTaxSingle(PurchaseOrderContentList[0].TaxId) == null ? 
+                                        GlobalConfig.Connection.GetTaxes_All().Where(t => t.DefaultSelectedTax).Single() : 
+                                        GlobalConfig.Connection.GetTaxSingle(PurchaseOrderContentList[0].TaxId);
 
             for (int i = 0; i < PurchaseOrderContentList.Count; i++)
             {
                 if (ValidatePurchaseOrderTotalCalculations(taxToUse, i, PurchaseOrderContentList))
                 {
+                    if(PurchaseOrderContentList[i].TaxId != 0 && taxToUse.Id != PurchaseOrderContentList[i].TaxId)
+                        taxToUse = GlobalConfig.Connection.GetTaxSingle(PurchaseOrderContentList[i].TaxId);
+
                     purchaseOrderTotal.Total += PurchaseOrderContentList[i].Quantity * PurchaseOrderContentList[i].PurchasePrice;
                     purchaseOrderTotal.TaxTotal += PurchaseOrderContentList[i].Quantity * (PurchaseOrderContentList[i].PurchasePrice / 100 * (taxToUse.Percent));
                     purchaseOrderTotal.GrandTotal = purchaseOrderTotal.Total + purchaseOrderTotal.TaxTotal;
                 }
             }
+
             return purchaseOrderTotal;
         }
 

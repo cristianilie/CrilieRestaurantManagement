@@ -12,7 +12,7 @@ namespace RMLibrary.RMS_Logic
         /// </summary>
         public List<PurchaseOrderModel> InitializePurchaseOrderList()
         {
-                return GlobalConfig.Connection.GetPurchaseOrders_All();
+            return GlobalConfig.Connection.GetPurchaseOrders_All();
         }
 
         /// <summary>
@@ -46,6 +46,14 @@ namespace RMLibrary.RMS_Logic
                 PurchaseOrderList = InitializePurchaseOrderList();
 
             return PurchaseOrderList;
+        }
+
+        /// <summary>
+        /// Filters the purchase order list by order status
+        /// </summary>
+        public List<PurchaseOrderModel> FilterPurchaseOrderList_ByOrderStatus(List<PurchaseOrderModel> PurchaseOrderList, OrderStatus orderStatus)
+        {
+            return PurchaseOrderList.Where(o => o.Status == orderStatus).ToList();
         }
 
         /// <summary>

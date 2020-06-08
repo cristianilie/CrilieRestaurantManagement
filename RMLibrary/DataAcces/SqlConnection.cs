@@ -121,6 +121,8 @@ namespace RMLibrary.DataAcces
                 parameters.Add("@PurchasePrice", model.PurchasePrice);
                 parameters.Add("@PurchaseDate", model.PurchaseDate);
                 parameters.Add("@PurchaseOrderId", model.PurchaseOrderId);
+                parameters.Add("@RowIndex", model.RowIndex);
+                parameters.Add("@TaxId", model.TaxId);
                 parameters.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                 connection.Execute("dbo.spPurchasePrice_Insert", parameters, commandType: CommandType.StoredProcedure);
@@ -237,24 +239,23 @@ namespace RMLibrary.DataAcces
         /// <summary>
         /// Deletes a Purchase Price entry from the database
         /// </summary>
-        /// <param name="model">The Purchase Price about to be deleted</param>
-        /// <returns></returns>
-        public void DeletePurchasePrice(PurchasePriceModel model)
+        public void DeletePurchasePrice(int productId, int purchaseOrderId)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
             {
                 var parameters = new DynamicParameters();
-                parameters.Add("@Id", model.Id);
+                parameters.Add("@ProductId", productId);
+                parameters.Add("@PurchaseOrderId", purchaseOrderId);
+
                 connection.Execute("dbo.spPurchasePrice_Delete", parameters, commandType: CommandType.StoredProcedure);
             }
         }
 
         /// <summary>
-        /// Gets a Purchase Price entry from the database by the PO Id & product Id 
+        /// Gets a Purchase Price entry from the database by the PO Id & product Id & order row index
         /// </summary>
-        /// <param name="model">Purchase Order Id, Product Id</param>
-        /// <returns></returns>
-        public PurchasePriceModel GetPurchasePrice_By_Id(int poId, int productId)
+        /// <param name="model">Purchase Order Id, Product Id, order row index</param>
+        public PurchasePriceModel GetPurchasePrice_By_Id(int poId, int productId, int rowIndex)
         {
             PurchasePriceModel price = new PurchasePriceModel();
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
@@ -262,6 +263,7 @@ namespace RMLibrary.DataAcces
                 var parameters = new DynamicParameters();
                 parameters.Add("@PurchaseOrderId", poId);
                 parameters.Add("@ProductId", productId);
+                parameters.Add("@RowIndex", rowIndex);
                 price = connection.Query<PurchasePriceModel>("dbo.spGetPurchasePrice_ById", parameters, commandType: CommandType.StoredProcedure).Single();
             }
             return price;
@@ -297,6 +299,21 @@ namespace RMLibrary.DataAcces
                 var parameters = new DynamicParameters();
                 parameters.Add("@OrderId", poId);
                 output = connection.Query<OrderProductModel>("dbo.spGetPurchaseOrderProduct_ByPOId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Gets a single Tax model from the database by its Id 
+        /// </summary>
+        public TaxModel GetTaxSingle(int taxId)
+        {
+            TaxModel output = new TaxModel();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Id", taxId);
+                output = connection.Query<TaxModel>("dbo.spTax_GetSingle", parameters, commandType: CommandType.StoredProcedure).SingleOrDefault();
             }
             return output;
         }
@@ -590,8 +607,6 @@ namespace RMLibrary.DataAcces
         /// <summary>
         /// Creates a new Sales Order in the database
         /// </summary>
-        /// <param name="model">The new Sales Order model</param>
-        /// <returns></returns>
         public SalesOrderModel CreateSalesOrder(SalesOrderModel model)
         {
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
@@ -611,8 +626,6 @@ namespace RMLibrary.DataAcces
                 return model;
             }
         }
-
-
 
         /// <summary>
         /// Creates a new Purchase Order in the database
@@ -906,7 +919,34 @@ namespace RMLibrary.DataAcces
             }
         }
 
+        /// <summary>
+        ///Deletes a purchase order product from the database 
+        /// </summary>
+        public void Delete_PO_Product(int productId, int orderId)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ProductId", productId);
+                parameters.Add("@OrderId", orderId);
 
+                connection.Execute("dbo.spPurchaseOrderProduct_Delete", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
+        ///Deletes a purchase order from the database 
+        /// </summary>
+        public void Delete_PurchaseOrder(int orderId)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionString(dbName)))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Id", orderId);
+
+                connection.Execute("dbo.spPurchaseOrder_Delete", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
 
         /// <summary>
         /// Updates category details in the database
@@ -924,7 +964,6 @@ namespace RMLibrary.DataAcces
                 connection.Execute("dbo.spCategory_Update", parameters, commandType: CommandType.StoredProcedure);
             }
         }
-
 
         /// <summary>
         /// Updates a recipes details in the database
@@ -1105,6 +1144,8 @@ namespace RMLibrary.DataAcces
                 parameters.Add("@ProductId", model.ProductId);
                 parameters.Add("@PurchasePrice", model.PurchasePrice);
                 parameters.Add("@PurchaseOrderId", model.PurchaseOrderId);
+                parameters.Add("@RowIndex", model.RowIndex);
+                parameters.Add("@TaxId", model.TaxId);
                 parameters.Add("@Id", model.Id);
 
                 connection.Execute("dbo.spPurchasePrice_Update", parameters, commandType: CommandType.StoredProcedure);

@@ -47,11 +47,19 @@ namespace RestaurantUI
         }
 
         /// <summary>
-        /// Initialize the list of prices associated with the selected product
+        /// Initialize the list of prices associated with the selected product if the purchase order was invoiced
         /// </summary>
         private void InitializeSelectedProductPriceList(ProductModel selectedProduct)
         {
-            SelectedProduct_PurchasePriceList = GlobalConfig.Connection.GetPurchasePrices_All().Where(p => p.ProductId == selectedProduct.Id).OrderByDescending(c => c.PurchaseDate).ToList();
+            List<int> finishedPurchaseOrderIds = GlobalConfig.Connection.GetPurchaseOrders_All()
+                                                                        .Where(p => p.Status == OrderStatus.Finished)
+                                                                        .Select(c => c.Id)
+                                                                        .ToList();
+
+            SelectedProduct_PurchasePriceList = GlobalConfig.Connection.GetPurchasePrices_All()
+                                                                       .Where(p => p.ProductId == selectedProduct.Id && finishedPurchaseOrderIds.Contains(p.PurchaseOrderId))
+                                                                       .OrderByDescending(c => c.PurchaseDate)
+                                                                       .ToList();
 
             SelectedProductPricesListBox.DataSource = null;
             SelectedProductPricesListBox.DataSource = SelectedProduct_PurchasePriceList;

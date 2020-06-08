@@ -41,6 +41,8 @@
             this.SalesOrderContentListBox = new System.Windows.Forms.ListBox();
             this.FinishOrderLabel = new System.Windows.Forms.Label();
             this.SalesORderContentLabel = new System.Windows.Forms.Label();
+            this.CustomerLabel = new System.Windows.Forms.Label();
+            this.CustomerTextBox = new System.Windows.Forms.TextBox();
             this.SelectedOrderTotalGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,7 +54,7 @@
             this.SelectedOrderTotalGroupBox.Controls.Add(this.GrandTotalLabel);
             this.SelectedOrderTotalGroupBox.Controls.Add(this.TaxTotalLabel);
             this.SelectedOrderTotalGroupBox.Controls.Add(this.TotalLabel);
-            this.SelectedOrderTotalGroupBox.Location = new System.Drawing.Point(11, 294);
+            this.SelectedOrderTotalGroupBox.Location = new System.Drawing.Point(11, 321);
             this.SelectedOrderTotalGroupBox.Name = "SelectedOrderTotalGroupBox";
             this.SelectedOrderTotalGroupBox.Size = new System.Drawing.Size(266, 101);
             this.SelectedOrderTotalGroupBox.TabIndex = 32;
@@ -112,7 +114,7 @@
             // 
             // PrintBillButton
             // 
-            this.PrintBillButton.Location = new System.Drawing.Point(114, 401);
+            this.PrintBillButton.Location = new System.Drawing.Point(114, 428);
             this.PrintBillButton.Name = "PrintBillButton";
             this.PrintBillButton.Size = new System.Drawing.Size(62, 23);
             this.PrintBillButton.TabIndex = 31;
@@ -121,7 +123,7 @@
             // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(215, 401);
+            this.CancelButton.Location = new System.Drawing.Point(215, 428);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(62, 23);
             this.CancelButton.TabIndex = 30;
@@ -131,7 +133,7 @@
             // 
             // FinishSalesOrderButton
             // 
-            this.FinishSalesOrderButton.Location = new System.Drawing.Point(11, 401);
+            this.FinishSalesOrderButton.Location = new System.Drawing.Point(11, 428);
             this.FinishSalesOrderButton.Name = "FinishSalesOrderButton";
             this.FinishSalesOrderButton.Size = new System.Drawing.Size(64, 23);
             this.FinishSalesOrderButton.TabIndex = 29;
@@ -143,7 +145,7 @@
             // 
             this.SalesOrderContentListBox.FormattingEnabled = true;
             this.SalesOrderContentListBox.ItemHeight = 15;
-            this.SalesOrderContentListBox.Location = new System.Drawing.Point(11, 59);
+            this.SalesOrderContentListBox.Location = new System.Drawing.Point(11, 86);
             this.SalesOrderContentListBox.Name = "SalesOrderContentListBox";
             this.SalesOrderContentListBox.Size = new System.Drawing.Size(266, 229);
             this.SalesOrderContentListBox.TabIndex = 28;
@@ -161,18 +163,37 @@
             // SalesORderContentLabel
             // 
             this.SalesORderContentLabel.AutoSize = true;
-            this.SalesORderContentLabel.Location = new System.Drawing.Point(9, 41);
+            this.SalesORderContentLabel.Location = new System.Drawing.Point(8, 68);
             this.SalesORderContentLabel.Name = "SalesORderContentLabel";
             this.SalesORderContentLabel.Size = new System.Drawing.Size(140, 15);
             this.SalesORderContentLabel.TabIndex = 34;
             this.SalesORderContentLabel.Text = "Sales Order Content:";
+            // 
+            // CustomerLabel
+            // 
+            this.CustomerLabel.AutoSize = true;
+            this.CustomerLabel.Location = new System.Drawing.Point(12, 36);
+            this.CustomerLabel.Name = "CustomerLabel";
+            this.CustomerLabel.Size = new System.Drawing.Size(72, 15);
+            this.CustomerLabel.TabIndex = 35;
+            this.CustomerLabel.Text = "Customer:";
+            // 
+            // CustomerTextBox
+            // 
+            this.CustomerTextBox.Location = new System.Drawing.Point(92, 33);
+            this.CustomerTextBox.Name = "CustomerTextBox";
+            this.CustomerTextBox.ReadOnly = true;
+            this.CustomerTextBox.Size = new System.Drawing.Size(185, 21);
+            this.CustomerTextBox.TabIndex = 36;
             // 
             // FinishSalesOrderPreviewForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.ClientSize = new System.Drawing.Size(289, 440);
+            this.ClientSize = new System.Drawing.Size(289, 457);
+            this.Controls.Add(this.CustomerTextBox);
+            this.Controls.Add(this.CustomerLabel);
             this.Controls.Add(this.SalesORderContentLabel);
             this.Controls.Add(this.FinishOrderLabel);
             this.Controls.Add(this.SelectedOrderTotalGroupBox);
@@ -210,5 +231,7 @@
         private System.Windows.Forms.ListBox SalesOrderContentListBox;
         private System.Windows.Forms.Label FinishOrderLabel;
         private System.Windows.Forms.Label SalesORderContentLabel;
+        private System.Windows.Forms.Label CustomerLabel;
+        private System.Windows.Forms.TextBox CustomerTextBox;
     }
 }

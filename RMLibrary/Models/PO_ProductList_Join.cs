@@ -18,8 +18,7 @@ namespace RMLibrary.Models
 
         public int TaxId { get; set; }
 
-        public int RowNumber { get; set; }
 
-        // public int OrderId { get; set; }
+       // public int OrderId { get; set; }
     }
 }

@@ -102,6 +102,13 @@
     <Compile Include="ProductRecipeForm.Designer.cs">
       <DependentUpon>ProductRecipeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="IProductRecipeRequester.cs" />
+    <Compile Include="ProductStockFromRecipeIngredientsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProductStockFromRecipeIngredientsForm.Designer.cs">
+      <DependentUpon>ProductStockFromRecipeIngredientsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PurchasePriceManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,6 +179,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ProductRecipeForm.resx">
       <DependentUpon>ProductRecipeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductStockFromRecipeIngredientsForm.resx">
+      <DependentUpon>ProductStockFromRecipeIngredientsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PurchasePriceManagementForm.resx">
       <DependentUpon>PurchasePriceManagementForm.cs</DependentUpon>

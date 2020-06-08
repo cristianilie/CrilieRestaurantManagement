@@ -18,6 +18,9 @@ namespace RMLibrary.Models
 
         public int PurchaseOrderId { get; set; }
 
+        public int RowIndex { get; set; }
+
+        public int TaxId { get; set; }
 
     }
 }

@@ -34,11 +34,14 @@
             this.SelectDocumentButton = new System.Windows.Forms.Button();
             this.CancelSelectButton = new System.Windows.Forms.Button();
             this.FilterDocumentGroupBox = new System.Windows.Forms.GroupBox();
+            this.SearchDocument = new System.Windows.Forms.Button();
             this.FilterDocumentDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.DocumentDateLabel = new System.Windows.Forms.Label();
             this.SearchProductTextBox = new System.Windows.Forms.TextBox();
             this.VendorNameLabel = new System.Windows.Forms.Label();
-            this.SearchDocument = new System.Windows.Forms.Button();
+            this.PurchaseOrderStatusLabel = new System.Windows.Forms.Label();
+            this.ActivePOCheckBox = new System.Windows.Forms.CheckBox();
+            this.FinishedPOCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.POrderContentDataGridView)).BeginInit();
             this.FilterDocumentGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -76,7 +79,7 @@
             // 
             this.SelectDocumentButton.BackColor = System.Drawing.Color.Gray;
             this.SelectDocumentButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SelectDocumentButton.Location = new System.Drawing.Point(696, 265);
+            this.SelectDocumentButton.Location = new System.Drawing.Point(696, 277);
             this.SelectDocumentButton.Name = "SelectDocumentButton";
             this.SelectDocumentButton.Size = new System.Drawing.Size(123, 23);
             this.SelectDocumentButton.TabIndex = 41;
@@ -88,7 +91,7 @@
             // 
             this.CancelSelectButton.BackColor = System.Drawing.Color.Gray;
             this.CancelSelectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CancelSelectButton.Location = new System.Drawing.Point(833, 265);
+            this.CancelSelectButton.Location = new System.Drawing.Point(833, 277);
             this.CancelSelectButton.Name = "CancelSelectButton";
             this.CancelSelectButton.Size = new System.Drawing.Size(123, 23);
             this.CancelSelectButton.TabIndex = 42;
@@ -98,6 +101,9 @@
             // 
             // FilterDocumentGroupBox
             // 
+            this.FilterDocumentGroupBox.Controls.Add(this.FinishedPOCheckBox);
+            this.FilterDocumentGroupBox.Controls.Add(this.ActivePOCheckBox);
+            this.FilterDocumentGroupBox.Controls.Add(this.PurchaseOrderStatusLabel);
             this.FilterDocumentGroupBox.Controls.Add(this.SearchDocument);
             this.FilterDocumentGroupBox.Controls.Add(this.FilterDocumentDateTimePicker);
             this.FilterDocumentGroupBox.Controls.Add(this.DocumentDateLabel);
@@ -106,10 +112,22 @@
             this.FilterDocumentGroupBox.ForeColor = System.Drawing.Color.Gold;
             this.FilterDocumentGroupBox.Location = new System.Drawing.Point(696, 38);
             this.FilterDocumentGroupBox.Name = "FilterDocumentGroupBox";
-            this.FilterDocumentGroupBox.Size = new System.Drawing.Size(260, 142);
+            this.FilterDocumentGroupBox.Size = new System.Drawing.Size(260, 192);
             this.FilterDocumentGroupBox.TabIndex = 43;
             this.FilterDocumentGroupBox.TabStop = false;
             this.FilterDocumentGroupBox.Text = "Filter By";
+            // 
+            // SearchDocument
+            // 
+            this.SearchDocument.BackColor = System.Drawing.Color.Gray;
+            this.SearchDocument.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SearchDocument.Location = new System.Drawing.Point(111, 163);
+            this.SearchDocument.Name = "SearchDocument";
+            this.SearchDocument.Size = new System.Drawing.Size(143, 23);
+            this.SearchDocument.TabIndex = 47;
+            this.SearchDocument.Text = "Search";
+            this.SearchDocument.UseVisualStyleBackColor = false;
+            this.SearchDocument.Click += new System.EventHandler(this.SearchDocument_Click);
             // 
             // FilterDocumentDateTimePicker
             // 
@@ -144,17 +162,34 @@
             this.VendorNameLabel.TabIndex = 14;
             this.VendorNameLabel.Text = "Vendor Name";
             // 
-            // SearchDocument
+            // PurchaseOrderStatusLabel
             // 
-            this.SearchDocument.BackColor = System.Drawing.Color.Gray;
-            this.SearchDocument.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SearchDocument.Location = new System.Drawing.Point(108, 113);
-            this.SearchDocument.Name = "SearchDocument";
-            this.SearchDocument.Size = new System.Drawing.Size(143, 23);
-            this.SearchDocument.TabIndex = 47;
-            this.SearchDocument.Text = "Search";
-            this.SearchDocument.UseVisualStyleBackColor = false;
-            this.SearchDocument.Click += new System.EventHandler(this.SearchDocument_Click);
+            this.PurchaseOrderStatusLabel.AutoSize = true;
+            this.PurchaseOrderStatusLabel.Location = new System.Drawing.Point(6, 104);
+            this.PurchaseOrderStatusLabel.Name = "PurchaseOrderStatusLabel";
+            this.PurchaseOrderStatusLabel.Size = new System.Drawing.Size(94, 16);
+            this.PurchaseOrderStatusLabel.TabIndex = 48;
+            this.PurchaseOrderStatusLabel.Text = "Order Status";
+            // 
+            // ActivePOCheckBox
+            // 
+            this.ActivePOCheckBox.AutoSize = true;
+            this.ActivePOCheckBox.Location = new System.Drawing.Point(111, 104);
+            this.ActivePOCheckBox.Name = "ActivePOCheckBox";
+            this.ActivePOCheckBox.Size = new System.Drawing.Size(70, 20);
+            this.ActivePOCheckBox.TabIndex = 49;
+            this.ActivePOCheckBox.Text = "Active";
+            this.ActivePOCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // FinishedPOCheckBox
+            // 
+            this.FinishedPOCheckBox.AutoSize = true;
+            this.FinishedPOCheckBox.Location = new System.Drawing.Point(111, 130);
+            this.FinishedPOCheckBox.Name = "FinishedPOCheckBox";
+            this.FinishedPOCheckBox.Size = new System.Drawing.Size(86, 20);
+            this.FinishedPOCheckBox.TabIndex = 50;
+            this.FinishedPOCheckBox.Text = "Finished";
+            this.FinishedPOCheckBox.UseVisualStyleBackColor = true;
             // 
             // SearchPurchaseDocumentForm
             // 
@@ -194,5 +229,8 @@
         private System.Windows.Forms.DateTimePicker FilterDocumentDateTimePicker;
         private System.Windows.Forms.Label DocumentDateLabel;
         private System.Windows.Forms.Button SearchDocument;
+        private System.Windows.Forms.Label PurchaseOrderStatusLabel;
+        private System.Windows.Forms.CheckBox FinishedPOCheckBox;
+        private System.Windows.Forms.CheckBox ActivePOCheckBox;
     }
 }

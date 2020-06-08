@@ -31,7 +31,22 @@ namespace RestaurantUI
             salesOrder = _salesOrder;
             taxToUse = _taxToUse;
             DisplaySalesOrderContent(salesOrderContent);
+            ToggleFinishOrder_Button(salesOrder);
+
+            CustomerTextBox.Text = salesOrder.Name;
         }
+
+        /// <summary>
+        /// If the sales order has the "finished" status - it disables the "finish order" button/otherwise it enables it
+        /// </summary>
+        private void ToggleFinishOrder_Button(SalesOrderModel salesOrder)
+        {
+            if (salesOrder.Status == OrderStatus.Finished)
+                FinishSalesOrderButton.Enabled = false;
+            else
+                FinishSalesOrderButton.Enabled = true;
+        }
+
         /// <summary>
         /// Displays the sales order content and calls "CalculateSalesOrderValue" method to calculate the sales order totals
         /// </summary>
