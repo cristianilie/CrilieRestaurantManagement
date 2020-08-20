@@ -593,7 +593,7 @@ namespace RestaurantUI
             InitializeSelectedProductPriceDetails();
 
             ProductModel selectedProduct = (ProductModel)ProductListListBox.SelectedItem;
-         
+
             if (selectedProduct != null && selectedProduct.RecipeId != null)
                 CreateProductFromRecipeButton.Enabled = true;
             else
@@ -798,43 +798,91 @@ namespace RestaurantUI
         /// <summary>
         /// Check if there are products matching the searched product Name/Id and adds them to the selected row
         /// </summary>
-        private void AddSearchedProductToRow(string productName)
+        private bool AddSearchedProductToRow(string productName)
         {
             int closestEmptyRowIndex = RMS_Logic.PurchasingLogic.GetClosestEmptyRowIndex(PurchaseOrderContentList);
-
             //Check if we are on the "product name" column so we can add / search by name
             if (POrderContentDataGridView.CurrentCell.ColumnIndex == 1)
             {
-                DisplayTheProductSearchResultsForm(productName);
-                RMS_Logic.PurchasingLogic.AddProductToPurchaseOrderContent_BySearchedName(productName,
-                                                                                          closestEmptyRowIndex,
-                                                                                          ProductsList,
-                                                                                          PurchaseOrderContentList,
-                                                                                          ((TaxModel)ProductTaxComboBox.SelectedItem).Id);
-
-                if (RMS_Logic.PurchasingLogic.SearchProductByName(productName, ProductsList).Count() == 0)
-                    DisplayErrorMessage_IfNoProductFound(productName);
-
-                productToAdd = null;
+                return TryAddProductToRow_ByName(productName, closestEmptyRowIndex);
             }
 
             //Check if we are on the "product id" column so we can add if there is a product with that id
             if (POrderContentDataGridView.CurrentCell.ColumnIndex == 0)
             {
-                int idToSearch = Convert.ToInt32(POrderContentDataGridView.CurrentCell.Value);
-                productToAdd = RMS_Logic.PurchasingLogic.RetrieveProductById(idToSearch, ProductsList);
-
-                if (productToAdd != null)
-                    RMS_Logic.PurchasingLogic.AddProductToPurchaseOrderContent_BySearchedId(closestEmptyRowIndex,
-                                                                                            PurchaseOrderContentList,
-                                                                                            ((TaxModel)ProductTaxComboBox.SelectedItem).Id,
-                                                                                            productToAdd);
-                else
-                    DisplayErrorMessage_IfNoProductFound(POrderContentDataGridView.CurrentCell.Value.ToString());
-
-                productToAdd = null;
+                return TryAddProductToRow_ById(closestEmptyRowIndex);
             }
             POrderContentDataGridView.Refresh();
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try to add a product to the closest empty row, by id
+        /// </summary>
+        /// <returns>True if we the product exists and was added / False otherwise</returns>
+        private bool TryAddProductToRow_ById(int closestEmptyRowIndex)
+        {
+            int currentRowIndex = POrderContentDataGridView.CurrentCell.RowIndex;
+
+            int idToSearch = Convert.ToInt32(POrderContentDataGridView.CurrentCell.Value);
+            productToAdd = RMS_Logic.PurchasingLogic.RetrieveProductById(idToSearch, ProductsList);
+
+            if (productToAdd != null)
+            {
+                RMS_Logic.PurchasingLogic.AddProductToPurchaseOrderContent_BySearchedId(closestEmptyRowIndex,
+                                                                                        PurchaseOrderContentList,
+                                                                                        ((TaxModel)ProductTaxComboBox.SelectedItem).Id,
+                                                                                        productToAdd);
+
+                if (closestEmptyRowIndex < POrderContentDataGridView.CurrentCell.RowIndex)
+                    ClearCurrentRow(currentRowIndex);
+            }
+            else
+            {
+                DisplayErrorMessage_IfNoProductFound(POrderContentDataGridView.CurrentCell.Value.ToString());
+                ClearCurrentRow(POrderContentDataGridView.CurrentCell.RowIndex);
+
+                return false;
+            }
+            productToAdd = null;
+            return true;
+        }
+
+        /// <summary>
+        /// Clears the row at the specified index
+        /// </summary>
+        private void ClearCurrentRow(int rowIndex)
+        {
+            PurchaseOrderContentList[rowIndex].ProductId = 0;
+            PurchaseOrderContentList[rowIndex].ProductName = "";
+            PurchaseOrderContentList[rowIndex].PurchasePrice = 0;
+            PurchaseOrderContentList[rowIndex].Quantity = 0;
+            PurchaseOrderContentList[rowIndex].TaxId = 0;
+        }
+
+        /// <summary>
+        /// Try to add a product to the closest empty row, by name
+        /// </summary>
+        /// <returns>True if we the product exists and was added / False otherwise</returns>
+        private bool TryAddProductToRow_ByName(string productName, int closestEmptyRowIndex)
+        {
+            DisplayTheProductSearchResultsForm(productName);
+            RMS_Logic.PurchasingLogic.AddProductToPurchaseOrderContent_BySearchedName(productName,
+                                                                                      closestEmptyRowIndex,
+                                                                                      ProductsList,
+                                                                                      PurchaseOrderContentList,
+                                                                                      ((TaxModel)ProductTaxComboBox.SelectedItem).Id);
+
+            if (RMS_Logic.PurchasingLogic.SearchProductByName(productName, ProductsList).Count() == 0)
+            {
+                DisplayErrorMessage_IfNoProductFound(productName);
+                POrderContentDataGridView.CurrentCell.Value = POrderContentDataGridView.CurrentCell.ColumnIndex == 1 ? "" : "0";
+                return false;
+            }
+
+            productToAdd = null;
+            return true;
         }
 
         /// <summary>
@@ -903,11 +951,17 @@ namespace RestaurantUI
         /// </summary>
         private void POrderContentDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            bool wasAdded = false;
             if (POrderContentDataGridView.CurrentCell.Value != null)
-                AddSearchedProductToRow(POrderContentDataGridView.CurrentCell.Value.ToString());
+                wasAdded = AddSearchedProductToRow(POrderContentDataGridView.CurrentCell.Value.ToString());
 
             if (POrderContentDataGridView.CurrentCell.ColumnIndex == 4)
                 UpdateRowTaxId_IfValid();
+
+            if (wasAdded == false)
+            {
+                //POrderContentDataGridView.CurrentCell.Value = POrderContentDataGridView.CurrentCell.ColumnIndex == 1 ? "" : "0";
+            }
 
             AddNewRowIfNoneAvailable();
             POrderContentDataGridView.Refresh();
